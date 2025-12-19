@@ -10,6 +10,9 @@ import { addSession } from "@/lib/sessionStorage";
 import { useGamification } from "@/hooks/useGamification";
 import OxygenBar from "@/components/OxygenBar";
 import EmergencyModal from "@/components/EmergencyModal";
+import MissionCompleteModal from "@/components/MissionCompleteModal";
+import { Creature } from "@/data/creatures";
+import { rollForCreature, addToCollection } from "@/lib/lootSystem";
 
 const MAX_TIME = 60 * 60; // 60 minutes max
 const MIN_TIME = 60; // 1 minute min
@@ -47,6 +50,10 @@ const Index = () => {
   });
   const [activeTab, setActiveTab] = useState<"focus" | "history">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
+  const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
+  const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
+  const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
   
   // Gamification hook - engine level starts at 1
   const engineLevel = 1; // TODO: Load from user profile when persistence is added
@@ -163,9 +170,8 @@ const Index = () => {
               timestamp: Date.now(),
             });
             
-            toast.success("Deep Dive Complete!", {
-              description: "Great focus session!",
-            });
+            // Trigger mission complete with loot roll
+            handleMissionComplete();
           }
           
           return newTime;
@@ -335,6 +341,35 @@ const Index = () => {
     setShowEmergencyModal(false);
     setTimeLeft(setDuration);
     resetDive();
+  };
+
+  const handleMissionComplete = () => {
+    // Store current depth and duration before reset
+    setCompletedSessionDepth(depth);
+    setCompletedSessionDuration(setDuration);
+    
+    // Roll for a creature reward
+    const creature = rollForCreature(depth);
+    setRewardCreature(creature);
+    
+    // Show the mission complete modal
+    setShowMissionCompleteModal(true);
+  };
+
+  const handleMissionCompleteClose = () => {
+    // Add creature to collection if one was found
+    if (rewardCreature) {
+      addToCollection(rewardCreature.id);
+    }
+    
+    setShowMissionCompleteModal(false);
+    setRewardCreature(null);
+    setTimeLeft(setDuration);
+    resetDive();
+    
+    toast.success("Creature added to collection!", {
+      description: rewardCreature ? `${rewardCreature.name} saved!` : "Keep diving!",
+    });
   };
 
   // Task management functions
@@ -815,6 +850,15 @@ const Index = () => {
         open={showEmergencyModal} 
         onClose={handleEmergencyClose}
         depth={depth}
+      />
+      
+      {/* Mission Complete Modal */}
+      <MissionCompleteModal
+        open={showMissionCompleteModal}
+        onClose={handleMissionCompleteClose}
+        maxDepth={completedSessionDepth}
+        creature={rewardCreature}
+        sessionDuration={completedSessionDuration}
       />
     </>
   );
