@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2 } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2, Anchor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -7,6 +7,9 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import BottomNav from "@/components/BottomNav";
 import History from "@/pages/History";
 import { addSession } from "@/lib/sessionStorage";
+import { useGamification } from "@/hooks/useGamification";
+import OxygenBar from "@/components/OxygenBar";
+import EmergencyModal from "@/components/EmergencyModal";
 
 const MAX_TIME = 60 * 60; // 60 minutes max
 const MIN_TIME = 60; // 1 minute min
@@ -43,7 +46,14 @@ const Index = () => {
     cafe: false,
   });
   const [activeTab, setActiveTab] = useState<"focus" | "history">("focus");
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   
+  // Gamification hook - engine level starts at 1
+  const engineLevel = 1; // TODO: Load from user profile when persistence is added
+  const { depth, oxygen, isEmergency, resetDive } = useGamification({
+    isDiving: isRunning,
+    engineLevel,
+  });
   const svgRef = useRef<SVGSVGElement>(null);
   
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({
@@ -107,6 +117,14 @@ const Index = () => {
       localStorage.setItem("deepDiveTasks", JSON.stringify(tasks));
     }
   }, [tasks]);
+
+  // Handle emergency ascent (oxygen depleted)
+  useEffect(() => {
+    if (isEmergency && isRunning) {
+      setIsRunning(false);
+      setShowEmergencyModal(true);
+    }
+  }, [isEmergency, isRunning]);
 
   // Timer logic with per-task time accumulation
   useEffect(() => {
@@ -310,6 +328,13 @@ const Index = () => {
   const handleReset = () => {
     setIsRunning(false);
     setTimeLeft(setDuration);
+    resetDive();
+  };
+
+  const handleEmergencyClose = () => {
+    setShowEmergencyModal(false);
+    setTimeLeft(setDuration);
+    resetDive();
   };
 
   // Task management functions
@@ -555,6 +580,17 @@ const Index = () => {
               >
                 {formatTime(isDragging ? setDuration : timeLeft)}
               </div>
+              
+              {/* Depth Display - shown when diving */}
+              {isRunning && (
+                <div className="flex items-center gap-2 mt-2" style={{ mixBlendMode: "difference", color: "white" }}>
+                  <Anchor className="h-4 w-4" />
+                  <span className="font-robotic text-xl tracking-wider">
+                    {depth}m
+                  </span>
+                </div>
+              )}
+              
               {!isRunning && !isDragging && (
                 <p 
                   className="text-xs mt-2"
@@ -573,6 +609,11 @@ const Index = () => {
               )}
             </div>
           </div>
+          
+          {/* Oxygen Bar - shown when diving */}
+          {isRunning && (
+            <OxygenBar oxygen={oxygen} className="animate-fade-in" />
+          )}
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-4">
@@ -768,6 +809,13 @@ const Index = () => {
       )}
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      
+      {/* Emergency Ascent Modal */}
+      <EmergencyModal 
+        open={showEmergencyModal} 
+        onClose={handleEmergencyClose}
+        depth={depth}
+      />
     </>
   );
 };
