@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root,
+  [data-theme="ocean"] {
+    /* Deep Ocean Theme - Premium Dark */
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Electric Blue to Deep Blue */
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-deep: 217 91% 60%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 12%;
+    --ring: 199 89% 48%;
+
+    --radius: 1rem;
+
+    /* Custom gradients */
+    --gradient-start: 199 89% 48%;
+    --gradient-end: 217 91% 60%;
+  }
+
+  /* Sage Green Pastel Theme */
+  [data-theme="sage"] {
+    --background: 140 20% 4%;
+    --foreground: 140 10% 95%;
+
+    --card: 140 15% 8%;
+    --card-foreground: 140 10% 95%;
+
+    --popover: 140 15% 8%;
+    --popover-foreground: 140 10% 95%;
+
+    --primary: 142 69% 58%;
+    --primary-foreground: 140 20% 10%;
+    --primary-deep: 142 55% 45%;
+
+    --secondary: 140 15% 15%;
+    --secondary-foreground: 140 10% 95%;
+
+    --muted: 140 10% 18%;
+    --muted-foreground: 140 10% 55%;
+
+    --accent: 142 69% 58%;
+    --accent-foreground: 140 20% 10%;
+
+    --border: 140 10% 18%;
+    --input: 140 15% 12%;
+    --ring: 142 69% 58%;
+
+    --gradient-start: 142 69% 58%;
+    --gradient-end: 142 55% 45%;
+  }
+
+  /* Rose Pastel Theme */
+  [data-theme="rose"] {
+    --background: 350 20% 4%;
+    --foreground: 350 10% 95%;
+
+    --card: 350 15% 8%;
+    --card-foreground: 350 10% 95%;
+
+    --popover: 350 15% 8%;
+    --popover-foreground: 350 10% 95%;
+
+    --primary: 350 89% 72%;
+    --primary-foreground: 350 20% 10%;
+    --primary-deep: 350 82% 60%;
+
+    --secondary: 350 15% 15%;
+    --secondary-foreground: 350 10% 95%;
+
+    --muted: 350 10% 18%;
+    --muted-foreground: 350 10% 55%;
+
+    --accent: 350 89% 72%;
+    --accent-foreground: 350 20% 10%;
+
+    --border: 350 10% 18%;
+    --input: 350 15% 12%;
+    --ring: 350 89% 72%;
+
+    --gradient-start: 350 89% 72%;
+    --gradient-end: 350 82% 60%;
+  }
+
+  /* Lavender Pastel Theme */
+  [data-theme="lavender"] {
+    --background: 270 20% 4%;
+    --foreground: 270 10% 95%;
+
+    --card: 270 15% 8%;
+    --card-foreground: 270 10% 95%;
+
+    --popover: 270 15% 8%;
+    --popover-foreground: 270 10% 95%;
+
+    --primary: 270 67% 77%;
+    --primary-foreground: 270 20% 10%;
+    --primary-deep: 265 75% 60%;
+
+    --secondary: 270 15% 15%;
+    --secondary-foreground: 270 10% 95%;
+
+    --muted: 270 10% 18%;
+    --muted-foreground: 270 10% 55%;
+
+    --accent: 270 67% 77%;
+    --accent-foreground: 270 20% 10%;
+
+    --border: 270 10% 18%;
+    --input: 270 15% 12%;
+    --ring: 270 67% 77%;
+
+    --gradient-start: 270 67% 77%;
+    --gradient-end: 265 75% 60%;
+  }
+
+  /* Mono Theme (Black & White) */
+  [data-theme="mono"] {
+    --background: 0 0% 2%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 5%;
+    --primary-deep: 0 0% 60%;
+
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 50%;
+
+    --accent: 0 0% 85%;
+    --accent-foreground: 0 0% 5%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 12%;
+    --ring: 0 0% 85%;
+
+    --gradient-start: 0 0% 85%;
+    --gradient-end: 0 0% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom glow animation */
+  @keyframes glow-pulse {
+    0%, 100% {
+      filter: drop-shadow(0 0 20px hsl(var(--primary) / 0.4));
+    }
+    50% {
+      filter: drop-shadow(0 0 40px hsl(var(--primary) / 0.6));
+    }
+  }
+
+  .glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+}
