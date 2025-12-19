@@ -45,6 +45,11 @@ All colors MUST be HSL.
     /* Custom gradients */
     --gradient-start: 199 89% 48%;
     --gradient-end: 217 91% 60%;
+
+    /* HUD Colors */
+    --hud-cyan: 185 100% 50%;
+    --hud-emergency: 0 90% 55%;
+    --hud-glow: 185 100% 60%;
   }
 
   /* Sage Green Pastel Theme */
