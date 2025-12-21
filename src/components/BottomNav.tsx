@@ -1,9 +1,9 @@
-import { Timer, BarChart3 } from "lucide-react";
+import { Timer, BarChart3, Fish } from "lucide-react";
 import { useTheme, getThemePrimaryHsl } from "@/hooks/useTheme";
 
 interface BottomNavProps {
-  activeTab: "focus" | "history";
-  onTabChange: (tab: "focus" | "history") => void;
+  activeTab: "focus" | "history" | "collection";
+  onTabChange: (tab: "focus" | "history" | "collection") => void;
 }
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
@@ -13,10 +13,10 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
       <div className="max-w-md mx-auto px-4 pb-4">
-        <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-2 shadow-lg">
+        <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-1 shadow-lg">
           <button
             onClick={() => onTabChange("focus")}
-            className={`flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 ${
+            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "focus"
                 ? "bg-primary/10"
                 : "hover:bg-muted"
@@ -35,8 +35,28 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           </button>
 
           <button
+            onClick={() => onTabChange("collection")}
+            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
+              activeTab === "collection"
+                ? "bg-primary/10"
+                : "hover:bg-muted"
+            }`}
+            style={{
+              color: activeTab === "collection" ? primaryColor : "hsl(var(--muted-foreground))",
+            }}
+          >
+            <Fish
+              className="h-5 w-5 transition-all"
+              style={{
+                filter: activeTab === "collection" ? `drop-shadow(0 0 8px ${primaryColor})` : "none",
+              }}
+            />
+            <span className="text-xs font-medium">Collection</span>
+          </button>
+
+          <button
             onClick={() => onTabChange("history")}
-            className={`flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 ${
+            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "history"
                 ? "bg-primary/10"
                 : "hover:bg-muted"

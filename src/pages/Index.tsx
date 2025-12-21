@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import BottomNav from "@/components/BottomNav";
 import History from "@/pages/History";
+import Collection from "@/pages/Collection";
 import { addSession } from "@/lib/sessionStorage";
 import { useGamification } from "@/hooks/useGamification";
 import OxygenBar from "@/components/OxygenBar";
@@ -48,7 +49,7 @@ const Index = () => {
     whiteNoise: false,
     cafe: false,
   });
-  const [activeTab, setActiveTab] = useState<"focus" | "history">("focus");
+  const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
@@ -446,6 +447,8 @@ const Index = () => {
     <>
       {activeTab === "history" ? (
         <History />
+      ) : activeTab === "collection" ? (
+        <Collection />
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28">
           <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
