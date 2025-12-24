@@ -90,7 +90,7 @@ export const MissionCompleteModal = ({
 
           <AlertDialogDescription className="text-center">
             <span className="text-muted-foreground font-robotic text-sm tracking-wider">
-              DIVE SUCCESSFUL
+              DIVE COMPLETE
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
