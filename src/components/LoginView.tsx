@@ -63,7 +63,9 @@ export const LoginView = ({ onLogin }: LoginViewProps) => {
         <div className="relative">
           <div className="absolute inset-0 bg-hud-cyan/30 blur-3xl rounded-full scale-150" />
           <div className="relative p-6 rounded-full border-2 border-hud-cyan/50 bg-black/50">
-            <Anchor className="h-16 w-16 text-hud-cyan drop-shadow-[0_0_20px_hsl(var(--hud-cyan))]" />
+            <div className="relative z-10 animate-float w-24 h-24 flex items-center justify-center">
+            <div className="absolute inset-0 border-2 border-cyan-500/50 rounded-full drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] animate-pulse-slow"></div>
+            <Anchor className="w-16 h-16 text-cyan-400 drop-shadow-[0_0_25px_rgba(34,211,238,0.8)]" />
           </div>
         </div>
 
