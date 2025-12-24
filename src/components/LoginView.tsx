@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Anchor } from "lucide-react";
+import { Radar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LoginViewProps {
@@ -52,32 +52,43 @@ export const LoginView = ({ onLogin }: LoginViewProps) => {
 
       {/* Radar sweep effect */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-80 h-80 rounded-full border border-hud-cyan/10 animate-ping" style={{ animationDuration: '3s' }} />
-        <div className="absolute w-60 h-60 rounded-full border border-hud-cyan/15 animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }} />
-        <div className="absolute w-40 h-40 rounded-full border border-hud-cyan/20 animate-ping" style={{ animationDuration: '2s', animationDelay: '1s' }} />
+        <div
+          className="w-80 h-80 rounded-full border border-hud-cyan/10 animate-ping"
+          style={{ animationDuration: "3s" }}
+        />
+        <div
+          className="absolute w-60 h-60 rounded-full border border-hud-cyan/15 animate-ping"
+          style={{ animationDuration: "2.5s", animationDelay: "0.5s" }}
+        />
+        <div
+          className="absolute w-40 h-40 rounded-full border border-hud-cyan/20 animate-ping"
+          style={{ animationDuration: "2s", animationDelay: "1s" }}
+        />
       </div>
 
       {/* Main content */}
-      <div className={`relative z-10 flex flex-col items-center gap-8 transition-opacity duration-500 ${isInitializing ? 'opacity-0' : 'opacity-100'}`}>
+      <div
+        className={`relative z-10 flex flex-col items-center gap-8 transition-opacity duration-500 ${isInitializing ? "opacity-0" : "opacity-100"}`}
+      >
         {/* Logo/Icon */}
         <div className="relative">
           <div className="absolute inset-0 bg-hud-cyan/30 blur-3xl rounded-full scale-150" />
           <div className="relative p-6 rounded-full border-2 border-hud-cyan/50 bg-black/50">
-            <Anchor className="h-16 w-16 text-hud-cyan drop-shadow-[0_0_20px_hsl(var(--hud-cyan))]" />
+            <Radar className="h-16 w-16 text-hud-cyan drop-shadow-[0_0_20px_hsl(var(--hud-cyan))]" />
           </div>
         </div>
 
         {/* Title */}
         <div className="text-center space-y-4">
-          <h1 
+          <h1
             className="text-6xl md:text-7xl font-robotic font-bold tracking-[0.3em] text-hud-cyan"
-            style={{ 
-              textShadow: '0 0 30px hsl(var(--hud-cyan)), 0 0 60px hsl(var(--hud-cyan) / 0.5)' 
+            style={{
+              textShadow: "0 0 30px hsl(var(--hud-cyan)), 0 0 60px hsl(var(--hud-cyan) / 0.5)",
             }}
           >
             DEEP DIVE
           </h1>
-          
+
           {/* Blinking subtitle */}
           <p className="font-robotic text-sm tracking-widest text-hud-cyan/70 animate-pulse">
             SYSTEM READY // WAITING FOR PILOT
