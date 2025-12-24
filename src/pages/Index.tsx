@@ -12,6 +12,7 @@ import { useGamification } from "@/hooks/useGamification";
 import OxygenBar from "@/components/OxygenBar";
 import EmergencyModal from "@/components/EmergencyModal";
 import MissionCompleteModal from "@/components/MissionCompleteModal";
+import LoginView from "@/components/LoginView";
 import { Creature } from "@/data/creatures";
 import { rollForCreature, addToCollection } from "@/lib/lootSystem";
 
@@ -35,6 +36,7 @@ const SOUND_URLS = {
 };
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [setDuration, setSetDuration] = useState(25 * 60); // User-set duration
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
@@ -442,6 +444,11 @@ const Index = () => {
   const displayProgress = setDuration > 0 ? (displayTime / MAX_TIME) * 100 : 0;
 
   const activeSoundsCount = Object.values(sounds).filter(Boolean).length;
+
+  // Show login view if not logged in
+  if (!isLoggedIn) {
+    return <LoginView onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     <>
