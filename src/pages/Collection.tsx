@@ -1,6 +1,37 @@
 import { useState, useEffect } from "react";
-import { Lock } from "lucide-react";
+import { 
+  Lock, 
+  Fish, 
+  Shell, 
+  Star, 
+  Waves, 
+  Sparkles, 
+  Shield, 
+  Grip, 
+  Wind, 
+  Flashlight, 
+  Anchor, 
+  Ghost, 
+  Skull,
+  HelpCircle,
+  LucideIcon
+} from "lucide-react";
 import { CREATURES, Creature, getRarityColor } from "@/data/creatures";
+
+const iconMap: Record<string, LucideIcon> = {
+  Fish,
+  Shell,
+  Star,
+  Waves,
+  Sparkles,
+  Shield,
+  Grip,
+  Wind,
+  Flashlight,
+  Anchor,
+  Ghost,
+  Skull,
+};
 import { getCollection } from "@/lib/lootSystem";
 
 const Collection = () => {
@@ -104,8 +135,15 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
       {/* Content */}
       <div className={`space-y-3 ${!unlocked ? 'opacity-30 blur-sm' : ''}`}>
         {/* Icon */}
-        <div className="text-4xl text-center">
-          {creature.icon}
+        <div className="flex justify-center">
+          {(() => {
+            const IconComponent = iconMap[creature.icon] || HelpCircle;
+            return (
+              <div className="p-3 rounded-full bg-background/50 border border-hud-cyan/30" style={{ boxShadow: '0 0 15px hsl(var(--hud-cyan) / 0.3)' }}>
+                <IconComponent size={32} className="text-hud-cyan drop-shadow-[0_0_8px_hsl(var(--hud-cyan))]" />
+              </div>
+            );
+          })()}
         </div>
 
         {/* Name */}
