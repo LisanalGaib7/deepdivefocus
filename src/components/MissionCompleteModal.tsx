@@ -162,12 +162,28 @@ export const MissionCompleteModal = ({
 
                 {/* Traits List */}
                 <div className="flex flex-col items-center gap-1 mt-4">
-                  {creature.description.split('//').map((trait, index) => (
-                    <p key={index} className="text-xs text-muted-foreground/80 font-robotic tracking-wide">
-                      <span className="text-hud-cyan/60 mr-2">•</span>
-                      {trait.trim().replace(/_/g, ' ')}
-                    </p>
-                  ))}
+                  {creature.description.split('//').map((trait, index) => {
+                    // Prettify the trait string
+                    let cleanTrait = trait.trim();
+                    // Remove UNIT. prefix if present
+                    if (cleanTrait.startsWith('UNIT.')) {
+                      cleanTrait = cleanTrait.slice(5);
+                    }
+                    // Replace underscores with spaces and convert to title case
+                    cleanTrait = cleanTrait
+                      .replace(/_/g, ' ')
+                      .toLowerCase()
+                      .split(' ')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ');
+                    
+                    return (
+                      <p key={index} className="text-xs text-gray-300 font-robotic tracking-wide">
+                        <span className="text-hud-cyan/60 mr-2">•</span>
+                        {cleanTrait}
+                      </p>
+                    );
+                  })}
                 </div>
 
                 {/* Pearl reward */}
