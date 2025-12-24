@@ -9,7 +9,38 @@ import {
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
-import { Anchor, Gem, Sparkles } from "lucide-react";
+import { 
+  Anchor, 
+  Gem, 
+  Sparkles, 
+  Fish, 
+  Shell, 
+  Star, 
+  Waves, 
+  Shield, 
+  Grip, 
+  Wind, 
+  Flashlight, 
+  Ghost, 
+  Skull,
+  HelpCircle,
+  LucideIcon
+} from "lucide-react";
+
+const iconMap: Record<string, LucideIcon> = {
+  Fish,
+  Shell,
+  Star,
+  Waves,
+  Sparkles,
+  Shield,
+  Grip,
+  Wind,
+  Flashlight,
+  Anchor,
+  Ghost,
+  Skull,
+};
 
 interface MissionCompleteModalProps {
   open: boolean;
@@ -100,7 +131,16 @@ export const MissionCompleteModal = ({
                   </div>
                 )}
 
-                <div className="text-6xl mb-3">{creature.icon}</div>
+                <div className="flex justify-center mb-3">
+                  {(() => {
+                    const IconComponent = iconMap[creature.icon] || HelpCircle;
+                    return (
+                      <div className="p-4 rounded-full bg-background/50 border border-hud-cyan/30" style={{ boxShadow: '0 0 20px hsl(var(--hud-cyan) / 0.5)' }}>
+                        <IconComponent size={48} className="text-hud-cyan drop-shadow-[0_0_12px_hsl(var(--hud-cyan))]" />
+                      </div>
+                    );
+                  })()}
+                </div>
 
                 <h3
                   className={`text-xl font-bold mb-1 ${getRarityColor(
