@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2, Anchor, Power } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power } from "lucide-react";
 import DeepSeaAmbience from "@/components/DeepSeaAmbience";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ interface Task {
 // Free ambient sound URLs
 const SOUND_URLS = {
   rain: "https://cdn.pixabay.com/audio/2022/05/13/audio_257112671d.mp3",
-  cafe: "https://cdn.pixabay.com/audio/2022/10/30/audio_f1e078a943.mp3",
+  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
   whiteNoise: "https://cdn.pixabay.com/audio/2022/03/10/audio_270f49ab4d.mp3",
 };
 
@@ -50,6 +50,7 @@ const Index = () => {
   const [showSoundMixer, setShowSoundMixer] = useState(false);
   const [sounds, setSounds] = useState({
     rain: false,
+    ocean: false,
     whiteNoise: false,
     cafe: false,
   });
@@ -71,6 +72,7 @@ const Index = () => {
   
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({
     rain: null,
+    ocean: null,
     whiteNoise: null,
     cafe: null,
   });
@@ -98,9 +100,9 @@ const Index = () => {
     audioRefs.current.rain.loop = true;
     audioRefs.current.rain.volume = 0.5;
 
-    audioRefs.current.cafe = new Audio(SOUND_URLS.cafe);
-    audioRefs.current.cafe.loop = true;
-    audioRefs.current.cafe.volume = 0.4;
+    audioRefs.current.ocean = new Audio(SOUND_URLS.ocean);
+    audioRefs.current.ocean.loop = true;
+    audioRefs.current.ocean.volume = 0.4;
 
     audioRefs.current.whiteNoise = new Audio(SOUND_URLS.whiteNoise);
     audioRefs.current.whiteNoise.loop = true;
@@ -837,16 +839,16 @@ const Index = () => {
               </Button>
               
               <Button
-                onClick={() => toggleSound("cafe")}
+                onClick={() => toggleSound("ocean")}
                 variant="ghost"
                 className={`flex flex-col items-center gap-2 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${
-                  sounds.cafe
+                  sounds.ocean
                     ? "text-foreground bg-foreground/10"
                     : "text-muted-foreground/50 hover:text-muted-foreground"
                 }`}
               >
-                <Coffee className="h-6 w-6" />
-                <span className="text-xs">Coffee Shop</span>
+                <Waves className="h-6 w-6" />
+                <span className="text-xs">Ocean Waves</span>
               </Button>
               
               <Button
@@ -858,7 +860,7 @@ const Index = () => {
                     : "text-muted-foreground/50 hover:text-muted-foreground"
                 }`}
               >
-                <Radio className="h-6 w-6" />
+                <Wind className="h-6 w-6" />
                 <span className="text-xs">White Noise</span>
               </Button>
             </div>
