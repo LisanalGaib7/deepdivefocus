@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2, Anchor, Power } from "lucide-react";
+import DeepSeaAmbience from "@/components/DeepSeaAmbience";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,7 @@ const Index = () => {
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
   const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
+  const [isDiveTransition, setIsDiveTransition] = useState(false);
   
   // Gamification hook - engine level starts at 1
   const engineLevel = 1; // TODO: Load from user profile when persistence is added
@@ -332,6 +334,13 @@ const Index = () => {
       // Reset to set duration if timer finished
       setTimeLeft(setDuration);
     }
+    
+    // Trigger dive transition burst when starting
+    if (!isRunning) {
+      setIsDiveTransition(true);
+      setTimeout(() => setIsDiveTransition(false), 2000);
+    }
+    
     setIsRunning(!isRunning);
   };
   
@@ -458,7 +467,9 @@ const Index = () => {
       ) : activeTab === "collection" ? (
         <Collection />
       ) : (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
+          {/* Deep Sea Ambience - Underwater bubbles when diving */}
+          <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
           {/* Logout Button - Top Right */}
           <Tooltip>
             <TooltipTrigger asChild>
