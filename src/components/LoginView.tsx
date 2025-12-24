@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Anchor } from "lucide-react";
+import { Anchor, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LoginViewProps {
@@ -59,17 +59,25 @@ export const LoginView = ({ onLogin }: LoginViewProps) => {
 
       {/* Main content */}
       <div className={`relative z-10 flex flex-col items-center gap-8 transition-opacity duration-500 ${isInitializing ? 'opacity-0' : 'opacity-100'}`}>
-        {/* NEW ARMORED ANCHOR LOGO */}
-        <div className="relative">
-          <div className="absolute inset-0 bg-hud-cyan/30 blur-3xl rounded-full scale-150" />
-          <div className="relative z-10 animate-float w-32 h-32 flex items-center justify-center mb-4">
-            {/* Outer Rotating Ring (Radar) */}
-            <div className="absolute inset-0 border-2 border-cyan-500/30 rounded-full drop-shadow-[0_0_15px_rgba(34,211,238,0.3)] animate-spin-slow" />
-            {/* Inner Pulsing Ring */}
-            <div className="absolute inset-2 border border-cyan-400/50 rounded-full drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] animate-pulse" />
-            {/* Central Anchor */}
-            <Anchor className="w-20 h-20 text-cyan-400 drop-shadow-[0_0_25px_rgba(34,211,238,0.8)] relative z-20" />
+        {/* GEAR ANCHOR LOGO v3 */}
+        <div className="relative z-10 flex items-center justify-center w-48 h-48 mb-8 animate-float">
+          
+          {/* BACKGROUND: The Gear (Settings Icon) */}
+          {/* We use the Settings icon itself because it HAS TEETH. We spin it slowly. */}
+          <div className="absolute inset-0 flex items-center justify-center animate-[spin_10s_linear_infinite]">
+            <Settings 
+              strokeWidth={0.5} 
+              className="w-full h-full text-cyan-900/40 drop-shadow-[0_0_15px_rgba(8,145,178,0.3)]" 
+            />
           </div>
+
+          {/* MIDDLE: Glowing Ring */}
+          <div className="absolute inset-12 border border-cyan-500/30 rounded-full drop-shadow-[0_0_10px_rgba(34,211,238,0.4)]"></div>
+
+          {/* FOREGROUND: The Anchor */}
+          <Anchor 
+            className="relative z-20 w-20 h-20 text-cyan-400 drop-shadow-[0_0_30px_rgba(34,211,238,1)]" 
+          />
         </div>
 
         {/* Title */}
