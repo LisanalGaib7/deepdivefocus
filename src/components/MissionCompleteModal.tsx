@@ -201,9 +201,10 @@ export const MissionCompleteModal = ({
         <AlertDialogFooter className="mt-4">
           <Button
             onClick={onClose}
-            className="w-full bg-hud-cyan hover:bg-hud-cyan/80 text-background font-robotic tracking-wider h-12"
+            variant="outline"
+            className="w-full bg-transparent border border-cyan-500 text-cyan-400 font-robotic uppercase tracking-widest h-12 transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(6,182,212,0.5)]"
           >
-            ADD TO COLLECTION
+            STORE DATA
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
