@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2, Anchor } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Coffee, Radio, Plus, Trash2, Anchor, Power } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -457,7 +458,23 @@ const Index = () => {
       ) : activeTab === "collection" ? (
         <Collection />
       ) : (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative">
+          {/* Logout Button - Top Right */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setIsLoggedIn(false)}
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all duration-300"
+                aria-label="Logout"
+              >
+                <Power className="w-5 h-5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="left" className="font-mono text-xs tracking-wider">
+              SYSTEM SHUTDOWN
+            </TooltipContent>
+          </Tooltip>
+
           <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
         {/* Header - hidden in focus mode */}
         {!isRunning && (
