@@ -203,4 +203,26 @@ All colors MUST be HSL.
   .glow-pulse {
     animation: glow-pulse 2s ease-in-out infinite;
   }
+
+  /* Rising bubbles animation */
+  @keyframes bubble-rise {
+    0% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.6;
+    }
+    90% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(20px);
+      opacity: 0;
+    }
+  }
+
+  .animate-bubble {
+    animation: bubble-rise linear infinite;
+  }
 }
