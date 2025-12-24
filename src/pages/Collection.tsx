@@ -195,26 +195,89 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
 
       {/* Content */}
       <div className={`space-y-3 ${!unlocked ? 'opacity-20 blur-sm' : ''}`}>
-        {/* Icon */}
+        {/* Holographic Icon Capsule */}
         <div className="flex justify-center">
           {(() => {
             const IconComponent = iconMap[creature.icon] || HelpCircle;
+            
+            // Rarity-based capsule styles
+            const capsuleStyles = unlocked 
+              ? creature.rarity === 'Legendary'
+                ? {
+                    container: 'bg-amber-900/20 border-amber-500/60',
+                    innerGlow: 'bg-amber-500/10',
+                    pulse: 'animate-pulse',
+                  }
+                : creature.rarity === 'Rare'
+                  ? {
+                      container: 'bg-cyan-900/20 border-cyan-500/60',
+                      innerGlow: 'bg-cyan-500/10',
+                      pulse: 'animate-pulse',
+                    }
+                  : {
+                      container: 'bg-slate-800/30 border-slate-600/40',
+                      innerGlow: 'bg-slate-500/5',
+                      pulse: '',
+                    }
+              : {
+                  container: 'bg-slate-900/30 border-slate-800/40',
+                  innerGlow: 'bg-slate-800/10',
+                  pulse: '',
+                };
+
             return (
-              <div 
-                className={`p-3 rounded-full bg-black/50 border ${
-                  unlocked 
-                    ? creature.rarity === 'Legendary'
-                      ? 'border-amber-500/40'
-                      : creature.rarity === 'Rare'
-                        ? 'border-cyan-500/40'
-                        : 'border-slate-700/60'
-                    : 'border-slate-800'
-                }`}
-              >
-                <IconComponent 
-                  size={48} 
-                  className={`${styles.iconColor} ${styles.iconGlow}`} 
-                />
+              <div className="relative">
+                {/* Outer pulsing ring for Rare/Legendary */}
+                {unlocked && creature.rarity !== 'Common' && (
+                  <div 
+                    className={`absolute -inset-1 rounded-full ${capsuleStyles.pulse} ${
+                      creature.rarity === 'Legendary' 
+                        ? 'bg-amber-500/20' 
+                        : 'bg-cyan-500/20'
+                    }`}
+                    style={{
+                      boxShadow: creature.rarity === 'Legendary'
+                        ? '0 0 20px rgba(245, 158, 11, 0.3)'
+                        : '0 0 20px rgba(34, 211, 238, 0.3)'
+                    }}
+                  />
+                )}
+                
+                {/* Main capsule container */}
+                <div 
+                  className={`relative w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden ${capsuleStyles.container}`}
+                  style={{
+                    boxShadow: unlocked
+                      ? creature.rarity === 'Legendary'
+                        ? 'inset 0 0 15px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.2)'
+                        : creature.rarity === 'Rare'
+                          ? 'inset 0 0 15px rgba(34, 211, 238, 0.3), 0 0 10px rgba(34, 211, 238, 0.2)'
+                          : 'inset 0 0 10px rgba(100, 116, 139, 0.2)'
+                      : 'none'
+                  }}
+                >
+                  {/* Inner glow layer */}
+                  <div className={`absolute inset-0 rounded-full ${capsuleStyles.innerGlow}`} />
+                  
+                  {/* Scan lines effect */}
+                  {unlocked && (
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-20 pointer-events-none"
+                      style={{
+                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
+                      }}
+                    />
+                  )}
+                  
+                  {/* Floating icon */}
+                  <div className={unlocked ? 'animate-float' : ''}>
+                    <IconComponent 
+                      size={32} 
+                      strokeWidth={1.5}
+                      className={`relative z-10 ${styles.iconColor} ${styles.iconGlow}`} 
+                    />
+                  </div>
+                </div>
               </div>
             );
           })()}
