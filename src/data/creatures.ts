@@ -17,7 +17,7 @@ export const CREATURES: Creature[] = [
     minDepth: 0,
     rarity: 'Common',
     description: 'UNIT.SARDINE // BASIC_LIFEFORM // SIGNAL_WEAK',
-    icon: '🐟',
+    icon: 'Fish',
   },
   {
     id: 'crab',
@@ -25,7 +25,7 @@ export const CREATURES: Creature[] = [
     minDepth: 25,
     rarity: 'Common',
     description: 'UNIT.CRAB // SHELL_DETECTED // MOBILITY_LOW',
-    icon: '🦀',
+    icon: 'Shell',
   },
   {
     id: 'starfish',
@@ -33,7 +33,7 @@ export const CREATURES: Creature[] = [
     minDepth: 50,
     rarity: 'Common',
     description: 'UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY',
-    icon: '⭐',
+    icon: 'Star',
   },
   {
     id: 'seahorse',
@@ -41,7 +41,7 @@ export const CREATURES: Creature[] = [
     minDepth: 75,
     rarity: 'Common',
     description: 'UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE',
-    icon: '🐴',
+    icon: 'Waves',
   },
 
   // 100-500m: Rare tier
@@ -51,7 +51,7 @@ export const CREATURES: Creature[] = [
     minDepth: 100,
     rarity: 'Rare',
     description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
-    icon: '🪼',
+    icon: 'Sparkles',
   },
   {
     id: 'turtle',
@@ -59,7 +59,7 @@ export const CREATURES: Creature[] = [
     minDepth: 150,
     rarity: 'Rare',
     description: 'UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED',
-    icon: '🐢',
+    icon: 'Shield',
   },
   {
     id: 'octopus',
@@ -67,7 +67,7 @@ export const CREATURES: Creature[] = [
     minDepth: 250,
     rarity: 'Rare',
     description: 'UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED',
-    icon: '🐙',
+    icon: 'Grip',
   },
   {
     id: 'manta',
@@ -75,7 +75,7 @@ export const CREATURES: Creature[] = [
     minDepth: 400,
     rarity: 'Rare',
     description: 'UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE',
-    icon: '🦈',
+    icon: 'Wind',
   },
 
   // 500m+: Legendary tier
@@ -85,7 +85,7 @@ export const CREATURES: Creature[] = [
     minDepth: 500,
     rarity: 'Legendary',
     description: 'UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX',
-    icon: '🔦',
+    icon: 'Flashlight',
   },
   {
     id: 'giant_squid',
@@ -93,7 +93,7 @@ export const CREATURES: Creature[] = [
     minDepth: 750,
     rarity: 'Legendary',
     description: 'UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED',
-    icon: '🦑',
+    icon: 'Anchor',
   },
   {
     id: 'glowing_shark',
@@ -101,7 +101,7 @@ export const CREATURES: Creature[] = [
     minDepth: 1000,
     rarity: 'Legendary',
     description: 'UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL',
-    icon: '👻',
+    icon: 'Ghost',
   },
   {
     id: 'leviathan',
@@ -109,7 +109,7 @@ export const CREATURES: Creature[] = [
     minDepth: 1500,
     rarity: 'Legendary',
     description: 'UNIT.??? // DATA_CORRUPTED // RUN.',
-    icon: '🐉',
+    icon: 'Skull',
   },
 ];
 
