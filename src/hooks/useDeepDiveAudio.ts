@@ -68,7 +68,16 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   // Toggle a specific sound on/off
   const toggleSound = useCallback((soundType: SoundType) => {
     const audio = audioRefs.current[soundType];
-    if (!audio) return;
+    if (!audio) {
+      console.error(`[Audio Debug] No audio element found for: ${soundType}`);
+      return;
+    }
+
+    console.log(`[Audio Debug] Toggling ${soundType}:`, {
+      url: SOUND_URLS[soundType],
+      readyState: audio.readyState,
+      paused: audio.paused,
+    });
 
     setSounds((prev) => {
       const isCurrentlyPlaying = prev[soundType];
@@ -76,8 +85,11 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
       if (isCurrentlyPlaying) {
         audio.pause();
         audio.currentTime = 0;
+        console.log(`[Audio Debug] Paused: ${soundType}`);
       } else {
-        audio.play().catch(console.error);
+        audio.play()
+          .then(() => console.log(`[Audio Debug] Playing: ${soundType}`))
+          .catch((err) => console.error(`[Audio Debug] Play failed for ${soundType}:`, err));
       }
 
       return { ...prev, [soundType]: !isCurrentlyPlaying };
