@@ -1,3 +1,5 @@
+import { DEFAULT_UPGRADE_LEVELS, OXYGEN_CONFIG } from "@/constants/gameConfig";
+
 // Upgrade levels for submarine equipment
 export interface Upgrades {
   engine: number;      // Affects depth gained per focus minute
@@ -20,11 +22,7 @@ export interface GameSession {
 }
 
 // Default values for new users
-export const DEFAULT_UPGRADES: Upgrades = {
-  engine: 1,
-  oxygenTank: 1,
-  hullArmor: 1,
-};
+export const DEFAULT_UPGRADES: Upgrades = { ...DEFAULT_UPGRADE_LEVELS };
 
 export const DEFAULT_USER_PROFILE: UserProfile = {
   totalDepth: 0,
@@ -34,6 +32,6 @@ export const DEFAULT_USER_PROFILE: UserProfile = {
 
 export const DEFAULT_GAME_SESSION: GameSession = {
   currentDepth: 0,
-  oxygenLevel: 100,
+  oxygenLevel: OXYGEN_CONFIG.MAX_OXYGEN,
   isEmergency: false,
 };

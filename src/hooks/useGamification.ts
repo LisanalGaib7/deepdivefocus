@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { DEPTH_CONFIG, OXYGEN_CONFIG } from "@/constants/gameConfig";
 
 interface UseGamificationProps {
   isDiving: boolean;
@@ -17,7 +18,7 @@ export const useGamification = ({
   engineLevel,
 }: UseGamificationProps): UseGamificationReturn => {
   const [depth, setDepth] = useState(0);
-  const [oxygen, setOxygen] = useState(100);
+  const [oxygen, setOxygen] = useState<number>(OXYGEN_CONFIG.MAX_OXYGEN);
   const [isEmergency, setIsEmergency] = useState(false);
 
   const startTimeRef = useRef<number | null>(null);
@@ -27,7 +28,7 @@ export const useGamification = ({
   // Reset dive state
   const resetDive = useCallback(() => {
     setDepth(0);
-    setOxygen(100);
+    setOxygen(OXYGEN_CONFIG.MAX_OXYGEN);
     setIsEmergency(false);
     startTimeRef.current = null;
     hiddenAtRef.current = null;
@@ -50,7 +51,7 @@ export const useGamification = ({
       if (startTimeRef.current === null || isEmergency) return;
 
       const elapsedSeconds = (Date.now() - startTimeRef.current) / 1000;
-      const newDepth = 5 * engineLevel * Math.pow(elapsedSeconds, 0.7);
+      const newDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(elapsedSeconds, DEPTH_CONFIG.DEPTH_EXPONENT);
       setDepth(Math.floor(newDepth));
       depthAtPenaltyRef.current = newDepth;
     }, 100);
@@ -71,8 +72,8 @@ export const useGamification = ({
         const timeAwaySeconds = (Date.now() - hiddenAtRef.current) / 1000;
         const currentDepth = depthAtPenaltyRef.current;
 
-        // Loss = TimeAwaySeconds * 5 * (1 + CurrentDepth / 500)
-        const loss = timeAwaySeconds * 5 * (1 + currentDepth / 500);
+        // Loss = TimeAway * PENALTY_MULTIPLIER * (1 + depth / DEPTH_PENALTY_DIVISOR)
+        const loss = timeAwaySeconds * OXYGEN_CONFIG.PENALTY_MULTIPLIER * (1 + currentDepth / OXYGEN_CONFIG.DEPTH_PENALTY_DIVISOR);
 
         setOxygen((prev) => {
           const newOxygen = Math.max(0, prev - loss);
