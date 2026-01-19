@@ -1,18 +1,22 @@
 import { Creature, getCreaturesAtDepth, CreatureRarity } from '@/data/creatures';
+import { RARITY_CONFIG, PEARL_VALUES } from '@/constants/gameConfig';
 
 const COLLECTION_STORAGE_KEY = 'deepDiveCollection';
 
 // Rarity weights - higher depth increases rare/legendary chances
 const getRarityWeight = (rarity: CreatureRarity, depth: number): number => {
-  const depthBonus = depth / 1000; // 0 to ~1.5 bonus based on depth
+  const depthBonus = depth / RARITY_CONFIG.DEPTH_DIVISOR;
   
   switch (rarity) {
     case 'Common':
-      return Math.max(0.1, 1 - depthBonus * 0.5); // Decreases with depth
+      return Math.max(
+        RARITY_CONFIG.WEIGHTS.COMMON.minimum,
+        RARITY_CONFIG.WEIGHTS.COMMON.base + depthBonus * RARITY_CONFIG.WEIGHTS.COMMON.depthMultiplier
+      );
     case 'Rare':
-      return 0.5 + depthBonus * 0.3; // Increases with depth
+      return RARITY_CONFIG.WEIGHTS.RARE.base + depthBonus * RARITY_CONFIG.WEIGHTS.RARE.depthMultiplier;
     case 'Legendary':
-      return 0.1 + depthBonus * 0.5; // Significantly increases with depth
+      return RARITY_CONFIG.WEIGHTS.LEGENDARY.base + depthBonus * RARITY_CONFIG.WEIGHTS.LEGENDARY.depthMultiplier;
     default:
       return 1;
   }
@@ -66,14 +70,5 @@ export const isCreatureCollected = (creatureId: string): boolean => {
 
 // Get pearl value based on rarity
 export const getPearlValue = (rarity: CreatureRarity): number => {
-  switch (rarity) {
-    case 'Common':
-      return 10;
-    case 'Rare':
-      return 50;
-    case 'Legendary':
-      return 200;
-    default:
-      return 10;
-  }
+  return PEARL_VALUES[rarity] ?? PEARL_VALUES.Common;
 };

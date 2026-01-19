@@ -17,10 +17,7 @@ import MissionCompleteModal from "@/components/MissionCompleteModal";
 import LoginView from "@/components/LoginView";
 import { Creature } from "@/data/creatures";
 import { rollForCreature, addToCollection } from "@/lib/lootSystem";
-
-const MAX_TIME = 60 * 60; // 60 minutes max
-const MIN_TIME = 60; // 1 minute min
-const MAX_TASKS = 10;
+import { TIMER_CONFIG } from "@/constants/gameConfig";
 
 // Task type with time tracking
 interface Task {
@@ -39,8 +36,8 @@ const SOUND_URLS = {
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [setDuration, setSetDuration] = useState(25 * 60); // User-set duration
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [isRunning, setIsRunning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -211,11 +208,11 @@ const Index = () => {
   // Convert angle (0-360) to time in seconds
   const angleToTime = useCallback((angle: number): number => {
     // Map 360 degrees to MAX_TIME (60 minutes)
-    const rawTime = (angle / 360) * MAX_TIME;
+    const rawTime = (angle / 360) * TIMER_CONFIG.MAX_TIME_SECONDS;
     // Snap to nearest minute
     const snappedTime = Math.round(rawTime / 60) * 60;
     // Clamp between min and max, ensure at least MIN_TIME
-    return Math.max(MIN_TIME, Math.min(MAX_TIME, snappedTime));
+    return Math.max(TIMER_CONFIG.MIN_TIME_SECONDS, Math.min(TIMER_CONFIG.MAX_TIME_SECONDS, snappedTime));
   }, []);
 
   // Handle drag start
@@ -390,7 +387,7 @@ const Index = () => {
   // Task management functions
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTaskText.trim() && tasks.length < MAX_TASKS) {
+    if (newTaskText.trim() && tasks.length < TIMER_CONFIG.MAX_TASKS) {
       const newTask: Task = {
         id: Date.now().toString(),
         text: newTaskText.trim(),
@@ -453,7 +450,7 @@ const Index = () => {
   // Progress: starts at 100% (full) and depletes to 0%
   // When dragging, show the setDuration position directly; otherwise show timeLeft progress
   const displayTime = isDragging ? setDuration : timeLeft;
-  const displayProgress = setDuration > 0 ? (displayTime / MAX_TIME) * 100 : 0;
+  const displayProgress = setDuration > 0 ? (displayTime / TIMER_CONFIG.MAX_TIME_SECONDS) * 100 : 0;
 
   const activeSoundsCount = Object.values(sounds).filter(Boolean).length;
 
@@ -732,7 +729,7 @@ const Index = () => {
           <div className="space-y-4 animate-fade-in">
             <form onSubmit={handleAddTask} className="space-y-2">
               <label className="text-sm text-muted-foreground block text-center">
-                What are you diving into? ({tasks.length}/{MAX_TASKS})
+                What are you diving into? ({tasks.length}/{TIMER_CONFIG.MAX_TASKS})
               </label>
               <div className="flex gap-2">
                 <Input
@@ -741,13 +738,13 @@ const Index = () => {
                   onChange={(e) => setNewTaskText(e.target.value)}
                   placeholder="Add a focus task..."
                   className="text-center text-lg h-14 bg-card border-border focus:border-primary transition-colors flex-1"
-                  disabled={tasks.length >= MAX_TASKS}
+                  disabled={tasks.length >= TIMER_CONFIG.MAX_TASKS}
                 />
                 <Button 
                   type="submit" 
                   size="icon" 
                   className="h-14 w-14 bg-primary hover:bg-primary/90"
-                  disabled={tasks.length >= MAX_TASKS || !newTaskText.trim()}
+                  disabled={tasks.length >= TIMER_CONFIG.MAX_TASKS || !newTaskText.trim()}
                 >
                   <Plus className="h-5 w-5" />
                 </Button>
