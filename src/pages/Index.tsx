@@ -1,24 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power } from "lucide-react";
-import DeepSeaAmbience from "@/components/DeepSeaAmbience";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
-import BottomNav from "@/components/BottomNav";
+
+// Common components
+import ThemeSwitcher from "@/components/common/ThemeSwitcher";
+import BottomNav from "@/components/common/BottomNav";
+import LoginView from "@/components/common/LoginView";
+
+// Timer feature components
+import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
+import OxygenBar from "@/features/timer/OxygenBar";
+import EmergencyModal from "@/features/timer/EmergencyModal";
+import MissionCompleteModal from "@/features/timer/MissionCompleteModal";
+
+// Pages
 import History from "@/pages/History";
 import Collection from "@/pages/Collection";
+
+// Hooks & Data
 import { addSession } from "@/lib/sessionStorage";
 import { useGamification } from "@/hooks/useGamification";
-import OxygenBar from "@/components/OxygenBar";
-import EmergencyModal from "@/components/EmergencyModal";
-import MissionCompleteModal from "@/components/MissionCompleteModal";
-import LoginView from "@/components/LoginView";
+import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
 import { Creature } from "@/data/creatures";
 import { rollForCreature, addToCollection } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
-import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
 
 // Task type with time tracking
 interface Task {
