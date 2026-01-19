@@ -18,6 +18,7 @@ import LoginView from "@/components/LoginView";
 import { Creature } from "@/data/creatures";
 import { rollForCreature, addToCollection } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
+import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
 
 // Task type with time tracking
 interface Task {
@@ -27,12 +28,6 @@ interface Task {
   timeSpentInSeconds: number;
 }
 
-// Free ambient sound URLs
-const SOUND_URLS = {
-  rain: "https://cdn.pixabay.com/audio/2022/05/13/audio_257112671d.mp3",
-  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
-  whiteNoise: "https://cdn.pixabay.com/audio/2022/03/10/audio_270f49ab4d.mp3",
-};
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,12 +40,9 @@ const Index = () => {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [totalTime, setTotalTime] = useState(0);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
-  const [sounds, setSounds] = useState({
-    rain: false,
-    ocean: false,
-    whiteNoise: false,
-    cafe: false,
-  });
+  
+  // Audio hook - manages all sound playback
+  const { sounds, toggleSound, playCompletionSound, activeSoundsCount } = useDeepDiveAudio();
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
@@ -66,15 +58,6 @@ const Index = () => {
     engineLevel,
   });
   const svgRef = useRef<SVGSVGElement>(null);
-  
-  const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({
-    rain: null,
-    ocean: null,
-    whiteNoise: null,
-    cafe: null,
-  });
-  
-  const audioContextRef = useRef<AudioContext | null>(null);
 
   // Load total time and tasks from localStorage
   useEffect(() => {
@@ -91,37 +74,6 @@ const Index = () => {
     }
   }, []);
 
-  // Initialize audio elements
-  useEffect(() => {
-    audioRefs.current.rain = new Audio(SOUND_URLS.rain);
-    audioRefs.current.rain.loop = true;
-    audioRefs.current.rain.volume = 0.5;
-
-    audioRefs.current.ocean = new Audio(SOUND_URLS.ocean);
-    audioRefs.current.ocean.loop = true;
-    audioRefs.current.ocean.volume = 0.4;
-
-    audioRefs.current.whiteNoise = new Audio(SOUND_URLS.whiteNoise);
-    audioRefs.current.whiteNoise.loop = true;
-    audioRefs.current.whiteNoise.volume = 0.3;
-
-    return () => {
-      Object.values(audioRefs.current).forEach(audio => {
-        if (audio) {
-          audio.pause();
-          audio.src = "";
-        }
-      });
-    };
-  }, []);
-
-  // Audio context for completion sound
-  useEffect(() => {
-    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-    return () => {
-      audioContextRef.current?.close();
-    };
-  }, []);
 
   // Save tasks to localStorage whenever they change
   useEffect(() => {
@@ -296,37 +248,6 @@ const Index = () => {
     }
   }, [setDuration, isDragging, isRunning]);
 
-  const playCompletionSound = () => {
-    if (!audioContextRef.current) return;
-    
-    const ctx = audioContextRef.current;
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    
-    oscillator.frequency.value = 800;
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
-    
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 1);
-  };
-
-  const toggleSound = (soundType: keyof typeof sounds) => {
-    const audio = audioRefs.current[soundType];
-    if (!audio) return;
-
-    if (sounds[soundType]) {
-      audio.pause();
-      audio.currentTime = 0;
-    } else {
-      audio.play().catch(console.error);
-    }
-    
-    setSounds((prev) => ({ ...prev, [soundType]: !prev[soundType] }));
-  };
 
   const handleStart = () => {
     if (!isRunning && timeLeft === 0) {
@@ -452,7 +373,7 @@ const Index = () => {
   const displayTime = isDragging ? setDuration : timeLeft;
   const displayProgress = setDuration > 0 ? (displayTime / TIMER_CONFIG.MAX_TIME_SECONDS) * 100 : 0;
 
-  const activeSoundsCount = Object.values(sounds).filter(Boolean).length;
+  
 
   // Show login view if not logged in
   if (!isLoggedIn) {

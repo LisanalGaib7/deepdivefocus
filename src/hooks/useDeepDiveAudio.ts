@@ -1,0 +1,132 @@
+import { useRef, useEffect, useCallback, useState } from "react";
+
+// Centralized sound URLs
+const SOUND_URLS = {
+  rain: "https://assets.mixkit.co/active_storage/sfx/2492/2492-preview.mp3",
+  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
+  whiteNoise: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
+} as const;
+
+// Default volume levels for each sound
+const DEFAULT_VOLUMES = {
+  rain: 0.5,
+  ocean: 0.4,
+  whiteNoise: 0.3,
+} as const;
+
+export type SoundType = keyof typeof SOUND_URLS;
+
+export interface SoundState {
+  rain: boolean;
+  ocean: boolean;
+  whiteNoise: boolean;
+}
+
+export interface UseDeepDiveAudioReturn {
+  sounds: SoundState;
+  toggleSound: (soundType: SoundType) => void;
+  stopAllSounds: () => void;
+  playCompletionSound: () => void;
+  activeSoundsCount: number;
+}
+
+export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
+  const [sounds, setSounds] = useState<SoundState>({
+    rain: false,
+    ocean: false,
+    whiteNoise: false,
+  });
+
+  const audioRefs = useRef<{ [K in SoundType]?: HTMLAudioElement }>({});
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  // Initialize audio elements
+  useEffect(() => {
+    // Create audio elements for each sound type
+    (Object.keys(SOUND_URLS) as SoundType[]).forEach((soundType) => {
+      const audio = new Audio(SOUND_URLS[soundType]);
+      audio.loop = true;
+      audio.volume = DEFAULT_VOLUMES[soundType];
+      audioRefs.current[soundType] = audio;
+    });
+
+    // Initialize AudioContext for completion sound
+    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+    // Cleanup on unmount
+    return () => {
+      Object.values(audioRefs.current).forEach((audio) => {
+        if (audio) {
+          audio.pause();
+          audio.src = "";
+        }
+      });
+      audioContextRef.current?.close();
+    };
+  }, []);
+
+  // Toggle a specific sound on/off
+  const toggleSound = useCallback((soundType: SoundType) => {
+    const audio = audioRefs.current[soundType];
+    if (!audio) return;
+
+    setSounds((prev) => {
+      const isCurrentlyPlaying = prev[soundType];
+
+      if (isCurrentlyPlaying) {
+        audio.pause();
+        audio.currentTime = 0;
+      } else {
+        audio.play().catch(console.error);
+      }
+
+      return { ...prev, [soundType]: !isCurrentlyPlaying };
+    });
+  }, []);
+
+  // Stop all sounds
+  const stopAllSounds = useCallback(() => {
+    (Object.keys(audioRefs.current) as SoundType[]).forEach((soundType) => {
+      const audio = audioRefs.current[soundType];
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    });
+    setSounds({
+      rain: false,
+      ocean: false,
+      whiteNoise: false,
+    });
+  }, []);
+
+  // Play completion sound using Web Audio API
+  const playCompletionSound = useCallback(() => {
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
+
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    oscillator.frequency.value = 800;
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
+
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 1);
+  }, []);
+
+  // Count of active sounds
+  const activeSoundsCount = Object.values(sounds).filter(Boolean).length;
+
+  return {
+    sounds,
+    toggleSound,
+    stopAllSounds,
+    playCompletionSound,
+    activeSoundsCount,
+  };
+};
