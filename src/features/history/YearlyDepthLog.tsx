@@ -21,29 +21,41 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     return map;
   }, [sessions]);
 
-  // Generate 52 weeks x 7 days grid (past year from today)
+  // Generate calendar year 2026 grid (Jan 1 - Dec 31)
   const grid = useMemo(() => {
     const weeks: { date: Date; dateKey: string; minutes: number }[][] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const year = 2026;
+    
+    // Start from January 1st of the year
+    const yearStart = new Date(year, 0, 1);
+    yearStart.setHours(0, 0, 0, 0);
+    
+    // Find the Sunday before or on Jan 1 to align the grid
+    const gridStart = new Date(yearStart);
+    gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+    
+    // End at December 31st
+    const yearEnd = new Date(year, 11, 31);
+    yearEnd.setHours(23, 59, 59, 999);
+    
+    // Find the Saturday after or on Dec 31 to complete the grid
+    const gridEnd = new Date(yearEnd);
+    gridEnd.setDate(gridEnd.getDate() + (6 - gridEnd.getDay()));
 
-    // Find the start of the grid (52 weeks ago, aligned to Sunday)
-    const startDate = new Date(today);
-    startDate.setDate(startDate.getDate() - 364 - today.getDay());
+    let currentDate = new Date(gridStart);
 
-    let currentDate = new Date(startDate);
-
-    for (let week = 0; week < 53; week++) {
+    while (currentDate <= gridEnd) {
       const weekDays: { date: Date; dateKey: string; minutes: number }[] = [];
 
       for (let day = 0; day < 7; day++) {
         const dateKey = currentDate.toISOString().split("T")[0];
         const minutes = Math.round(dailyData[dateKey] || 0);
+        const isInYear = currentDate.getFullYear() === year;
 
         weekDays.push({
           date: new Date(currentDate),
           dateKey,
-          minutes,
+          minutes: isInYear ? minutes : 0,
         });
 
         currentDate.setDate(currentDate.getDate() + 1);
@@ -151,15 +163,24 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
               <div key={weekIndex} className="flex flex-col gap-[3px]">
                 {week.map((day, dayIndex) => {
                   const level = getLevel(day.minutes);
-                  const isFuture = day.date > new Date();
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  const isFuture = day.date > today;
+                  const isOutsideYear = day.date.getFullYear() !== 2026;
 
                   return (
                     <div
                       key={`${weekIndex}-${dayIndex}`}
                       className="w-[11px] h-[11px] rounded-sm cursor-pointer transition-transform hover:scale-125"
-                      style={isFuture ? { backgroundColor: "transparent" } : getCellStyle(level)}
+                      style={
+                        isOutsideYear
+                          ? { backgroundColor: "transparent" }
+                          : isFuture
+                          ? { backgroundColor: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255,255,255,0.05)" }
+                          : getCellStyle(level)
+                      }
                       onMouseEnter={(e) => {
-                        if (!isFuture) {
+                        if (!isOutsideYear) {
                           const rect = e.currentTarget.getBoundingClientRect();
                           setHoveredCell({
                             date: formatDate(day.date),
