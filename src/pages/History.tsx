@@ -193,9 +193,6 @@ const History = () => {
           </div>
         </div>
 
-        {/* Yearly Depth Log */}
-        <YearlyDepthLog sessions={sessions} />
-
         {/* Task Breakdown Donut Chart */}
         {taskBreakdown.length > 0 && (
           <div className="space-y-3">
@@ -306,6 +303,9 @@ const History = () => {
             </div>
           </div>
         )}
+
+        {/* Yearly Depth Log */}
+        <YearlyDepthLog sessions={sessions} />
       </div>
     </div>
   );
