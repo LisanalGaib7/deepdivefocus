@@ -106,7 +106,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     });
   };
 
-  const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
+  // Removed weekday labels for cleaner minimalist look
 
   // Month labels based on first week of each month (only for 2026)
   const monthLabels = useMemo(() => {
@@ -131,10 +131,10 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold text-muted-foreground">Yearly Depth Log</h2>
+      <h2 className="text-lg font-semibold text-muted-foreground">YEARLY DIVE HISTORY</h2>
       <div className="bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-deep-sea">
         {/* Month labels */}
-        <div className="flex mb-2 ml-8">
+        <div className="flex mb-2">
           {monthLabels.map(({ label, weekIndex }, i) => (
             <div
               key={i}
@@ -150,15 +150,6 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
         </div>
 
         <div className="flex">
-          {/* Day labels */}
-          <div className="flex flex-col gap-[3px] mr-2 shrink-0">
-            {dayLabels.map((label, i) => (
-              <div key={i} className="h-[11px] text-[10px] text-muted-foreground leading-[11px]">
-                {label}
-              </div>
-            ))}
-          </div>
-
           {/* Grid */}
           <div className="flex gap-[3px] relative pr-6">
             {grid.map((week, weekIndex) => (
