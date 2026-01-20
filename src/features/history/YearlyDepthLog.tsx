@@ -108,7 +108,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
 
   const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
 
-  // Month labels based on first week of each month
+  // Month labels based on first week of each month (only for 2026)
   const monthLabels = useMemo(() => {
     const labels: { label: string; weekIndex: number }[] = [];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -117,8 +117,10 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     grid.forEach((week, weekIndex) => {
       const firstDayOfWeek = week[0];
       const month = firstDayOfWeek.date.getMonth();
+      const year = firstDayOfWeek.date.getFullYear();
 
-      if (month !== lastMonth) {
+      // Only show labels for months in 2026
+      if (month !== lastMonth && year === 2026) {
         labels.push({ label: months[month], weekIndex });
         lastMonth = month;
       }
@@ -130,7 +132,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
   return (
     <div className="space-y-3">
       <h2 className="text-lg font-semibold text-muted-foreground">Yearly Depth Log</h2>
-      <div className="bg-card rounded-2xl p-4 border border-border overflow-x-auto">
+      <div className="bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-deep-sea">
         {/* Month labels */}
         <div className="flex mb-2 ml-8">
           {monthLabels.map(({ label, weekIndex }, i) => (
@@ -158,7 +160,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
           </div>
 
           {/* Grid */}
-          <div className="flex gap-[3px] relative">
+          <div className="flex gap-[3px] relative pr-6">
             {grid.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col gap-[3px]">
                 {week.map((day, dayIndex) => {
