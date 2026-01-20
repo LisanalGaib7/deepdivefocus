@@ -2,6 +2,7 @@ import { useMemo, useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
 import { initializeSessions, FocusSession } from "@/lib/sessionStorage";
+import { YearlyDepthLog } from "@/features/history";
 
 const History = () => {
   const { currentTheme } = useTheme();
@@ -191,6 +192,9 @@ const History = () => {
             </ResponsiveContainer>
           </div>
         </div>
+
+        {/* Yearly Depth Log */}
+        <YearlyDepthLog sessions={sessions} />
 
         {/* Task Breakdown Donut Chart */}
         {taskBreakdown.length > 0 && (
