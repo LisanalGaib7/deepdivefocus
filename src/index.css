@@ -192,7 +192,8 @@ All colors MUST be HSL.
 
   /* Custom glow animation */
   @keyframes glow-pulse {
-    0%, 100% {
+    0%,
+    100% {
       filter: drop-shadow(0 0 20px hsl(var(--primary) / 0.4));
     }
     50% {
@@ -242,7 +243,8 @@ All colors MUST be HSL.
 
   /* Holographic float animation */
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -278,4 +280,8 @@ All colors MUST be HSL.
   .scrollbar-deep-sea::-webkit-scrollbar-thumb:hover {
     background: hsl(185 100% 40%);
   }
+}
+/* Lovable 배지 숨기기 */
+#lovable-badge {
+  display: none !important;
 }
