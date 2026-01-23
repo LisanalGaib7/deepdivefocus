@@ -1,4 +1,4 @@
-export type CreatureRarity = 'Common' | 'Uncommon' | 'Rare' | 'Legendary';
+export type CreatureRarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary';
 
 export interface Creature {
   id: string;
@@ -12,7 +12,9 @@ export interface Creature {
 }
 
 export const CREATURES: Creature[] = [
-  // 0-100m: Common tier
+  // ==========================================
+  // TIER 1: SHALLOW WATERS (0m - 100m) - Common
+  // ==========================================
   {
     id: 'sardine',
     name: 'Silver Sardine',
@@ -40,7 +42,7 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY',
     icon: 'Star',
-    pearls: 10,
+    pearls: 15,
     traits: ['Regenerative', 'Static'],
   },
   {
@@ -50,46 +52,48 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE',
     icon: 'Waves',
-    pearls: 10,
+    pearls: 15,
     traits: ['Camouflage', 'Fragile'],
   },
 
-  // 100-500m: Rare tier (with new creatures)
+  // ==========================================
+  // TIER 2: THE TWILIGHT ZONE (100m - 500m) - Uncommon
+  // ==========================================
   {
     id: 'jellyfish',
     name: 'Neon Jellyfish',
     minDepth: 100,
-    rarity: 'Rare',
+    rarity: 'Uncommon',
     description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
     icon: 'Sparkles',
-    pearls: 50,
+    pearls: 30,
     traits: ['Bioluminescent', 'Toxic'],
   },
   {
     id: 'electric_eel',
     name: 'Electric Eel',
     minDepth: 120,
-    rarity: 'Common',
+    rarity: 'Uncommon',
     description: 'UNIT.EEL // HIGH_VOLTAGE // BATTERY_DETECTED',
     icon: 'Zap',
-    pearls: 15,
+    pearls: 40,
     traits: ['Electric', 'Danger'],
   },
   {
     id: 'turtle',
     name: 'Ancient Sea Turtle',
-    minDepth: 150,
-    rarity: 'Rare',
+    minDepth: 180,
+    rarity: 'Uncommon',
     description: 'UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED',
     icon: 'Shield',
-    pearls: 50,
+    pearls: 45,
     traits: ['Ancient', 'Wise'],
   },
   {
     id: 'octopus',
     name: 'Phantom Octopus',
     minDepth: 250,
-    rarity: 'Rare',
+    rarity: 'Uncommon',
     description: 'UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED',
     icon: 'Grip',
     pearls: 50,
@@ -102,69 +106,75 @@ export const CREATURES: Creature[] = [
     rarity: 'Rare',
     description: 'UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE',
     icon: 'Wind',
-    pearls: 50,
+    pearls: 60,
     traits: ['Majestic', 'Silent'],
   },
 
-  // 500m+: Legendary tier (with new creatures)
+  // ==========================================
+  // TIER 3: THE MIDNIGHT ZONE (500m - 1000m) - Rare
+  // ==========================================
   {
     id: 'anglerfish',
     name: 'Abyssal Anglerfish',
     minDepth: 500,
-    rarity: 'Legendary',
+    rarity: 'Rare',
     description: 'UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX',
     icon: 'Flashlight',
-    pearls: 200,
+    pearls: 70,
     traits: ['Apex', 'Lure'],
   },
   {
     id: 'giant_isopod',
     name: 'Giant Isopod',
     minDepth: 600,
-    rarity: 'Uncommon',
+    rarity: 'Rare',
     description: 'UNIT.ISOPOD // SCAVENGER // ARMOR_HEAVY',
     icon: 'Bug',
-    pearls: 40,
+    pearls: 75,
     traits: ['Tank', 'Ancient'],
   },
   {
     id: 'giant_squid',
     name: 'Kraken Spawn',
     minDepth: 750,
-    rarity: 'Legendary',
+    rarity: 'Epic',
     description: 'UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED',
     icon: 'Anchor',
-    pearls: 200,
+    pearls: 100,
     traits: ['Mythical', 'Massive'],
   },
   {
     id: 'blobfish',
     name: 'Blobfish',
     minDepth: 900,
-    rarity: 'Rare',
-    description: 'UNIT.BLOB // STRUCTURE_UNSTABLE // ERROR_AESTHETICS',
+    rarity: 'Epic',
+    description: 'UNIT.BLOB // STRUCTURE_UNSTABLE // AESTHETICS_ERR',
     icon: 'Cloud',
-    pearls: 75,
+    pearls: 120,
     traits: ['Soft', 'Meme'],
   },
+
+  // ==========================================
+  // TIER 4: THE ABYSS (1000m+) - Legendary
+  // ==========================================
   {
     id: 'glowing_shark',
     name: 'Spectral Shark',
     minDepth: 1000,
-    rarity: 'Legendary',
+    rarity: 'Epic',
     description: 'UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL',
     icon: 'Ghost',
-    pearls: 200,
+    pearls: 150,
     traits: ['Spectral', 'Predator'],
   },
   {
     id: 'dumbo_octopus',
     name: 'Dumbo Octopus',
     minDepth: 1300,
-    rarity: 'Rare',
+    rarity: 'Legendary',
     description: 'UNIT.OCTOPUS // HOVER_MODE // EARS_DETECTED',
     icon: 'Smile',
-    pearls: 90,
+    pearls: 200,
     traits: ['Cute', 'Floating'],
   },
   {
@@ -192,9 +202,11 @@ export const getRarityColor = (rarity: CreatureRarity): string => {
     case 'Uncommon':
       return 'text-emerald-400';
     case 'Rare':
-      return 'text-hud-cyan';
+      return 'text-blue-400';
+    case 'Epic':
+      return 'text-purple-400 drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]';
     case 'Legendary':
-      return 'text-yellow-400';
+      return 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]';
     default:
       return 'text-foreground';
   }

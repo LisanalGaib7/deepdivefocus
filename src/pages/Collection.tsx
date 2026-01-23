@@ -165,14 +165,23 @@ const getRarityStyles = (rarity: string, unlocked: boolean, themeColors: ReturnT
         textColor: 'text-amber-400',
         iconColor: 'text-amber-400',
       };
+    case 'Epic':
+      return {
+        border: 'border-purple-500',
+        shadow: 'shadow-lg shadow-purple-500/30',
+        glow: { boxShadow: '0 0 25px rgba(168, 85, 247, 0.3), inset 0 0 15px rgba(168, 85, 247, 0.1)' },
+        iconGlow: 'drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]',
+        textColor: 'text-purple-400',
+        iconColor: 'text-purple-400',
+      };
     case 'Rare':
       return {
-        border: themeColors.border,
-        shadow: `shadow-lg`,
-        glow: { boxShadow: `0 0 25px ${themeColors.glowRgba}, inset 0 0 15px ${themeColors.glowRgba}` },
-        iconGlow: `drop-shadow-[0_0_12px_${themeColors.glow.replace('rgba', '').replace(')', '').replace('(', '')}]`,
-        textColor: themeColors.text,
-        iconColor: themeColors.text,
+        border: 'border-blue-500',
+        shadow: 'shadow-lg shadow-blue-500/20',
+        glow: { boxShadow: '0 0 25px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(59, 130, 246, 0.1)' },
+        iconGlow: 'drop-shadow-[0_0_10px_rgba(59,130,246,0.7)]',
+        textColor: 'text-blue-400',
+        iconColor: 'text-blue-400',
       };
     case 'Uncommon':
       return {
@@ -328,50 +337,67 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
           {(() => {
             const IconComponent = iconMap[creature.icon] || HelpCircle;
             
-            // Rarity-based capsule styles with theme support
-            const capsuleStyles = unlocked 
-              ? creature.rarity === 'Legendary'
-                ? {
-                    container: 'bg-amber-900/20 border-amber-500/60',
-                    innerGlow: 'bg-amber-500/10',
-                    pulse: 'animate-pulse',
-                  }
-                : creature.rarity === 'Rare'
-                  ? {
-                      container: `${themeColors.bgLight} ${themeColors.border}/60`,
-                      innerGlow: themeColors.bg,
-                      pulse: 'animate-pulse',
-                    }
-                  : creature.rarity === 'Uncommon'
-                    ? {
-                        container: 'bg-emerald-900/20 border-emerald-500/60',
-                        innerGlow: 'bg-emerald-500/10',
-                        pulse: '',
-                      }
-                    : {
-                        container: 'bg-slate-800/30 border-slate-600/40',
-                        innerGlow: 'bg-slate-500/5',
-                        pulse: '',
-                      }
-              : {
+            // Rarity-based capsule styles
+            const getCapsuleStyles = () => {
+              if (!unlocked) {
+                return {
                   container: 'bg-slate-900/30 border-slate-800/40',
                   innerGlow: 'bg-slate-800/10',
                   pulse: '',
                 };
+              }
+              switch (creature.rarity) {
+                case 'Legendary':
+                  return {
+                    container: 'bg-amber-900/20 border-amber-500/60',
+                    innerGlow: 'bg-amber-500/10',
+                    pulse: 'animate-pulse',
+                  };
+                case 'Epic':
+                  return {
+                    container: 'bg-purple-900/20 border-purple-500/60',
+                    innerGlow: 'bg-purple-500/10',
+                    pulse: 'animate-pulse',
+                  };
+                case 'Rare':
+                  return {
+                    container: 'bg-blue-900/20 border-blue-500/60',
+                    innerGlow: 'bg-blue-500/10',
+                    pulse: 'animate-pulse',
+                  };
+                case 'Uncommon':
+                  return {
+                    container: 'bg-emerald-900/20 border-emerald-500/60',
+                    innerGlow: 'bg-emerald-500/10',
+                    pulse: '',
+                  };
+                default:
+                  return {
+                    container: 'bg-slate-800/30 border-slate-600/40',
+                    innerGlow: 'bg-slate-500/5',
+                    pulse: '',
+                  };
+              }
+            };
+            const capsuleStyles = getCapsuleStyles();
 
             return (
               <div className="relative">
-                {/* Outer pulsing ring for Rare/Legendary */}
-                {unlocked && (creature.rarity === 'Legendary' || creature.rarity === 'Rare') && (
+                {/* Outer pulsing ring for Epic/Rare/Legendary */}
+                {unlocked && ['Legendary', 'Epic', 'Rare'].includes(creature.rarity) && (
                   <div 
                     className={`absolute -inset-1 rounded-full ${capsuleStyles.pulse}`}
                     style={{
                       backgroundColor: creature.rarity === 'Legendary' 
                         ? 'rgba(245, 158, 11, 0.2)' 
-                        : themeColors.glowRgba.replace('0.3', '0.2'),
+                        : creature.rarity === 'Epic'
+                          ? 'rgba(168, 85, 247, 0.2)'
+                          : 'rgba(59, 130, 246, 0.2)',
                       boxShadow: creature.rarity === 'Legendary'
                         ? '0 0 20px rgba(245, 158, 11, 0.3)'
-                        : `0 0 20px ${themeColors.glowRgba}`
+                        : creature.rarity === 'Epic'
+                          ? '0 0 20px rgba(168, 85, 247, 0.3)'
+                          : '0 0 20px rgba(59, 130, 246, 0.3)'
                     }}
                   />
                 )}
@@ -383,9 +409,11 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
                     boxShadow: unlocked
                       ? creature.rarity === 'Legendary'
                         ? 'inset 0 0 15px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.2)'
-                        : creature.rarity === 'Rare'
-                          ? `inset 0 0 15px ${themeColors.glowRgba}, 0 0 10px ${themeColors.glowRgba.replace('0.3', '0.2')}`
-                          : 'inset 0 0 10px rgba(100, 116, 139, 0.2)'
+                        : creature.rarity === 'Epic'
+                          ? 'inset 0 0 15px rgba(168, 85, 247, 0.3), 0 0 10px rgba(168, 85, 247, 0.2)'
+                          : creature.rarity === 'Rare'
+                            ? 'inset 0 0 15px rgba(59, 130, 246, 0.3), 0 0 10px rgba(59, 130, 246, 0.2)'
+                            : 'inset 0 0 10px rgba(100, 116, 139, 0.2)'
                       : 'none'
                   }}
                 >
@@ -432,11 +460,13 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
             unlocked 
               ? creature.rarity === 'Legendary' 
                 ? 'border-amber-500/60 text-amber-400 bg-amber-500/10' 
-                : creature.rarity === 'Rare'
-                  ? `${themeColors.border}/60 ${themeColors.text} ${themeColors.bg}`
-                  : creature.rarity === 'Uncommon'
-                    ? 'border-emerald-500/60 text-emerald-400 bg-emerald-500/10'
-                    : 'border-slate-600 text-slate-400 bg-slate-800/50'
+                : creature.rarity === 'Epic'
+                  ? 'border-purple-500/60 text-purple-400 bg-purple-500/10'
+                  : creature.rarity === 'Rare'
+                    ? 'border-blue-500/60 text-blue-400 bg-blue-500/10'
+                    : creature.rarity === 'Uncommon'
+                      ? 'border-emerald-500/60 text-emerald-400 bg-emerald-500/10'
+                      : 'border-slate-600 text-slate-400 bg-slate-800/50'
               : 'border-slate-800 text-slate-600 bg-slate-900/50'
           }`}>
             {creature.rarity.toUpperCase()}
