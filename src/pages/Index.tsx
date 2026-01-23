@@ -675,7 +675,7 @@ const Index = () => {
 
         {/* Task List - Hidden when timer is running (Focus Mode) */}
         {!isRunning && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="space-y-4 animate-fade-in w-full max-w-md md:max-w-lg mx-auto">
             <form onSubmit={handleAddTask} className="space-y-2">
               <div className="flex justify-between items-center px-1 mb-2">
                 <span className="text-xs uppercase tracking-widest text-primary/70">
