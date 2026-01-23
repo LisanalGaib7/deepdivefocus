@@ -21,50 +21,51 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     return map;
   }, [sessions]);
 
-  // Generate calendar year 2026 grid (Jan 1 - Dec 31)
+  // Generate sequential grid for 2026 (perfect rectangle layout)
   const grid = useMemo(() => {
-    const weeks: { date: Date; dateKey: string; minutes: number }[][] = [];
+    const columns: { date: Date; dateKey: string; minutes: number }[][] = [];
     const year = 2026;
     
-    // Start from January 1st of the year
+    // Generate all days of 2026 sequentially
+    const allDays: { date: Date; dateKey: string; minutes: number }[] = [];
     const yearStart = new Date(year, 0, 1);
-    yearStart.setHours(0, 0, 0, 0);
-    
-    // Find the Sunday before or on Jan 1 to align the grid
-    const gridStart = new Date(yearStart);
-    gridStart.setDate(gridStart.getDate() - gridStart.getDay());
-    
-    // End at December 31st
     const yearEnd = new Date(year, 11, 31);
-    yearEnd.setHours(23, 59, 59, 999);
     
-    // Find the Saturday after or on Dec 31 to complete the grid
-    const gridEnd = new Date(yearEnd);
-    gridEnd.setDate(gridEnd.getDate() + (6 - gridEnd.getDay()));
-
-    let currentDate = new Date(gridStart);
-
-    while (currentDate <= gridEnd) {
-      const weekDays: { date: Date; dateKey: string; minutes: number }[] = [];
-
-      for (let day = 0; day < 7; day++) {
-        const dateKey = currentDate.toISOString().split("T")[0];
-        const minutes = Math.round(dailyData[dateKey] || 0);
-        const isInYear = currentDate.getFullYear() === year;
-
-        weekDays.push({
-          date: new Date(currentDate),
-          dateKey,
-          minutes: isInYear ? minutes : 0,
-        });
-
-        currentDate.setDate(currentDate.getDate() + 1);
+    let currentDate = new Date(yearStart);
+    currentDate.setHours(0, 0, 0, 0);
+    
+    while (currentDate <= yearEnd) {
+      const dateKey = currentDate.toISOString().split("T")[0];
+      const minutes = Math.round(dailyData[dateKey] || 0);
+      
+      allDays.push({
+        date: new Date(currentDate),
+        dateKey,
+        minutes,
+      });
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    // Map sequentially into columns of 7 rows each
+    // Index 0 -> Row 0, Col 0; Index 1 -> Row 1, Col 0; etc.
+    const numColumns = Math.ceil(allDays.length / 7);
+    
+    for (let col = 0; col < numColumns; col++) {
+      const column: { date: Date; dateKey: string; minutes: number }[] = [];
+      
+      for (let row = 0; row < 7; row++) {
+        const dayIndex = col * 7 + row;
+        
+        if (dayIndex < allDays.length) {
+          column.push(allDays[dayIndex]);
+        }
       }
-
-      weeks.push(weekDays);
+      
+      columns.push(column);
     }
 
-    return weeks;
+    return columns;
   }, [dailyData]);
 
   // Get level based on minutes
@@ -108,20 +109,18 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
 
   // Removed weekday labels for cleaner minimalist look
 
-  // Month labels based on first week of each month (only for 2026)
+  // Month labels based on first day of each column
   const monthLabels = useMemo(() => {
-    const labels: { label: string; weekIndex: number }[] = [];
+    const labels: { label: string; colIndex: number }[] = [];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     let lastMonth = -1;
 
-    grid.forEach((week, weekIndex) => {
-      const firstDayOfWeek = week[0];
-      const month = firstDayOfWeek.date.getMonth();
-      const year = firstDayOfWeek.date.getFullYear();
+    grid.forEach((column, colIndex) => {
+      const firstDayOfColumn = column[0];
+      const month = firstDayOfColumn.date.getMonth();
 
-      // Only show labels for months in 2026
-      if (month !== lastMonth && year === 2026) {
-        labels.push({ label: months[month], weekIndex });
+      if (month !== lastMonth) {
+        labels.push({ label: months[month], colIndex });
         lastMonth = month;
       }
     });
@@ -135,12 +134,12 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
       <div className="bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-deep-sea">
         {/* Month labels */}
         <div className="flex mb-2">
-          {monthLabels.map(({ label, weekIndex }, i) => (
+          {monthLabels.map(({ label, colIndex }, i) => (
             <div
               key={i}
               className="text-xs text-muted-foreground"
               style={{
-                marginLeft: i === 0 ? weekIndex * 14 : (weekIndex - monthLabels[i - 1].weekIndex) * 14 - 24,
+                marginLeft: i === 0 ? colIndex * 14 : (colIndex - monthLabels[i - 1].colIndex) * 14 - 24,
                 minWidth: 24,
               }}
             >
@@ -152,36 +151,31 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
         <div className="flex">
           {/* Grid */}
           <div className="flex gap-[3px] relative pr-6">
-            {grid.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex flex-col gap-[3px]">
-                {week.map((day, dayIndex) => {
+            {grid.map((column, colIndex) => (
+              <div key={colIndex} className="flex flex-col gap-[3px]">
+                {column.map((day, rowIndex) => {
                   const level = getLevel(day.minutes);
                   const today = new Date();
                   today.setHours(0, 0, 0, 0);
                   const isFuture = day.date > today;
-                  const isOutsideYear = day.date.getFullYear() !== 2026;
 
                   return (
                     <div
-                      key={`${weekIndex}-${dayIndex}`}
+                      key={`${colIndex}-${rowIndex}`}
                       className="w-[11px] h-[11px] rounded-sm cursor-pointer transition-transform hover:scale-125"
                       style={
-                        isOutsideYear
-                          ? { backgroundColor: "transparent" }
-                          : isFuture
+                        isFuture
                           ? { backgroundColor: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255,255,255,0.05)" }
                           : getCellStyle(level)
                       }
                       onMouseEnter={(e) => {
-                        if (!isOutsideYear) {
-                          const rect = e.currentTarget.getBoundingClientRect();
-                          setHoveredCell({
-                            date: formatDate(day.date),
-                            minutes: day.minutes,
-                            x: rect.left + rect.width / 2,
-                            y: rect.top,
-                          });
-                        }
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setHoveredCell({
+                          date: formatDate(day.date),
+                          minutes: day.minutes,
+                          x: rect.left + rect.width / 2,
+                          y: rect.top,
+                        });
                       }}
                       onMouseLeave={() => setHoveredCell(null)}
                     />
