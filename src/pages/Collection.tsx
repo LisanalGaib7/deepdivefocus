@@ -479,17 +479,26 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
           )}
         </div>
 
-        {/* Traits List (Parsed Description) */}
-        {unlocked && traits.length > 0 && (
-          <div className="space-y-1 pt-2 border-t border-slate-800/50">
-            {traits.map((trait, index) => (
-              <p 
+        {/* Traits Badges */}
+        {unlocked && creature.traits.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-1 pt-2 border-t border-slate-800/50">
+            {creature.traits.map((trait, index) => (
+              <span 
                 key={index} 
-                className="text-xs font-mono text-slate-500 flex items-start gap-1.5"
+                className={`text-[9px] px-1.5 py-0.5 rounded font-mono tracking-wide ${
+                  creature.rarity === 'Legendary'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : creature.rarity === 'Epic'
+                      ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                      : creature.rarity === 'Rare'
+                        ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                        : creature.rarity === 'Uncommon'
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          : 'bg-slate-700/50 text-slate-400 border border-slate-600/30'
+                }`}
               >
-                <span className={themeColors.bullet}>•</span>
-                <span>{trait}</span>
-              </p>
+                {trait}
+              </span>
             ))}
           </div>
         )}
