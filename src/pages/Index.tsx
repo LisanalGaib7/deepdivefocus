@@ -638,7 +638,7 @@ const Index = () => {
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-6">
-            {/* Play/Pause Button - Glowing Glass Effect */}
+            {/* Play/Pause Button - Glowing Glass Effect (Primary) */}
             <Button
               onClick={handleStart}
               size="lg"
@@ -651,14 +651,14 @@ const Index = () => {
               )}
             </Button>
             
-            {/* Reset Button - Dark Glass Effect */}
+            {/* Reset Button - Dark Glass Effect (Secondary) */}
             <Button
               onClick={handleReset}
               size="lg"
               variant="ghost"
-              className="h-14 w-14 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] hover:bg-white/10 hover:border-white/30 hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.15),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 active:scale-95"
+              className="h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] hover:bg-white/10 hover:border-white/30 hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.15),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 active:scale-95"
             >
-              <RotateCcw className="h-5 w-5" />
+              <RotateCcw className="h-6 w-6" />
             </Button>
           </div>
         </div>
