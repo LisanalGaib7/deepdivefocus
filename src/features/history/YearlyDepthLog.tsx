@@ -230,7 +230,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
   return (
     <div className="space-y-3">
       <style>{scrollbarStyle}</style>
-      <h2 className="text-lg font-semibold text-muted-foreground">YEARLY DIVE HISTORY</h2>
+      <h2 className="text-lg font-semibold text-muted-foreground">Yearly Dive History</h2>
       <div className={`bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-theme-${currentTheme}`}>
         {/* Month labels */}
         <div className="flex mb-2">

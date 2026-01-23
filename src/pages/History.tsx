@@ -121,10 +121,12 @@ const History = () => {
       <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight" style={{ color: primaryColor }}>
-            Analytics
+          <h1 
+            className="text-4xl font-bold text-primary font-mono uppercase drop-shadow-[0_0_15px_hsl(var(--primary)/0.7)]"
+          >
+            ANALYTICS
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">Your focus journey</p>
+          <p className="text-muted-foreground text-sm mt-2">Your focus journey</p>
         </div>
 
         {/* Stat Cards */}
