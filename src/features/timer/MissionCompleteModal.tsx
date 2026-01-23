@@ -68,46 +68,46 @@ export const MissionCompleteModal = ({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="bg-card border-hud-cyan/30 max-w-md">
+      <AlertDialogContent className="bg-card border-hud-cyan/30 max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         {/* Header with scan lines effect */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
           <div className="absolute inset-0 bg-gradient-to-b from-hud-cyan/5 to-transparent" />
         </div>
 
-        <AlertDialogHeader className="relative">
-          <div className="flex items-center justify-center mb-4">
+        <AlertDialogHeader className="relative space-y-2">
+          <div className="flex items-center justify-center mb-2">
             <div className="relative">
               <div className="absolute inset-0 bg-hud-cyan/20 blur-xl rounded-full" />
-              <div className="relative bg-hud-cyan/10 border border-hud-cyan/50 rounded-full p-4">
-                <Anchor className="h-8 w-8 text-hud-cyan" />
+              <div className="relative bg-hud-cyan/10 border border-hud-cyan/50 rounded-full p-3">
+                <Anchor className="h-6 w-6 text-hud-cyan" />
               </div>
             </div>
           </div>
 
-          <AlertDialogTitle className="text-center font-robotic text-2xl tracking-widest text-hud-cyan">
+          <AlertDialogTitle className="text-center font-robotic text-xl tracking-widest text-hud-cyan">
             SURFACE REACHED
           </AlertDialogTitle>
 
           <AlertDialogDescription className="text-center">
-            <span className="text-muted-foreground font-robotic text-sm tracking-wider">
+            <span className="text-muted-foreground font-robotic text-xs tracking-wider">
               DIVE COMPLETE
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 gap-4 my-6">
-          <div className="bg-muted/30 border border-border rounded-lg p-4 text-center">
+        <div className="grid grid-cols-2 gap-3 my-4">
+          <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
               MAX DEPTH
             </p>
-            <p className="text-2xl font-robotic text-hud-cyan">{maxDepth}m</p>
+            <p className="text-xl font-robotic text-hud-cyan">{maxDepth}m</p>
           </div>
-          <div className="bg-muted/30 border border-border rounded-lg p-4 text-center">
+          <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
               DIVE TIME
             </p>
-            <p className="text-2xl font-robotic text-foreground">
+            <p className="text-xl font-robotic text-foreground">
               {formatDuration(sessionDuration)}
             </p>
           </div>
@@ -116,7 +116,7 @@ export const MissionCompleteModal = ({
         {/* Creature Reward Section */}
         {creature && (
           <div className="relative">
-            <div className="bg-muted/20 border border-border rounded-xl p-6 text-center relative overflow-hidden">
+            <div className="bg-muted/20 border border-border rounded-xl p-4 text-center relative overflow-hidden">
               {/* Glow effect for new discoveries */}
               {isNewDiscovery && (
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-hud-cyan/10 to-transparent animate-pulse" />
@@ -124,26 +124,26 @@ export const MissionCompleteModal = ({
 
               <div className="relative">
                 {isNewDiscovery && (
-                  <div className="flex items-center justify-center gap-1 text-hud-cyan text-xs font-robotic tracking-wider mb-3">
+                  <div className="flex items-center justify-center gap-1 text-hud-cyan text-xs font-robotic tracking-wider mb-2">
                     <Sparkles className="h-3 w-3" />
                     <span>NEW DISCOVERY</span>
                     <Sparkles className="h-3 w-3" />
                   </div>
                 )}
 
-                <div className="flex justify-center mb-3">
+                <div className="flex justify-center mb-2">
                   {(() => {
                     const IconComponent = iconMap[creature.icon] || HelpCircle;
                     return (
-                      <div className="p-4 rounded-full bg-background/50 border border-hud-cyan/30" style={{ boxShadow: '0 0 20px hsl(var(--hud-cyan) / 0.5)' }}>
-                        <IconComponent size={48} className="text-hud-cyan drop-shadow-[0_0_12px_hsl(var(--hud-cyan))]" />
+                      <div className="p-3 rounded-full bg-background/50 border border-hud-cyan/30" style={{ boxShadow: '0 0 20px hsl(var(--hud-cyan) / 0.5)' }}>
+                        <IconComponent size={36} className="text-hud-cyan drop-shadow-[0_0_12px_hsl(var(--hud-cyan))]" />
                       </div>
                     );
                   })()}
                 </div>
 
                 <h3
-                  className={`text-xl font-bold mb-1 ${getRarityColor(
+                  className={`text-lg font-bold mb-0.5 ${getRarityColor(
                     creature.rarity
                   )}`}
                 >
@@ -151,7 +151,7 @@ export const MissionCompleteModal = ({
                 </h3>
 
                 <p
-                  className={`text-xs font-robotic tracking-widest uppercase mt-1 ${
+                  className={`text-xs font-robotic tracking-widest uppercase ${
                     creature.rarity === 'Common' ? 'text-gray-400' :
                     creature.rarity === 'Rare' ? 'text-cyan-400' :
                     'text-amber-400'
@@ -161,7 +161,7 @@ export const MissionCompleteModal = ({
                 </p>
 
                 {/* Traits List */}
-                <div className="flex flex-col items-center gap-1 mt-4">
+                <div className="flex flex-col items-center gap-0.5 mt-3">
                   {creature.description.split('//').map((trait, index) => {
                     // Prettify the trait string
                     let cleanTrait = trait.trim();
@@ -187,9 +187,9 @@ export const MissionCompleteModal = ({
                 </div>
 
                 {/* Pearl reward */}
-                <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-border">
+                <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-border">
                   <Gem className="h-4 w-4 text-yellow-400" />
-                  <span className="text-yellow-400 font-robotic">
+                  <span className="text-yellow-400 font-robotic text-sm">
                     +{pearls} PEARLS
                   </span>
                 </div>
@@ -198,11 +198,11 @@ export const MissionCompleteModal = ({
           </div>
         )}
 
-        <AlertDialogFooter className="mt-4">
+        <AlertDialogFooter className="mt-4 mb-2">
           <Button
             onClick={onClose}
             variant="outline"
-            className="w-full bg-transparent border border-cyan-500 text-cyan-400 font-robotic uppercase tracking-widest h-12 transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(6,182,212,0.5)]"
+            className="w-full bg-transparent border border-cyan-500 text-cyan-400 font-robotic uppercase tracking-widest h-11 transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(6,182,212,0.5)]"
           >
             STORE DATA
           </Button>
