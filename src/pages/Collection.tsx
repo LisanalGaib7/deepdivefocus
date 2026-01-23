@@ -14,6 +14,11 @@ import {
   Ghost, 
   Skull,
   HelpCircle,
+  Zap,
+  Bug,
+  Cloud,
+  Smile,
+  Gem,
   LucideIcon,
 } from "lucide-react";
 import { CREATURES, Creature } from "@/data/creatures";
@@ -34,6 +39,10 @@ const iconMap: Record<string, LucideIcon> = {
   Anchor,
   Ghost,
   Skull,
+  Zap,
+  Bug,
+  Cloud,
+  Smile,
 };
 
 // Theme color mapping for dynamic styling
@@ -164,6 +173,15 @@ const getRarityStyles = (rarity: string, unlocked: boolean, themeColors: ReturnT
         iconGlow: `drop-shadow-[0_0_12px_${themeColors.glow.replace('rgba', '').replace(')', '').replace('(', '')}]`,
         textColor: themeColors.text,
         iconColor: themeColors.text,
+      };
+    case 'Uncommon':
+      return {
+        border: 'border-emerald-500',
+        shadow: 'shadow-md shadow-emerald-500/20',
+        glow: { boxShadow: '0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 10px rgba(16, 185, 129, 0.1)' },
+        iconGlow: 'drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]',
+        textColor: 'text-emerald-400',
+        iconColor: 'text-emerald-400',
       };
     default:
       return {
@@ -324,11 +342,17 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
                       innerGlow: themeColors.bg,
                       pulse: 'animate-pulse',
                     }
-                  : {
-                      container: 'bg-slate-800/30 border-slate-600/40',
-                      innerGlow: 'bg-slate-500/5',
-                      pulse: '',
-                    }
+                  : creature.rarity === 'Uncommon'
+                    ? {
+                        container: 'bg-emerald-900/20 border-emerald-500/60',
+                        innerGlow: 'bg-emerald-500/10',
+                        pulse: '',
+                      }
+                    : {
+                        container: 'bg-slate-800/30 border-slate-600/40',
+                        innerGlow: 'bg-slate-500/5',
+                        pulse: '',
+                      }
               : {
                   container: 'bg-slate-900/30 border-slate-800/40',
                   innerGlow: 'bg-slate-800/10',
@@ -338,7 +362,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
             return (
               <div className="relative">
                 {/* Outer pulsing ring for Rare/Legendary */}
-                {unlocked && creature.rarity !== 'Common' && (
+                {unlocked && (creature.rarity === 'Legendary' || creature.rarity === 'Rare') && (
                   <div 
                     className={`absolute -inset-1 rounded-full ${capsuleStyles.pulse}`}
                     style={{
@@ -402,19 +426,27 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
           {unlocked ? creature.name : '???'}
         </h3>
 
-        {/* Rarity badge */}
-        <div className="flex justify-center">
+        {/* Rarity badge + Pearls */}
+        <div className="flex justify-center items-center gap-2">
           <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono tracking-widest ${
             unlocked 
               ? creature.rarity === 'Legendary' 
                 ? 'border-amber-500/60 text-amber-400 bg-amber-500/10' 
                 : creature.rarity === 'Rare'
                   ? `${themeColors.border}/60 ${themeColors.text} ${themeColors.bg}`
-                  : 'border-slate-600 text-slate-400 bg-slate-800/50'
+                  : creature.rarity === 'Uncommon'
+                    ? 'border-emerald-500/60 text-emerald-400 bg-emerald-500/10'
+                    : 'border-slate-600 text-slate-400 bg-slate-800/50'
               : 'border-slate-800 text-slate-600 bg-slate-900/50'
           }`}>
             {creature.rarity.toUpperCase()}
           </span>
+          {unlocked && (
+            <span className="text-[10px] flex items-center gap-0.5 text-amber-300 font-mono">
+              <Gem size={10} className="text-amber-400" />
+              {creature.pearls}
+            </span>
+          )}
         </div>
 
         {/* Traits List (Parsed Description) */}
