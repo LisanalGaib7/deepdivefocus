@@ -690,8 +690,8 @@ const Index = () => {
                   type="text"
                   value={newTaskText}
                   onChange={(e) => setNewTaskText(e.target.value)}
-                  placeholder="Add a focus task..."
-                  className="text-center text-lg h-14 bg-card border-border focus:border-primary transition-colors flex-1"
+                  placeholder="INITIALIZE OBJECTIVE..."
+                  className="text-center text-lg h-14 font-mono bg-black/60 border border-white/10 placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
                   disabled={tasks.length >= TIMER_CONFIG.MAX_TASKS}
                 />
                 <Button 
