@@ -97,7 +97,7 @@ const GuidebookModal = () => {
             <AccordionContent className="text-muted-foreground space-y-3 pb-4">
               <p className="flex items-start gap-2">
                 <span className="text-primary">▸</span>
-                Customize your interface colors in the Settings.
+                Customize your interface colors directly on the Main Dashboard.
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-primary">▸</span>
