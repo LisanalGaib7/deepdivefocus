@@ -203,6 +203,7 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 bg-black/50 border-primary/30 focus:border-primary"
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -221,6 +222,7 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 bg-black/50 border-primary/30 focus:border-primary"
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                   required
                   minLength={6}
                 />
