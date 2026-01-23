@@ -761,38 +761,56 @@ const Index = () => {
 
         {/* Total Focus Time - HUD Data Module */}
         <div className="flex justify-center">
-          <div className="relative inline-flex flex-col items-center gap-2 px-8 py-4 rounded-2xl bg-background/40 backdrop-blur-md border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+          <div className="relative inline-flex flex-col items-center gap-3 px-10 py-5 rounded-2xl bg-background/40 backdrop-blur-md border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)]">
             {/* Corner accents for HUD feel */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/50 rounded-tl-lg" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/50 rounded-tr-lg" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/50 rounded-bl-lg" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/50 rounded-br-lg" />
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/50 rounded-tl-xl" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary/50 rounded-tr-xl" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary/50 rounded-bl-xl" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 rounded-br-xl" />
             
-            {/* Label with icon */}
+            {/* Label with status indicator */}
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-medium">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-primary/70 font-medium">
                 TOTAL ACCUMULATED TIME
               </span>
             </div>
             
-            {/* Main value display */}
-            <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-mono font-bold text-foreground tracking-tight tabular-nums">
+            {/* Main value display with glow */}
+            <div className="flex items-baseline gap-2">
+              <span 
+                className="text-5xl md:text-6xl font-mono font-black text-foreground tracking-tight tabular-nums drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
+              >
                 {Math.floor(totalTime / 60)}
               </span>
-              <span className="text-sm font-mono uppercase tracking-wider text-muted-foreground">
+              <span className="text-base font-mono uppercase tracking-widest text-muted-foreground font-medium">
                 mins
               </span>
             </div>
           </div>
         </div>
 
-        {/* Theme Switcher - hidden in focus mode */}
+        {/* Theme Switcher - HUD Module Style */}
         {!isRunning && (
-          <div className="space-y-3 animate-fade-in">
-            <p className="text-sm text-muted-foreground text-center">Theme</p>
-            <ThemeSwitcher />
+          <div className="flex justify-center animate-fade-in">
+            <div className="relative inline-flex flex-col items-center gap-4 px-8 py-4 rounded-2xl bg-background/40 backdrop-blur-md border border-primary/20 shadow-[0_0_15px_hsl(var(--primary)/0.1)]">
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/40 rounded-tl-lg" />
+              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/40 rounded-tr-lg" />
+              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/40 rounded-bl-lg" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/40 rounded-br-lg" />
+              
+              {/* Label */}
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-1 rounded-full bg-primary/60" />
+                <span className="text-[10px] uppercase tracking-[0.25em] text-primary/60 font-medium">
+                  INTERFACE THEME
+                </span>
+              </div>
+              
+              {/* Theme buttons */}
+              <ThemeSwitcher />
+            </div>
           </div>
         )}
 
