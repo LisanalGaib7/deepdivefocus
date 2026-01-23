@@ -212,7 +212,7 @@ const Collection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 relative overflow-hidden">
+    <div className="h-screen bg-background text-foreground overflow-y-auto relative">
       {/* Deep sea radial gradient background */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -227,7 +227,7 @@ const Collection = () => {
         }}
       />
 
-      <div className="max-w-2xl mx-auto space-y-6 relative z-10">
+      <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 
