@@ -754,7 +754,20 @@ const Index = () => {
           </div>
         )}
 
-        {/* Ambient Sound Mixer */}
+        {/* Total Focus Time - Moved up for visibility */}
+        <div className="text-center text-sm text-muted-foreground">
+          Total Focus Time: {Math.floor(totalTime / 60)} mins
+        </div>
+
+        {/* Theme Switcher - hidden in focus mode */}
+        {!isRunning && (
+          <div className="space-y-3 animate-fade-in">
+            <p className="text-sm text-muted-foreground text-center">Theme</p>
+            <ThemeSwitcher />
+          </div>
+        )}
+
+        {/* Ambient Sound Mixer - Moved to bottom */}
         <div className="space-y-3">
           <div className="flex justify-center">
             <Button
@@ -811,19 +824,6 @@ const Index = () => {
               </Button>
             </div>
           )}
-        </div>
-
-        {/* Theme Switcher - hidden in focus mode */}
-        {!isRunning && (
-          <div className="space-y-3 animate-fade-in">
-            <p className="text-sm text-muted-foreground text-center">Theme</p>
-            <ThemeSwitcher />
-          </div>
-        )}
-
-        {/* Stats */}
-        <div className="text-center text-sm text-muted-foreground">
-          Total Deep Dive Time: {Math.floor(totalTime / 60)} mins
         </div>
           </div>
         </div>
