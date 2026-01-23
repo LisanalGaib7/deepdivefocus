@@ -759,15 +759,32 @@ const Index = () => {
           </div>
         )}
 
-        {/* Total Focus Time - HUD Style Display */}
+        {/* Total Focus Time - HUD Data Module */}
         <div className="flex justify-center">
-          <div className="inline-flex flex-col items-center gap-1 px-6 py-3 rounded-xl bg-card/50 border border-border/50 backdrop-blur-sm">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">
-              TOTAL FOCUS TIME
-            </span>
-            <span className="text-2xl font-mono font-bold text-foreground tracking-wide">
-              {Math.floor(totalTime / 60)} <span className="text-sm text-muted-foreground">mins</span>
-            </span>
+          <div className="relative inline-flex flex-col items-center gap-2 px-8 py-4 rounded-2xl bg-background/40 backdrop-blur-md border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+            {/* Corner accents for HUD feel */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/50 rounded-tl-lg" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-primary/50 rounded-tr-lg" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-primary/50 rounded-bl-lg" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/50 rounded-br-lg" />
+            
+            {/* Label with icon */}
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-medium">
+                TOTAL ACCUMULATED TIME
+              </span>
+            </div>
+            
+            {/* Main value display */}
+            <div className="flex items-baseline gap-1">
+              <span className="text-4xl font-mono font-bold text-foreground tracking-tight tabular-nums">
+                {Math.floor(totalTime / 60)}
+              </span>
+              <span className="text-sm font-mono uppercase tracking-wider text-muted-foreground">
+                mins
+              </span>
+            </div>
           </div>
         </div>
 
