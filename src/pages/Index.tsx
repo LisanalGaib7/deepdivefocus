@@ -677,9 +677,14 @@ const Index = () => {
         {!isRunning && (
           <div className="space-y-4 animate-fade-in">
             <form onSubmit={handleAddTask} className="space-y-2">
-              <label className="text-sm text-muted-foreground block text-center">
-                What are you diving into? ({tasks.length}/{TIMER_CONFIG.MAX_TASKS})
-              </label>
+              <div className="flex justify-between items-center px-1 mb-2">
+                <span className="text-xs uppercase tracking-widest text-primary/70">
+                  MISSION OBJECTIVE
+                </span>
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">
+                  SLOT [{tasks.length}/{TIMER_CONFIG.MAX_TASKS}]
+                </span>
+              </div>
               <div className="flex gap-2">
                 <Input
                   type="text"
@@ -754,9 +759,16 @@ const Index = () => {
           </div>
         )}
 
-        {/* Total Focus Time - Moved up for visibility */}
-        <div className="text-center text-sm text-muted-foreground">
-          Total Focus Time: {Math.floor(totalTime / 60)} mins
+        {/* Total Focus Time - HUD Style Display */}
+        <div className="flex justify-center">
+          <div className="inline-flex flex-col items-center gap-1 px-6 py-3 rounded-xl bg-card/50 border border-border/50 backdrop-blur-sm">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">
+              TOTAL FOCUS TIME
+            </span>
+            <span className="text-2xl font-mono font-bold text-foreground tracking-wide">
+              {Math.floor(totalTime / 60)} <span className="text-sm text-muted-foreground">mins</span>
+            </span>
+          </div>
         </div>
 
         {/* Theme Switcher - hidden in focus mode */}
