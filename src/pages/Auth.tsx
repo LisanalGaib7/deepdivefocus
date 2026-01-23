@@ -26,7 +26,7 @@ const bubbles = generateBubbles(20);
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, signIn, signUp, signInWithGoogle, loading } = useAuthContext();
+  const { isAuthenticated, signIn, signUp, signInWithGoogle, signInAsGuest, loading } = useAuthContext();
   
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -95,6 +95,11 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setError(null);
     await signInWithGoogle();
+  };
+
+  const handleGuestMode = () => {
+    signInAsGuest();
+    navigate('/');
   };
 
   if (loading) {
@@ -276,6 +281,15 @@ const Auth = () => {
           </svg>
           GOOGLE AUTHENTICATION
         </Button>
+
+        {/* Guest/Demo Mode */}
+        <button
+          type="button"
+          onClick={handleGuestMode}
+          className="w-full text-center text-muted-foreground/70 hover:text-primary text-sm font-mono tracking-wide transition-colors duration-300 py-2"
+        >
+          ▸ CONTINUE AS GUEST (DEMO MODE)
+        </button>
 
         {/* Toggle Sign Up / Sign In */}
         <p className="text-center text-muted-foreground text-sm font-mono">

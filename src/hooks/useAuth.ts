@@ -20,6 +20,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isGuestMode, setIsGuestMode] = useState(false);
 
   // Fetch user profile
   const fetchProfile = useCallback(async (userId: string) => {
@@ -111,6 +112,14 @@ export const useAuth = () => {
 
   // Sign out
   const signOut = useCallback(async () => {
+    // Handle guest mode logout
+    if (isGuestMode) {
+      setIsGuestMode(false);
+      setProfile(null);
+      toast.info('Guest session ended');
+      return { error: null };
+    }
+
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error('Sign out failed', { description: error.message });
@@ -121,6 +130,28 @@ export const useAuth = () => {
     setSession(null);
     setProfile(null);
     return { error: null };
+  }, [isGuestMode]);
+
+  // Sign in as guest (demo mode)
+  const signInAsGuest = useCallback(() => {
+    // Create a mock profile for demo purposes
+    const mockProfile: UserProfile = {
+      id: 'guest-profile',
+      user_id: 'guest-user',
+      display_name: 'Guest Pilot',
+      avatar_url: null,
+      theme_color: 'ocean',
+      total_pearls: 0,
+      total_depth: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    setProfile(mockProfile);
+    setIsGuestMode(true);
+    toast.success('Welcome aboard, Guest Pilot!', { 
+      description: 'Demo mode - data will not be saved' 
+    });
   }, []);
 
   // Initialize auth state
@@ -171,10 +202,12 @@ export const useAuth = () => {
     session,
     profile,
     loading,
-    isAuthenticated: !!session,
+    isAuthenticated: !!session || isGuestMode,
+    isGuestMode,
     signUp,
     signIn,
     signInWithGoogle,
+    signInAsGuest,
     signOut,
     updateProfile,
     refetchProfile: () => user && fetchProfile(user.id).then(setProfile),
