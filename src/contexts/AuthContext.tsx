@@ -8,9 +8,11 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isGuestMode: boolean;
   signUp: (email: string, password: string) => Promise<{ error: Error | null; data?: any }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null; data?: any }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
+  signInAsGuest: () => void;
   signOut: () => Promise<{ error: Error | null }>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: Error | null }>;
   refetchProfile: () => void;
