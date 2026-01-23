@@ -17,8 +17,3 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   }
-}
-/* Lovable 배지 숨기기 */
-#lovable-badge {
-  display: none !important;
-}
