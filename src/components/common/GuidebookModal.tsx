@@ -82,7 +82,7 @@ const GuidebookModal = () => {
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-primary">▸</span>
-                Check your collection in the 'Bestiary' tab.
+                Check your collection in the 'Collection' tab.
               </p>
             </AccordionContent>
           </AccordionItem>
