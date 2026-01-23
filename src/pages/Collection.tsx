@@ -15,10 +15,10 @@ import {
   Skull,
   HelpCircle,
   LucideIcon,
-  ShieldOff
 } from "lucide-react";
 import { CREATURES, Creature } from "@/data/creatures";
-import { getCollection } from "@/lib/lootSystem";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useTheme, Theme } from "@/hooks/useTheme";
 
 const iconMap: Record<string, LucideIcon> = {
@@ -179,16 +179,37 @@ const getRarityStyles = (rarity: string, unlocked: boolean, themeColors: ReturnT
 
 const Collection = () => {
   const [collectedIds, setCollectedIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const { currentTheme } = useTheme();
+  const { isAuthenticated } = useAuthContext();
+  const { fetchCreatures } = useUserCreatures();
   const themeColors = getThemeColors(currentTheme);
 
   useEffect(() => {
-    setCollectedIds(getCollection());
-  }, []);
+    const loadCreatures = async () => {
+      if (isAuthenticated) {
+        setLoading(true);
+        const creatures = await fetchCreatures();
+        setCollectedIds(creatures.map(c => c.creature_id));
+        setLoading(false);
+      }
+    };
+    loadCreatures();
+  }, [isAuthenticated, fetchCreatures]);
 
   const isCollected = (creatureId: string) => collectedIds.includes(creatureId);
   const collectedCount = collectedIds.length;
   const totalCount = CREATURES.length;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 flex items-center justify-center">
+        <div className="animate-pulse text-primary font-robotic tracking-widest">
+          SCANNING SPECIMENS...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 relative overflow-hidden">

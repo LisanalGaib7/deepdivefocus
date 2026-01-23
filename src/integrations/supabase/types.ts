@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      focus_sessions: {
+        Row: {
+          created_at: string
+          creature_id: string | null
+          depth_reached: number
+          duration: number
+          id: string
+          pearls_earned: number | null
+          session_date: string
+          task_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          creature_id?: string | null
+          depth_reached?: number
+          duration: number
+          id?: string
+          pearls_earned?: number | null
+          session_date?: string
+          task_name?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          creature_id?: string | null
+          depth_reached?: number
+          duration?: number
+          id?: string
+          pearls_earned?: number | null
+          session_date?: string
+          task_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          theme_color: string | null
+          total_depth: number | null
+          total_pearls: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          theme_color?: string | null
+          total_depth?: number | null
+          total_pearls?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          theme_color?: string | null
+          total_depth?: number | null
+          total_pearls?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_creatures: {
+        Row: {
+          creature_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          creature_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          creature_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -8,7 +8,6 @@ import { toast } from "sonner";
 // Common components
 import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 import BottomNav from "@/components/common/BottomNav";
-import LoginView from "@/components/common/LoginView";
 
 // Timer feature components
 import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
@@ -21,11 +20,13 @@ import History from "@/pages/History";
 import Collection from "@/pages/Collection";
 
 // Hooks & Data
-import { addSession } from "@/lib/sessionStorage";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useFocusSessions } from "@/hooks/useFocusSessions";
+import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
 import { Creature } from "@/data/creatures";
-import { rollForCreature, addToCollection } from "@/lib/lootSystem";
+import { rollForCreature } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
 
 // Task type with time tracking
@@ -38,7 +39,10 @@ interface Task {
 
 
 const Index = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { signOut, profile, updateProfile } = useAuthContext();
+  const { addSession } = useFocusSessions();
+  const { addCreature } = useUserCreatures();
+  
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [isRunning, setIsRunning] = useState(false);
@@ -67,10 +71,14 @@ const Index = () => {
   });
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Load total time and tasks from localStorage
+  // Load total time from profile or localStorage
   useEffect(() => {
-    const savedTime = localStorage.getItem("deepDiveTotalTime");
-    if (savedTime) setTotalTime(parseInt(savedTime));
+    if (profile?.total_depth) {
+      setTotalTime(profile.total_depth);
+    } else {
+      const savedTime = localStorage.getItem("deepDiveTotalTime");
+      if (savedTime) setTotalTime(parseInt(savedTime));
+    }
     
     const savedTasks = localStorage.getItem("deepDiveTasks");
     if (savedTasks) {
@@ -80,7 +88,7 @@ const Index = () => {
       const firstUncompleted = parsedTasks.find((t: Task) => !t.isCompleted);
       if (firstUncompleted) setSelectedTaskId(firstUncompleted.id);
     }
-  }, []);
+  }, [profile]);
 
 
   // Save tasks to localStorage whenever they change
@@ -97,6 +105,8 @@ const Index = () => {
       setShowEmergencyModal(true);
     }
   }, [isEmergency, isRunning]);
+
+  const selectedTask = tasks.find(t => t.id === selectedTaskId);
 
   // Timer logic with per-task time accumulation
   useEffect(() => {
@@ -127,14 +137,6 @@ const Index = () => {
             setIsRunning(false);
             playCompletionSound();
             
-            // Save session to history
-            addSession({
-              taskId: selectedTaskId,
-              taskName: selectedTask?.text || "Focus Session",
-              duration: setDuration,
-              timestamp: Date.now(),
-            });
-            
             // Trigger mission complete with loot roll
             handleMissionComplete();
           }
@@ -145,7 +147,7 @@ const Index = () => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, totalTime, selectedTaskId]);
+  }, [isRunning, timeLeft, totalTime, selectedTaskId, playCompletionSound]);
 
   // Calculate angle from mouse/touch position (0 at top, clockwise 0-360)
   const getAngleFromEvent = useCallback((clientX: number, clientY: number): number => {
@@ -284,7 +286,7 @@ const Index = () => {
     resetDive();
   };
 
-  const handleMissionComplete = () => {
+  const handleMissionComplete = useCallback(() => {
     // Store current depth and duration before reset
     setCompletedSessionDepth(depth);
     setCompletedSessionDuration(setDuration);
@@ -293,14 +295,31 @@ const Index = () => {
     const creature = rollForCreature(depth);
     setRewardCreature(creature);
     
+    // Save session to database
+    addSession({
+      task_name: selectedTask?.text || "Focus Session",
+      duration: setDuration,
+      depth_reached: depth,
+      pearls_earned: Math.floor(depth / 10),
+      creature_id: creature?.id || null,
+    });
+
+    // Update total depth in profile
+    if (profile) {
+      updateProfile({ 
+        total_depth: (profile.total_depth || 0) + depth,
+        total_pearls: (profile.total_pearls || 0) + Math.floor(depth / 10),
+      });
+    }
+    
     // Show the mission complete modal
     setShowMissionCompleteModal(true);
-  };
+  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile]);
 
-  const handleMissionCompleteClose = () => {
+  const handleMissionCompleteClose = useCallback(async () => {
     // Add creature to collection if one was found
     if (rewardCreature) {
-      addToCollection(rewardCreature.id);
+      await addCreature(rewardCreature.id);
     }
     
     setShowMissionCompleteModal(false);
@@ -308,10 +327,12 @@ const Index = () => {
     setTimeLeft(setDuration);
     resetDive();
     
-    toast.success("Creature added to collection!", {
-      description: rewardCreature ? `${rewardCreature.name} saved!` : "Keep diving!",
-    });
-  };
+    if (rewardCreature) {
+      toast.success("Creature added to collection!", {
+        description: `${rewardCreature.name} saved!`,
+      });
+    }
+  }, [rewardCreature, addCreature, setDuration, resetDive]);
 
   // Task management functions
   const handleAddTask = (e: React.FormEvent) => {
@@ -368,8 +389,6 @@ const Index = () => {
     return `${mins}m`;
   };
 
-  const selectedTask = tasks.find(t => t.id === selectedTaskId);
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -381,12 +400,9 @@ const Index = () => {
   const displayTime = isDragging ? setDuration : timeLeft;
   const displayProgress = setDuration > 0 ? (displayTime / TIMER_CONFIG.MAX_TIME_SECONDS) * 100 : 0;
 
-  
-
-  // Show login view if not logged in
-  if (!isLoggedIn) {
-    return <LoginView onLogin={() => setIsLoggedIn(true)} />;
-  }
+  const handleLogout = async () => {
+    await signOut();
+  };
 
   return (
     <>
@@ -402,7 +418,7 @@ const Index = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => setIsLoggedIn(false)}
+                onClick={handleLogout}
                 className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all duration-300"
                 aria-label="Logout"
               >

@@ -1,20 +1,44 @@
 import { useMemo, useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
-import { initializeSessions, FocusSession } from "@/lib/sessionStorage";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useFocusSessions, FocusSessionDB } from "@/hooks/useFocusSessions";
 import { YearlyDepthLog } from "@/features/history";
 
 const History = () => {
   const { currentTheme } = useTheme();
   const primaryColor = getThemePrimaryHex(currentTheme);
   const themePalette = getThemePalette(currentTheme);
-  const [sessions, setSessions] = useState<FocusSession[]>([]);
+  const { isAuthenticated } = useAuthContext();
+  const { fetchSessions } = useFocusSessions();
+  
+  const [sessions, setSessions] = useState<FocusSessionDB[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    setSessions(initializeSessions());
-  }, []);
+    const loadSessions = async () => {
+      if (isAuthenticated) {
+        setLoading(true);
+        const data = await fetchSessions();
+        setSessions(data);
+        setLoading(false);
+      }
+    };
+    loadSessions();
+  }, [isAuthenticated, fetchSessions]);
+
+  // Convert DB sessions to the format expected by components
+  const formattedSessions = useMemo(() => {
+    return sessions.map(s => ({
+      id: s.id,
+      taskId: s.id,
+      taskName: s.task_name,
+      duration: s.duration,
+      timestamp: new Date(s.session_date).getTime(),
+    }));
+  }, [sessions]);
 
   // Weekly data for bar chart
   const weeklyData = useMemo(() => {
@@ -29,7 +53,7 @@ const History = () => {
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
 
-      const dayMinutes = sessions
+      const dayMinutes = formattedSessions
         .filter((s) => s.timestamp >= date.getTime() && s.timestamp <= endOfDay.getTime())
         .reduce((sum, s) => sum + s.duration / 60, 0);
 
@@ -40,13 +64,13 @@ const History = () => {
     }
 
     return result;
-  }, [sessions]);
+  }, [formattedSessions]);
 
   // Task breakdown for donut chart
   const taskBreakdown = useMemo(() => {
     const taskMap: Record<string, { name: string; minutes: number }> = {};
 
-    sessions.forEach((s) => {
+    formattedSessions.forEach((s) => {
       const key = s.taskName || "Untitled";
       if (!taskMap[key]) {
         taskMap[key] = { name: key, minutes: 0 };
@@ -58,34 +82,42 @@ const History = () => {
       .map((t) => ({ ...t, minutes: Math.round(t.minutes) }))
       .sort((a, b) => b.minutes - a.minutes)
       .slice(0, 5);
-  }, [sessions]);
-
-  
+  }, [formattedSessions]);
 
   // Stats
   const totalMinutes = useMemo(() => {
-    return Math.round(sessions.reduce((sum, s) => sum + s.duration / 60, 0));
-  }, [sessions]);
+    return Math.round(formattedSessions.reduce((sum, s) => sum + s.duration / 60, 0));
+  }, [formattedSessions]);
 
-  const totalSessions = sessions.length;
+  const totalSessions = formattedSessions.length;
 
   const avgSessionLength = useMemo(() => {
-    if (sessions.length === 0) return 0;
-    return Math.round(totalMinutes / sessions.length);
-  }, [sessions, totalMinutes]);
+    if (formattedSessions.length === 0) return 0;
+    return Math.round(totalMinutes / formattedSessions.length);
+  }, [formattedSessions, totalMinutes]);
 
   const todayMinutes = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return Math.round(
-      sessions
+      formattedSessions
         .filter((s) => s.timestamp >= today.getTime())
         .reduce((sum, s) => sum + s.duration / 60, 0)
     );
-  }, [sessions]);
+  }, [formattedSessions]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 flex items-center justify-center">
+        <div className="animate-pulse text-primary font-robotic tracking-widest">
+          LOADING DIVE LOGS...
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#000000] text-foreground px-4 py-8 pb-28">
+    <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28">
       <div className="max-w-2xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -144,14 +176,13 @@ const History = () => {
                     if (active && payload && payload.length) {
                       return (
                         <div
-                          className="rounded-lg px-3 py-2"
+                          className="rounded-lg px-3 py-2 bg-background border"
                           style={{
-                            background: '#000000',
-                            border: `1px solid ${primaryColor}`,
+                            borderColor: primaryColor,
                             boxShadow: `0 0 20px ${primaryColor}66`,
                           }}
                         >
-                          <p className="text-white text-xs font-medium mb-1">{label}</p>
+                          <p className="text-foreground text-xs font-medium mb-1">{label}</p>
                           <p className="font-mono font-bold" style={{ color: primaryColor }}>
                             {payload[0].value} min
                           </p>
@@ -222,7 +253,7 @@ const History = () => {
                       outerRadius={70}
                       dataKey="minutes"
                       paddingAngle={2}
-                      stroke="#000000"
+                      stroke="hsl(var(--background))"
                       strokeWidth={2}
                       onMouseEnter={(_, index) => setActiveIndex(index)}
                       onMouseLeave={() => setActiveIndex(null)}
@@ -266,14 +297,13 @@ const History = () => {
                           const sliceColor = themePalette[taskBreakdown.findIndex(t => t.name === data.name) % themePalette.length];
                           return (
                             <div
-                              className="rounded-lg px-3 py-2"
+                              className="rounded-lg px-3 py-2 bg-background/95 border"
                               style={{
-                                background: 'rgba(0, 0, 0, 0.95)',
-                                border: `1px solid ${sliceColor}`,
+                                borderColor: sliceColor,
                                 boxShadow: `0 0 20px ${sliceColor}66`,
                               }}
                             >
-                              <p className="text-white text-xs font-bold mb-1">{data.name}</p>
+                              <p className="text-foreground text-xs font-bold mb-1">{data.name}</p>
                               <p className="font-mono font-bold" style={{ color: sliceColor }}>
                                 {data.value} min
                               </p>
@@ -305,7 +335,7 @@ const History = () => {
         )}
 
         {/* Yearly Depth Log */}
-        <YearlyDepthLog sessions={sessions} />
+        <YearlyDepthLog sessions={formattedSessions} />
       </div>
     </div>
   );
