@@ -1,3 +1,5 @@
+import { LucideIcon } from 'lucide-react';
+
 export type CreatureRarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary';
 
 export interface Creature {
@@ -12,9 +14,7 @@ export interface Creature {
 }
 
 export const CREATURES: Creature[] = [
-  // ==========================================
-  // TIER 1: SHALLOW WATERS (0m - 100m) - Common
-  // ==========================================
+  // TIER 1: SHALLOW WATERS (0m - 100m)
   {
     id: 'sardine',
     name: 'Silver Sardine',
@@ -55,10 +55,7 @@ export const CREATURES: Creature[] = [
     pearls: 15,
     traits: ['Camouflage', 'Fragile'],
   },
-
-  // ==========================================
-  // TIER 2: THE TWILIGHT ZONE (100m - 500m) - Uncommon
-  // ==========================================
+  // TIER 2: TWILIGHT ZONE (100m - 500m)
   {
     id: 'jellyfish',
     name: 'Neon Jellyfish',
@@ -109,10 +106,7 @@ export const CREATURES: Creature[] = [
     pearls: 60,
     traits: ['Majestic', 'Silent'],
   },
-
-  // ==========================================
-  // TIER 3: THE MIDNIGHT ZONE (500m - 1000m) - Rare
-  // ==========================================
+  // TIER 3: MIDNIGHT ZONE (500m - 1000m)
   {
     id: 'anglerfish',
     name: 'Abyssal Anglerfish',
@@ -153,10 +147,7 @@ export const CREATURES: Creature[] = [
     pearls: 120,
     traits: ['Soft', 'Meme'],
   },
-
-  // ==========================================
-  // TIER 4: THE ABYSS (1000m+) - Legendary
-  // ==========================================
+  // TIER 4: THE ABYSS (1000m+)
   {
     id: 'glowing_shark',
     name: 'Spectral Shark',
@@ -189,25 +180,17 @@ export const CREATURES: Creature[] = [
   },
 ];
 
-// Helper function to get creatures available at a given depth
 export const getCreaturesAtDepth = (depth: number): Creature[] => {
   return CREATURES.filter(creature => creature.minDepth <= depth);
 };
 
-// Helper function to get rarity color
 export const getRarityColor = (rarity: CreatureRarity): string => {
   switch (rarity) {
-    case 'Common':
-      return 'text-muted-foreground';
-    case 'Uncommon':
-      return 'text-emerald-400';
-    case 'Rare':
-      return 'text-blue-400';
-    case 'Epic':
-      return 'text-purple-400 drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]';
-    case 'Legendary':
-      return 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]';
-    default:
-      return 'text-foreground';
+    case 'Common': return 'text-muted-foreground';
+    case 'Uncommon': return 'text-emerald-400';
+    case 'Rare': return 'text-hud-cyan';
+    case 'Epic': return 'text-purple-400 drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]';
+    case 'Legendary': return 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]';
+    default: return 'text-foreground';
   }
 };
