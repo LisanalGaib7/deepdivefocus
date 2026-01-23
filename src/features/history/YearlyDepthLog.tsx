@@ -1,12 +1,93 @@
 import { useMemo, useState } from "react";
 import { FocusSession } from "@/lib/sessionStorage";
+import { useTheme, Theme } from "@/hooks/useTheme";
 
 interface YearlyDepthLogProps {
   sessions: FocusSession[];
 }
 
+// Theme-based color palettes for heatmap cells
+const getThemeHeatmapColors = (theme: Theme) => {
+  const palettes: Record<Theme, {
+    empty: string;
+    level1: string;
+    level2: string;
+    level3: string;
+    level4: string;
+    level4Glow: string;
+    tooltipBorder: string;
+    tooltipText: string;
+    scrollbarThumb: string;
+    scrollbarHover: string;
+  }> = {
+    ocean: {
+      empty: 'rgba(255, 255, 255, 0.05)',
+      level1: '#083344', // cyan-950
+      level2: '#0e7490', // cyan-700
+      level3: '#06b6d4', // cyan-500
+      level4: '#67e8f9', // cyan-300
+      level4Glow: '#06b6d4',
+      tooltipBorder: '#06b6d4',
+      tooltipText: '#22d3ee',
+      scrollbarThumb: '#155e75', // cyan-800
+      scrollbarHover: '#0891b2', // cyan-600
+    },
+    sage: {
+      empty: 'rgba(255, 255, 255, 0.05)',
+      level1: '#14532d', // green-900
+      level2: '#15803d', // green-700
+      level3: '#22c55e', // green-500
+      level4: '#86efac', // green-300
+      level4Glow: '#22c55e',
+      tooltipBorder: '#22c55e',
+      tooltipText: '#4ade80',
+      scrollbarThumb: '#166534', // green-800
+      scrollbarHover: '#16a34a', // green-600
+    },
+    rose: {
+      empty: 'rgba(255, 255, 255, 0.05)',
+      level1: '#7f1d1d', // red-900
+      level2: '#b91c1c', // red-700
+      level3: '#ef4444', // red-500
+      level4: '#fca5a5', // red-300
+      level4Glow: '#ef4444',
+      tooltipBorder: '#f43f5e',
+      tooltipText: '#fb7185',
+      scrollbarThumb: '#9f1239', // rose-800
+      scrollbarHover: '#e11d48', // rose-600
+    },
+    lavender: {
+      empty: 'rgba(255, 255, 255, 0.05)',
+      level1: '#4c1d95', // violet-900
+      level2: '#6d28d9', // violet-700
+      level3: '#8b5cf6', // violet-500
+      level4: '#c4b5fd', // violet-300
+      level4Glow: '#8b5cf6',
+      tooltipBorder: '#8b5cf6',
+      tooltipText: '#a78bfa',
+      scrollbarThumb: '#5b21b6', // violet-800
+      scrollbarHover: '#7c3aed', // violet-600
+    },
+    mono: {
+      empty: 'rgba(255, 255, 255, 0.05)',
+      level1: '#262626', // neutral-800
+      level2: '#525252', // neutral-600
+      level3: '#a3a3a3', // neutral-400
+      level4: '#e5e5e5', // neutral-200
+      level4Glow: '#a3a3a3',
+      tooltipBorder: '#737373',
+      tooltipText: '#d4d4d4',
+      scrollbarThumb: '#404040', // neutral-700
+      scrollbarHover: '#525252', // neutral-600
+    },
+  };
+  return palettes[theme];
+};
+
 const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
   const [hoveredCell, setHoveredCell] = useState<{ date: string; minutes: number; x: number; y: number } | null>(null);
+  const { currentTheme } = useTheme();
+  const themeColors = getThemeHeatmapColors(currentTheme);
 
   // Aggregate sessions by date (sum all tasks for each day)
   const dailyData = useMemo(() => {
@@ -77,24 +158,24 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     return 4;
   };
 
-  // Get color class based on level
+  // Get color class based on level with theme support
   const getCellStyle = (level: number): React.CSSProperties => {
     switch (level) {
       case 0:
-        return { backgroundColor: "rgba(255, 255, 255, 0.05)" };
+        return { backgroundColor: themeColors.empty };
       case 1:
-        return { backgroundColor: "#083344" }; // cyan-950
+        return { backgroundColor: themeColors.level1 };
       case 2:
-        return { backgroundColor: "#0e7490" }; // cyan-700
+        return { backgroundColor: themeColors.level2 };
       case 3:
-        return { backgroundColor: "#06b6d4" }; // cyan-500
+        return { backgroundColor: themeColors.level3 };
       case 4:
         return {
-          backgroundColor: "#67e8f9", // cyan-300
-          boxShadow: "0 0 8px #67e8f9, 0 0 16px #06b6d4",
+          backgroundColor: themeColors.level4,
+          boxShadow: `0 0 8px ${themeColors.level4}, 0 0 16px ${themeColors.level4Glow}`,
         };
       default:
-        return { backgroundColor: "rgba(255, 255, 255, 0.05)" };
+        return { backgroundColor: themeColors.empty };
     }
   };
 
@@ -128,10 +209,29 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     return labels;
   }, [grid]);
 
+  // Dynamic scrollbar styles
+  const scrollbarStyle = `
+    .scrollbar-theme-${currentTheme}::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-theme-${currentTheme}::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+    .scrollbar-theme-${currentTheme}::-webkit-scrollbar-thumb {
+      background: ${themeColors.scrollbarThumb};
+      border-radius: 3px;
+    }
+    .scrollbar-theme-${currentTheme}::-webkit-scrollbar-thumb:hover {
+      background: ${themeColors.scrollbarHover};
+    }
+  `;
+
   return (
     <div className="space-y-3">
+      <style>{scrollbarStyle}</style>
       <h2 className="text-lg font-semibold text-muted-foreground">YEARLY DIVE HISTORY</h2>
-      <div className="bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-deep-sea">
+      <div className={`bg-card rounded-2xl p-4 border border-border overflow-x-auto scrollbar-theme-${currentTheme}`}>
         {/* Month labels */}
         <div className="flex mb-2">
           {monthLabels.map(({ label, colIndex }, i) => (
@@ -193,12 +293,12 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
                   top: hoveredCell.y - 50,
                   transform: "translateX(-50%)",
                   background: "#000000",
-                  border: "1px solid #06b6d4",
-                  boxShadow: "0 0 20px rgba(6, 182, 212, 0.4)",
+                  border: `1px solid ${themeColors.tooltipBorder}`,
+                  boxShadow: `0 0 20px ${themeColors.tooltipBorder}66`,
                 }}
               >
                 <p className="text-white text-xs font-medium mb-1">{hoveredCell.date}</p>
-                <p className="font-mono font-bold text-cyan-400">
+                <p className="font-mono font-bold" style={{ color: themeColors.tooltipText }}>
                   {hoveredCell.minutes > 0 ? `${hoveredCell.minutes} min` : "No focus"}
                 </p>
               </div>

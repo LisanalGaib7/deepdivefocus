@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { CREATURES, Creature } from "@/data/creatures";
 import { getCollection } from "@/lib/lootSystem";
+import { useTheme, Theme } from "@/hooks/useTheme";
 
 const iconMap: Record<string, LucideIcon> = {
   Fish,
@@ -35,6 +36,90 @@ const iconMap: Record<string, LucideIcon> = {
   Skull,
 };
 
+// Theme color mapping for dynamic styling
+const getThemeColors = (theme: Theme) => {
+  const themeMap: Record<Theme, {
+    primary: string;
+    primaryHex: string;
+    gradient: string;
+    glow: string;
+    glowRgba: string;
+    border: string;
+    text: string;
+    bg: string;
+    bgLight: string;
+    bullet: string;
+    depthText: string;
+  }> = {
+    ocean: {
+      primary: 'cyan',
+      primaryHex: '#22d3ee',
+      gradient: 'from-cyan-600 to-cyan-400',
+      glow: 'rgba(34, 211, 238, 0.8)',
+      glowRgba: 'rgba(34, 211, 238, 0.3)',
+      border: 'border-cyan-500',
+      text: 'text-cyan-400',
+      bg: 'bg-cyan-500/10',
+      bgLight: 'bg-cyan-900/20',
+      bullet: 'text-cyan-700',
+      depthText: 'text-cyan-600',
+    },
+    sage: {
+      primary: 'green',
+      primaryHex: '#4ade80',
+      gradient: 'from-green-600 to-green-400',
+      glow: 'rgba(74, 222, 128, 0.8)',
+      glowRgba: 'rgba(74, 222, 128, 0.3)',
+      border: 'border-green-500',
+      text: 'text-green-400',
+      bg: 'bg-green-500/10',
+      bgLight: 'bg-green-900/20',
+      bullet: 'text-green-700',
+      depthText: 'text-green-600',
+    },
+    rose: {
+      primary: 'rose',
+      primaryHex: '#fb7185',
+      gradient: 'from-rose-600 to-rose-400',
+      glow: 'rgba(251, 113, 133, 0.8)',
+      glowRgba: 'rgba(251, 113, 133, 0.3)',
+      border: 'border-rose-500',
+      text: 'text-rose-400',
+      bg: 'bg-rose-500/10',
+      bgLight: 'bg-rose-900/20',
+      bullet: 'text-rose-700',
+      depthText: 'text-rose-600',
+    },
+    lavender: {
+      primary: 'violet',
+      primaryHex: '#a78bfa',
+      gradient: 'from-violet-600 to-violet-400',
+      glow: 'rgba(167, 139, 250, 0.8)',
+      glowRgba: 'rgba(167, 139, 250, 0.3)',
+      border: 'border-violet-500',
+      text: 'text-violet-400',
+      bg: 'bg-violet-500/10',
+      bgLight: 'bg-violet-900/20',
+      bullet: 'text-violet-700',
+      depthText: 'text-violet-600',
+    },
+    mono: {
+      primary: 'gray',
+      primaryHex: '#a3a3a3',
+      gradient: 'from-gray-500 to-gray-300',
+      glow: 'rgba(163, 163, 163, 0.8)',
+      glowRgba: 'rgba(163, 163, 163, 0.3)',
+      border: 'border-gray-500',
+      text: 'text-gray-400',
+      bg: 'bg-gray-500/10',
+      bgLight: 'bg-gray-800/20',
+      bullet: 'text-gray-600',
+      depthText: 'text-gray-500',
+    },
+  };
+  return themeMap[theme];
+};
+
 // Parse description into clean trait lines
 const parseTraits = (description: string): string[] => {
   return description
@@ -48,8 +133,8 @@ const parseTraits = (description: string): string[] => {
     .filter(Boolean);
 };
 
-// Get rarity-based styles
-const getRarityStyles = (rarity: string, unlocked: boolean) => {
+// Get rarity-based styles with theme support
+const getRarityStyles = (rarity: string, unlocked: boolean, themeColors: ReturnType<typeof getThemeColors>) => {
   if (!unlocked) {
     return {
       border: 'border-slate-800',
@@ -73,12 +158,12 @@ const getRarityStyles = (rarity: string, unlocked: boolean) => {
       };
     case 'Rare':
       return {
-        border: 'border-cyan-500',
-        shadow: 'shadow-lg shadow-cyan-500/30',
-        glow: { boxShadow: '0 0 25px rgba(34, 211, 238, 0.3), inset 0 0 15px rgba(34, 211, 238, 0.1)' },
-        iconGlow: 'drop-shadow-[0_0_12px_rgba(34,211,238,0.8)]',
-        textColor: 'text-cyan-400',
-        iconColor: 'text-cyan-400',
+        border: themeColors.border,
+        shadow: `shadow-lg`,
+        glow: { boxShadow: `0 0 25px ${themeColors.glowRgba}, inset 0 0 15px ${themeColors.glowRgba}` },
+        iconGlow: `drop-shadow-[0_0_12px_${themeColors.glow.replace('rgba', '').replace(')', '').replace('(', '')}]`,
+        textColor: themeColors.text,
+        iconColor: themeColors.text,
       };
     default:
       return {
@@ -94,6 +179,8 @@ const getRarityStyles = (rarity: string, unlocked: boolean) => {
 
 const Collection = () => {
   const [collectedIds, setCollectedIds] = useState<string[]>([]);
+  const { currentTheme } = useTheme();
+  const themeColors = getThemeColors(currentTheme);
 
   useEffect(() => {
     setCollectedIds(getCollection());
@@ -109,13 +196,13 @@ const Collection = () => {
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 30%, rgba(8, 145, 178, 0.15) 0%, rgba(0, 0, 0, 0) 60%)',
+          background: `radial-gradient(ellipse at 50% 30%, ${themeColors.glowRgba.replace('0.3', '0.15')} 0%, rgba(0, 0, 0, 0) 60%)`,
         }}
       />
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 100%, rgba(6, 78, 95, 0.2) 0%, rgba(0, 0, 0, 0) 50%)',
+          background: `radial-gradient(ellipse at 50% 100%, ${themeColors.glowRgba.replace('0.3', '0.2')} 0%, rgba(0, 0, 0, 0) 50%)`,
         }}
       />
 
@@ -123,23 +210,23 @@ const Collection = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 
-            className="text-4xl font-bold tracking-widest text-cyan-400 font-orbitron uppercase"
+            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-orbitron uppercase`}
             style={{ 
-              textShadow: '0 0 30px rgba(34, 211, 238, 0.8), 0 0 60px rgba(34, 211, 238, 0.4)' 
+              textShadow: `0 0 30px ${themeColors.glow}, 0 0 60px ${themeColors.glowRgba}` 
             }}
           >
             BESTIARY
           </h1>
           <p className="text-muted-foreground text-sm font-mono tracking-wider">
-            SPECIMENS_CATALOGUED: <span className="text-cyan-400">{collectedCount}</span>/{totalCount}
+            SPECIMENS_CATALOGUED: <span className={themeColors.text}>{collectedCount}</span>/{totalCount}
           </p>
           {/* Progress bar */}
           <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden mt-4 border border-slate-800">
             <div 
-              className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-500"
+              className={`h-full bg-gradient-to-r ${themeColors.gradient} transition-all duration-500`}
               style={{ 
                 width: `${(collectedCount / totalCount) * 100}%`,
-                boxShadow: '0 0 15px rgba(34, 211, 238, 0.6)'
+                boxShadow: `0 0 15px ${themeColors.glowRgba.replace('0.3', '0.6')}`
               }}
             />
           </div>
@@ -151,7 +238,8 @@ const Collection = () => {
             <CreatureCard 
               key={creature.id} 
               creature={creature} 
-              unlocked={isCollected(creature.id)} 
+              unlocked={isCollected(creature.id)}
+              themeColors={themeColors}
             />
           ))}
         </div>
@@ -163,10 +251,11 @@ const Collection = () => {
 interface CreatureCardProps {
   creature: Creature;
   unlocked: boolean;
+  themeColors: ReturnType<typeof getThemeColors>;
 }
 
-const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
-  const styles = getRarityStyles(creature.rarity, unlocked);
+const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
+  const styles = getRarityStyles(creature.rarity, unlocked, themeColors);
   const traits = parseTraits(creature.description);
   
   return (
@@ -200,7 +289,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
           {(() => {
             const IconComponent = iconMap[creature.icon] || HelpCircle;
             
-            // Rarity-based capsule styles
+            // Rarity-based capsule styles with theme support
             const capsuleStyles = unlocked 
               ? creature.rarity === 'Legendary'
                 ? {
@@ -210,8 +299,8 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
                   }
                 : creature.rarity === 'Rare'
                   ? {
-                      container: 'bg-cyan-900/20 border-cyan-500/60',
-                      innerGlow: 'bg-cyan-500/10',
+                      container: `${themeColors.bgLight} ${themeColors.border}/60`,
+                      innerGlow: themeColors.bg,
                       pulse: 'animate-pulse',
                     }
                   : {
@@ -230,15 +319,14 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
                 {/* Outer pulsing ring for Rare/Legendary */}
                 {unlocked && creature.rarity !== 'Common' && (
                   <div 
-                    className={`absolute -inset-1 rounded-full ${capsuleStyles.pulse} ${
-                      creature.rarity === 'Legendary' 
-                        ? 'bg-amber-500/20' 
-                        : 'bg-cyan-500/20'
-                    }`}
+                    className={`absolute -inset-1 rounded-full ${capsuleStyles.pulse}`}
                     style={{
+                      backgroundColor: creature.rarity === 'Legendary' 
+                        ? 'rgba(245, 158, 11, 0.2)' 
+                        : themeColors.glowRgba.replace('0.3', '0.2'),
                       boxShadow: creature.rarity === 'Legendary'
                         ? '0 0 20px rgba(245, 158, 11, 0.3)'
-                        : '0 0 20px rgba(34, 211, 238, 0.3)'
+                        : `0 0 20px ${themeColors.glowRgba}`
                     }}
                   />
                 )}
@@ -251,7 +339,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
                       ? creature.rarity === 'Legendary'
                         ? 'inset 0 0 15px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.2)'
                         : creature.rarity === 'Rare'
-                          ? 'inset 0 0 15px rgba(34, 211, 238, 0.3), 0 0 10px rgba(34, 211, 238, 0.2)'
+                          ? `inset 0 0 15px ${themeColors.glowRgba}, 0 0 10px ${themeColors.glowRgba.replace('0.3', '0.2')}`
                           : 'inset 0 0 10px rgba(100, 116, 139, 0.2)'
                       : 'none'
                   }}
@@ -274,7 +362,12 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
                     <IconComponent 
                       size={32} 
                       strokeWidth={1.5}
-                      className={`relative z-10 ${styles.iconColor} ${styles.iconGlow}`} 
+                      className={`relative z-10 ${styles.iconColor}`}
+                      style={{
+                        filter: unlocked && creature.rarity !== 'Common' 
+                          ? `drop-shadow(0 0 12px ${creature.rarity === 'Legendary' ? 'rgba(245,158,11,0.8)' : themeColors.glow})`
+                          : unlocked ? 'drop-shadow(0 0 6px rgba(148,163,184,0.4))' : 'none'
+                      }}
                     />
                   </div>
                 </div>
@@ -295,7 +388,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
               ? creature.rarity === 'Legendary' 
                 ? 'border-amber-500/60 text-amber-400 bg-amber-500/10' 
                 : creature.rarity === 'Rare'
-                  ? 'border-cyan-500/60 text-cyan-400 bg-cyan-500/10'
+                  ? `${themeColors.border}/60 ${themeColors.text} ${themeColors.bg}`
                   : 'border-slate-600 text-slate-400 bg-slate-800/50'
               : 'border-slate-800 text-slate-600 bg-slate-900/50'
           }`}>
@@ -311,7 +404,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
                 key={index} 
                 className="text-xs font-mono text-slate-500 flex items-start gap-1.5"
               >
-                <span className="text-cyan-700">•</span>
+                <span className={themeColors.bullet}>•</span>
                 <span>{trait}</span>
               </p>
             ))}
@@ -320,7 +413,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
 
         {/* Depth requirement */}
         <p className={`text-[10px] font-mono text-center tracking-wider ${
-          unlocked ? 'text-cyan-600' : 'text-slate-700'
+          unlocked ? themeColors.depthText : 'text-slate-700'
         }`}>
           MIN_DEPTH: {creature.minDepth}m
         </p>
