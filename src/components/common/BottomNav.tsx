@@ -35,26 +35,6 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           </button>
 
           <button
-            onClick={() => onTabChange("collection")}
-            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
-              activeTab === "collection"
-                ? "bg-primary/10"
-                : "hover:bg-muted"
-            }`}
-            style={{
-              color: activeTab === "collection" ? primaryColor : "hsl(var(--muted-foreground))",
-            }}
-          >
-            <Fish
-              className="h-5 w-5 transition-all"
-              style={{
-                filter: activeTab === "collection" ? `drop-shadow(0 0 8px ${primaryColor})` : "none",
-              }}
-            />
-            <span className="text-xs font-medium">Collection</span>
-          </button>
-
-          <button
             onClick={() => onTabChange("history")}
             className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "history"
@@ -72,6 +52,26 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
               }}
             />
             <span className="text-xs font-medium">History</span>
+          </button>
+
+          <button
+            onClick={() => onTabChange("collection")}
+            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
+              activeTab === "collection"
+                ? "bg-primary/10"
+                : "hover:bg-muted"
+            }`}
+            style={{
+              color: activeTab === "collection" ? primaryColor : "hsl(var(--muted-foreground))",
+            }}
+          >
+            <Fish
+              className="h-5 w-5 transition-all"
+              style={{
+                filter: activeTab === "collection" ? `drop-shadow(0 0 8px ${primaryColor})` : "none",
+              }}
+            />
+            <span className="text-xs font-medium">Collection</span>
           </button>
         </div>
       </div>
