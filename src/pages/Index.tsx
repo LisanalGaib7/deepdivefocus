@@ -437,11 +437,11 @@ const Index = () => {
           <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
         {/* Header - hidden in focus mode */}
         {!isRunning && (
-          <div className="text-center space-y-2">
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-ocean bg-clip-text text-transparent">
+          <div className="text-center space-y-1 pt-8 md:pt-0 px-12 md:px-0">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-ocean bg-clip-text text-transparent">
               DEEP DIVE
             </h1>
-            <p className="text-muted-foreground text-sm">Deep work without distractions</p>
+            <p className="text-muted-foreground text-xs sm:text-sm">Deep work without distractions</p>
           </div>
         )}
 
