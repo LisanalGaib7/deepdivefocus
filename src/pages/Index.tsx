@@ -8,6 +8,7 @@ import { toast } from "sonner";
 // Common components
 import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 import BottomNav from "@/components/common/BottomNav";
+import GuidebookModal from "@/components/common/GuidebookModal";
 
 // Timer feature components
 import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
@@ -414,21 +415,24 @@ const Index = () => {
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
-          {/* Logout Button - Top Right */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={handleLogout}
-                className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all duration-300"
-                aria-label="Logout"
-              >
-                <Power className="w-5 h-5" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="left" className="font-mono text-xs tracking-wider">
-              SYSTEM SHUTDOWN
-            </TooltipContent>
-          </Tooltip>
+          {/* Top Right Controls - Guidebook & Logout */}
+          <div className="absolute top-4 right-4 flex items-center gap-1">
+            <GuidebookModal />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all duration-300"
+                  aria-label="Logout"
+                >
+                  <Power className="w-5 h-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="font-mono text-xs tracking-wider">
+                SYSTEM SHUTDOWN
+              </TooltipContent>
+            </Tooltip>
+          </div>
 
           <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
         {/* Header - hidden in focus mode */}
