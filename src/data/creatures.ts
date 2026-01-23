@@ -1,4 +1,4 @@
-export type CreatureRarity = 'Common' | 'Rare' | 'Legendary';
+export type CreatureRarity = 'Common' | 'Uncommon' | 'Rare' | 'Legendary';
 
 export interface Creature {
   id: string;
@@ -7,6 +7,8 @@ export interface Creature {
   rarity: CreatureRarity;
   description: string;
   icon: string;
+  pearls: number;
+  traits: string[];
 }
 
 export const CREATURES: Creature[] = [
@@ -18,6 +20,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.SARDINE // BASIC_LIFEFORM // SIGNAL_WEAK',
     icon: 'Fish',
+    pearls: 10,
+    traits: ['Basic', 'Swarm'],
   },
   {
     id: 'crab',
@@ -26,6 +30,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.CRAB // SHELL_DETECTED // MOBILITY_LOW',
     icon: 'Shell',
+    pearls: 10,
+    traits: ['Shell', 'Defensive'],
   },
   {
     id: 'starfish',
@@ -34,6 +40,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY',
     icon: 'Star',
+    pearls: 10,
+    traits: ['Regenerative', 'Static'],
   },
   {
     id: 'seahorse',
@@ -42,9 +50,11 @@ export const CREATURES: Creature[] = [
     rarity: 'Common',
     description: 'UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE',
     icon: 'Waves',
+    pearls: 10,
+    traits: ['Camouflage', 'Fragile'],
   },
 
-  // 100-500m: Rare tier
+  // 100-500m: Rare tier (with new creatures)
   {
     id: 'jellyfish',
     name: 'Neon Jellyfish',
@@ -52,6 +62,18 @@ export const CREATURES: Creature[] = [
     rarity: 'Rare',
     description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
     icon: 'Sparkles',
+    pearls: 50,
+    traits: ['Bioluminescent', 'Toxic'],
+  },
+  {
+    id: 'electric_eel',
+    name: 'Electric Eel',
+    minDepth: 120,
+    rarity: 'Common',
+    description: 'UNIT.EEL // HIGH_VOLTAGE // BATTERY_DETECTED',
+    icon: 'Zap',
+    pearls: 15,
+    traits: ['Electric', 'Danger'],
   },
   {
     id: 'turtle',
@@ -60,6 +82,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Rare',
     description: 'UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED',
     icon: 'Shield',
+    pearls: 50,
+    traits: ['Ancient', 'Wise'],
   },
   {
     id: 'octopus',
@@ -68,6 +92,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Rare',
     description: 'UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED',
     icon: 'Grip',
+    pearls: 50,
+    traits: ['Intelligent', 'Camouflage'],
   },
   {
     id: 'manta',
@@ -76,9 +102,11 @@ export const CREATURES: Creature[] = [
     rarity: 'Rare',
     description: 'UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE',
     icon: 'Wind',
+    pearls: 50,
+    traits: ['Majestic', 'Silent'],
   },
 
-  // 500m+: Legendary tier
+  // 500m+: Legendary tier (with new creatures)
   {
     id: 'anglerfish',
     name: 'Abyssal Anglerfish',
@@ -86,6 +114,18 @@ export const CREATURES: Creature[] = [
     rarity: 'Legendary',
     description: 'UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX',
     icon: 'Flashlight',
+    pearls: 200,
+    traits: ['Apex', 'Lure'],
+  },
+  {
+    id: 'giant_isopod',
+    name: 'Giant Isopod',
+    minDepth: 600,
+    rarity: 'Uncommon',
+    description: 'UNIT.ISOPOD // SCAVENGER // ARMOR_HEAVY',
+    icon: 'Bug',
+    pearls: 40,
+    traits: ['Tank', 'Ancient'],
   },
   {
     id: 'giant_squid',
@@ -94,6 +134,18 @@ export const CREATURES: Creature[] = [
     rarity: 'Legendary',
     description: 'UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED',
     icon: 'Anchor',
+    pearls: 200,
+    traits: ['Mythical', 'Massive'],
+  },
+  {
+    id: 'blobfish',
+    name: 'Blobfish',
+    minDepth: 900,
+    rarity: 'Rare',
+    description: 'UNIT.BLOB // STRUCTURE_UNSTABLE // ERROR_AESTHETICS',
+    icon: 'Cloud',
+    pearls: 75,
+    traits: ['Soft', 'Meme'],
   },
   {
     id: 'glowing_shark',
@@ -102,6 +154,18 @@ export const CREATURES: Creature[] = [
     rarity: 'Legendary',
     description: 'UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL',
     icon: 'Ghost',
+    pearls: 200,
+    traits: ['Spectral', 'Predator'],
+  },
+  {
+    id: 'dumbo_octopus',
+    name: 'Dumbo Octopus',
+    minDepth: 1300,
+    rarity: 'Rare',
+    description: 'UNIT.OCTOPUS // HOVER_MODE // EARS_DETECTED',
+    icon: 'Smile',
+    pearls: 90,
+    traits: ['Cute', 'Floating'],
   },
   {
     id: 'leviathan',
@@ -110,6 +174,8 @@ export const CREATURES: Creature[] = [
     rarity: 'Legendary',
     description: 'UNIT.??? // DATA_CORRUPTED // RUN.',
     icon: 'Skull',
+    pearls: 500,
+    traits: ['Unknown', 'Terror'],
   },
 ];
 
@@ -123,6 +189,8 @@ export const getRarityColor = (rarity: CreatureRarity): string => {
   switch (rarity) {
     case 'Common':
       return 'text-muted-foreground';
+    case 'Uncommon':
+      return 'text-emerald-400';
     case 'Rare':
       return 'text-hud-cyan';
     case 'Legendary':
