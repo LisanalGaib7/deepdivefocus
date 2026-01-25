@@ -41,10 +41,10 @@ interface Task {
 
 
 const Index = () => {
-  const { signOut, profile, updateProfile } = useAuthContext();
+  const { signOut, profile, updateProfile, isGuestMode, isAuthenticated } = useAuthContext();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
-  const { todayMinutes, getTaskTotalMinutes, refetch: refetchSessions } = useSessionStats();
+  const { todayMinutes, getTaskTotalMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
   
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
@@ -103,11 +103,15 @@ const Index = () => {
 
   const selectedTask = tasks.find(t => t.id === selectedTaskId);
 
+  // Track if we've already handled completion for this session
+  const completionHandledRef = useRef(false);
+
   // Timer logic with per-task time accumulation
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (isRunning && timeLeft > 0) {
+      completionHandledRef.current = false; // Reset on new session start
       interval = setInterval(() => {
         setTimeLeft((prev) => {
           const newTime = prev - 1;
@@ -123,21 +127,14 @@ const Index = () => {
             );
           }
           
-          if (newTime === 0) {
-            setIsRunning(false);
-            playCompletionSound();
-            
-            // Trigger mission complete with loot roll
-            handleMissionComplete();
-          }
-          
           return newTime;
         });
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, selectedTaskId, playCompletionSound]);
+  }, [isRunning, selectedTaskId]);
+
 
   // Calculate angle from mouse/touch position (0 at top, clockwise 0-360)
   const getAngleFromEvent = useCallback((clientX: number, clientY: number): number => {
@@ -277,37 +274,76 @@ const Index = () => {
   };
 
   const handleMissionComplete = useCallback(async () => {
+    // Capture current values immediately (avoid stale closures)
+    const currentDepth = depth;
+    const currentDuration = setDuration;
+    const taskName = selectedTask?.text || "Focus Session";
+    
+    console.log('[MissionComplete] Starting save:', { 
+      currentDepth, 
+      currentDuration, 
+      taskName, 
+      isGuestMode, 
+      isAuthenticated 
+    });
+    
     // Store current depth and duration before reset
-    setCompletedSessionDepth(depth);
-    setCompletedSessionDuration(setDuration);
+    setCompletedSessionDepth(currentDepth);
+    setCompletedSessionDuration(currentDuration);
     
     // Roll for a creature reward
-    const creature = rollForCreature(depth);
+    const creature = rollForCreature(currentDepth);
     setRewardCreature(creature);
     
-    // Save session to database
-    await addSession({
-      task_name: selectedTask?.text || "Focus Session",
-      duration: setDuration,
-      depth_reached: depth,
-      pearls_earned: Math.floor(depth / 10),
-      creature_id: creature?.id || null,
-    });
+    // Save session based on auth mode
+    if (isAuthenticated && !isGuestMode) {
+      // Authenticated: save to database
+      const result = await addSession({
+        task_name: taskName,
+        duration: currentDuration,
+        depth_reached: currentDepth,
+        pearls_earned: Math.floor(currentDepth / 10),
+        creature_id: creature?.id || null,
+      });
+      console.log('[MissionComplete] DB save result:', result);
+      
+      // Update total depth in profile
+      if (profile) {
+        updateProfile({ 
+          total_depth: (profile.total_depth || 0) + currentDepth,
+          total_pearls: (profile.total_pearls || 0) + Math.floor(currentDepth / 10),
+        });
+      }
+    } else {
+      // Guest mode: save to localStorage
+      addLocalFocusSession({
+        taskId: selectedTask?.id || null,
+        taskName: taskName,
+        duration: currentDuration,
+        timestamp: Date.now(),
+      });
+      console.log('[MissionComplete] Local session saved');
+    }
 
     // Refetch sessions to update "Today's Focus" display
     await refetchSessions();
-
-    // Update total depth in profile
-    if (profile) {
-      updateProfile({ 
-        total_depth: (profile.total_depth || 0) + depth,
-        total_pearls: (profile.total_pearls || 0) + Math.floor(depth / 10),
-      });
-    }
+    console.log('[MissionComplete] Sessions refetched');
     
     // Show the mission complete modal
     setShowMissionCompleteModal(true);
-  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile, refetchSessions]);
+  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession]);
+
+  // Handle timer completion separately to avoid closure issues
+  useEffect(() => {
+    if (timeLeft === 0 && isRunning && !completionHandledRef.current) {
+      completionHandledRef.current = true;
+      setIsRunning(false);
+      playCompletionSound();
+      
+      console.log('[Timer] Session complete, saving...', { setDuration, depth });
+      handleMissionComplete();
+    }
+  }, [timeLeft, isRunning, playCompletionSound, handleMissionComplete, setDuration, depth]);
 
   const handleMissionCompleteClose = useCallback(async () => {
     // Add creature to collection if one was found
