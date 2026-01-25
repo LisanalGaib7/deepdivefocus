@@ -2,16 +2,19 @@ import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
 import { useSessionStats } from "@/hooks/useSessionStats";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { YearlyDepthLog } from "@/features/history";
 
 const History = () => {
   const { currentTheme } = useTheme();
   const primaryColor = getThemePrimaryHex(currentTheme);
   const themePalette = getThemePalette(currentTheme);
+  const { isGuestMode, isAuthenticated } = useAuthContext();
   
   // Use unified session stats hook (single source of truth)
   const { 
     sessions, 
+    localSessions,
     todayMinutes, 
     totalMinutes, 
     totalSessions, 
@@ -22,18 +25,30 @@ const History = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
 
-  // Convert DB sessions to the format expected by components
+  // Combine and normalize sessions from both sources into unified format
   const formattedSessions = useMemo(() => {
-    return sessions.map(s => ({
-      id: s.id,
-      taskId: s.id,
-      taskName: s.task_name,
-      duration: s.duration,
-      timestamp: new Date(s.session_date).getTime(),
-    }));
-  }, [sessions]);
+    if (isAuthenticated && !isGuestMode) {
+      // Database sessions
+      return sessions.map(s => ({
+        id: s.id,
+        taskId: s.id,
+        taskName: s.task_name,
+        duration: s.duration,
+        timestamp: new Date(s.session_date).getTime(),
+      }));
+    } else {
+      // Local storage sessions (guest mode)
+      return localSessions.map(s => ({
+        id: s.id,
+        taskId: s.taskId || s.id,
+        taskName: s.taskName,
+        duration: s.duration,
+        timestamp: s.timestamp,
+      }));
+    }
+  }, [sessions, localSessions, isAuthenticated, isGuestMode]);
 
-  // Weekly data for bar chart
+  // Weekly data for bar chart - last 7 days including today
   const weeklyData = useMemo(() => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const now = new Date();
@@ -43,11 +58,14 @@ const History = () => {
       const date = new Date(now);
       date.setDate(date.getDate() - i);
       date.setHours(0, 0, 0, 0);
+      const startOfDay = date.getTime();
+      
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
+      const endOfDayTime = endOfDay.getTime();
 
       const dayMinutes = formattedSessions
-        .filter((s) => s.timestamp >= date.getTime() && s.timestamp <= endOfDay.getTime())
+        .filter((s) => s.timestamp >= startOfDay && s.timestamp <= endOfDayTime)
         .reduce((sum, s) => sum + s.duration / 60, 0);
 
       result.push({
@@ -56,6 +74,7 @@ const History = () => {
       });
     }
 
+    console.log('[History] Weekly data calculated:', result);
     return result;
   }, [formattedSessions]);
 
