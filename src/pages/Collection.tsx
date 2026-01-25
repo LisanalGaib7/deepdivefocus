@@ -266,7 +266,7 @@ const Collection = () => {
             BESTIARY
           </h1>
           <p className="text-muted-foreground text-sm font-mono tracking-wider">
-            SPECIMENS_CATALOGUED: <span className={themeColors.text}>{collectedCount}</span>/{totalCount}
+            SPECIMENS CATALOGUED: <span className={themeColors.text}>{collectedCount}</span>/{totalCount}
           </p>
           {/* Progress bar */}
           <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden mt-4 border border-slate-800">
@@ -507,7 +507,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
         <p className={`text-[10px] font-mono text-center tracking-wider ${
           unlocked ? themeColors.depthText : 'text-slate-700'
         }`}>
-          MIN_DEPTH: {creature.minDepth}m
+          MIN DEPTH: {creature.minDepth}m
         </p>
       </div>
     </div>
