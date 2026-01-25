@@ -280,6 +280,38 @@ All colors MUST be HSL.
   .scrollbar-deep-sea::-webkit-scrollbar-thumb:hover {
     background: hsl(185 100% 40%);
   }
+
+
+  /* Theme-aware Play Button */
+  .play-button-themed {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--primary) / 0.8),
+      hsl(var(--gradient-end) / 0.8)
+    );
+    border: 1px solid hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 25px hsl(var(--primary) / 0.6),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  }
+
+  .play-button-themed:hover {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--primary) / 0.9),
+      hsl(var(--gradient-end) / 0.9)
+    );
+    box-shadow: 0 0 35px hsl(var(--primary) / 0.8),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Theme-aware Reset Button */
+  .reset-button-themed:hover {
+    background: hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary) / 0.5);
+    color: hsl(var(--primary));
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.15),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
 }
 /* Lovable 배지 숨기기 */
 #lovable-badge {
