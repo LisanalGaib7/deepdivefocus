@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,6 +54,8 @@ const Index = () => {
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState("");
   
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount } = useDeepDiveAudio();
@@ -412,6 +414,39 @@ const Index = () => {
     }
   };
 
+  const handleStartEdit = (task: Task) => {
+    setEditingTaskId(task.id);
+    setEditingText(task.text);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingTaskId && editingText.trim()) {
+      setTasks(prev => 
+        prev.map(task => 
+          task.id === editingTaskId 
+            ? { ...task, text: editingText.trim() }
+            : task
+        )
+      );
+    }
+    setEditingTaskId(null);
+    setEditingText("");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTaskId(null);
+    setEditingText("");
+  };
+
+  const handleEditKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSaveEdit();
+    } else if (e.key === "Escape") {
+      handleCancelEdit();
+    }
+  };
+
   const formatTimeSpent = (seconds: number) => {
     if (seconds < 60) return `${seconds}s`;
     const mins = Math.floor(seconds / 60);
@@ -761,16 +796,40 @@ const Index = () => {
                     >
                       {task.isCompleted && <Check className="h-4 w-4 text-primary" />}
                     </Button>
-                    <p className={`flex-1 text-base font-medium ${
-                      task.isCompleted ? "line-through text-muted-foreground" : ""
-                    }`}>
-                      {task.text}
-                    </p>
+                    {editingTaskId === task.id ? (
+                      <Input
+                        type="text"
+                        value={editingText}
+                        onChange={(e) => setEditingText(e.target.value)}
+                        onBlur={handleSaveEdit}
+                        onKeyDown={handleEditKeyDown}
+                        autoFocus
+                        className="flex-1 h-8 text-base font-medium bg-background/50"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ) : (
+                      <p className={`flex-1 text-base font-medium ${
+                        task.isCompleted ? "line-through text-muted-foreground" : ""
+                      }`}>
+                        {task.text}
+                      </p>
+                    )}
                     {task.timeSpentInSeconds > 0 && (
                       <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-full">
                         {formatTimeSpent(task.timeSpentInSeconds)}
                       </span>
                     )}
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStartEdit(task);
+                      }}
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-primary shrink-0"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
