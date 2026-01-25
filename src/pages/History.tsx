@@ -223,8 +223,8 @@ const History = () => {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-muted-foreground">Task Breakdown</h2>
             <div className="bg-card rounded-2xl p-4 border border-border">
-              <div className="flex items-center gap-4">
-                <ResponsiveContainer width="50%" height={160}>
+              <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
+                <ResponsiveContainer width="100%" height={180} className="md:w-1/2">
                   <PieChart>
                     <defs>
                       {themePalette.map((color, index) => (
@@ -309,7 +309,7 @@ const History = () => {
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="flex-1 space-y-2">
+                <div className="w-full space-y-2 md:flex-1">
                   {taskBreakdown.map((task, index) => (
                     <div key={task.name} className="flex items-center gap-2 text-sm">
                       <div
