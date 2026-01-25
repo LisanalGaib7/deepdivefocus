@@ -21,6 +21,7 @@ export type Database = {
           depth_reached: number
           duration: number
           id: string
+          is_verified: boolean
           pearls_earned: number | null
           session_date: string
           task_name: string
@@ -32,6 +33,7 @@ export type Database = {
           depth_reached?: number
           duration: number
           id?: string
+          is_verified?: boolean
           pearls_earned?: number | null
           session_date?: string
           task_name?: string
@@ -43,6 +45,7 @@ export type Database = {
           depth_reached?: number
           duration?: number
           id?: string
+          is_verified?: boolean
           pearls_earned?: number | null
           session_date?: string
           task_name?: string
