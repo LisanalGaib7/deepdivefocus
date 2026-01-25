@@ -1,33 +1,26 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
-import { useAuthContext } from "@/contexts/AuthContext";
-import { useFocusSessions, FocusSessionDB } from "@/hooks/useFocusSessions";
+import { useSessionStats } from "@/hooks/useSessionStats";
 import { YearlyDepthLog } from "@/features/history";
 
 const History = () => {
   const { currentTheme } = useTheme();
   const primaryColor = getThemePrimaryHex(currentTheme);
   const themePalette = getThemePalette(currentTheme);
-  const { isAuthenticated } = useAuthContext();
-  const { fetchSessions } = useFocusSessions();
   
-  const [sessions, setSessions] = useState<FocusSessionDB[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Use unified session stats hook (single source of truth)
+  const { 
+    sessions, 
+    todayMinutes, 
+    totalMinutes, 
+    totalSessions, 
+    avgSessionLength, 
+    loading 
+  } = useSessionStats();
+  
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const loadSessions = async () => {
-      if (isAuthenticated) {
-        setLoading(true);
-        const data = await fetchSessions();
-        setSessions(data);
-        setLoading(false);
-      }
-    };
-    loadSessions();
-  }, [isAuthenticated, fetchSessions]);
 
   // Convert DB sessions to the format expected by components
   const formattedSessions = useMemo(() => {
@@ -84,27 +77,7 @@ const History = () => {
       .slice(0, 5);
   }, [formattedSessions]);
 
-  // Stats
-  const totalMinutes = useMemo(() => {
-    return Math.round(formattedSessions.reduce((sum, s) => sum + s.duration / 60, 0));
-  }, [formattedSessions]);
-
-  const totalSessions = formattedSessions.length;
-
-  const avgSessionLength = useMemo(() => {
-    if (formattedSessions.length === 0) return 0;
-    return Math.round(totalMinutes / formattedSessions.length);
-  }, [formattedSessions, totalMinutes]);
-
-  const todayMinutes = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return Math.round(
-      formattedSessions
-        .filter((s) => s.timestamp >= today.getTime())
-        .reduce((sum, s) => sum + s.duration / 60, 0)
-    );
-  }, [formattedSessions]);
+  // Stats are now derived from useSessionStats hook (single source of truth)
 
   if (loading) {
     return (
