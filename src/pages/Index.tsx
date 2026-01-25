@@ -23,6 +23,7 @@ import Collection from "@/pages/Collection";
 // Hooks & Data
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useFocusSessions } from "@/hooks/useFocusSessions";
+import { useSessionStats } from "@/hooks/useSessionStats";
 import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
@@ -43,6 +44,7 @@ const Index = () => {
   const { signOut, profile, updateProfile } = useAuthContext();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
+  const { todayMinutes, getTaskTotalMinutes, refetch: refetchSessions } = useSessionStats();
   
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
@@ -51,7 +53,6 @@ const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [totalTime, setTotalTime] = useState(0);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
   
   // Audio hook - manages all sound playback
@@ -72,15 +73,8 @@ const Index = () => {
   });
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Load total time from profile or localStorage
+  // Load tasks from localStorage
   useEffect(() => {
-    if (profile?.total_depth) {
-      setTotalTime(profile.total_depth);
-    } else {
-      const savedTime = localStorage.getItem("deepDiveTotalTime");
-      if (savedTime) setTotalTime(parseInt(savedTime));
-    }
-    
     const savedTasks = localStorage.getItem("deepDiveTasks");
     if (savedTasks) {
       const parsedTasks = JSON.parse(savedTasks);
@@ -89,7 +83,7 @@ const Index = () => {
       const firstUncompleted = parsedTasks.find((t: Task) => !t.isCompleted);
       if (firstUncompleted) setSelectedTaskId(firstUncompleted.id);
     }
-  }, [profile]);
+  }, []);
 
 
   // Save tasks to localStorage whenever they change
@@ -118,12 +112,7 @@ const Index = () => {
         setTimeLeft((prev) => {
           const newTime = prev - 1;
           
-          // Update total time
-          const newTotal = totalTime + 1;
-          setTotalTime(newTotal);
-          localStorage.setItem("deepDiveTotalTime", newTotal.toString());
-          
-          // Add time to selected task
+          // Add time to selected task (local tracking during session)
           if (selectedTaskId) {
             setTasks(prevTasks => 
               prevTasks.map(task => 
@@ -148,7 +137,7 @@ const Index = () => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, totalTime, selectedTaskId, playCompletionSound]);
+  }, [isRunning, timeLeft, selectedTaskId, playCompletionSound]);
 
   // Calculate angle from mouse/touch position (0 at top, clockwise 0-360)
   const getAngleFromEvent = useCallback((clientX: number, clientY: number): number => {
@@ -287,7 +276,7 @@ const Index = () => {
     resetDive();
   };
 
-  const handleMissionComplete = useCallback(() => {
+  const handleMissionComplete = useCallback(async () => {
     // Store current depth and duration before reset
     setCompletedSessionDepth(depth);
     setCompletedSessionDuration(setDuration);
@@ -297,13 +286,16 @@ const Index = () => {
     setRewardCreature(creature);
     
     // Save session to database
-    addSession({
+    await addSession({
       task_name: selectedTask?.text || "Focus Session",
       duration: setDuration,
       depth_reached: depth,
       pearls_earned: Math.floor(depth / 10),
       creature_id: creature?.id || null,
     });
+
+    // Refetch sessions to update "Today's Focus" display
+    await refetchSessions();
 
     // Update total depth in profile
     if (profile) {
@@ -315,7 +307,7 @@ const Index = () => {
     
     // Show the mission complete modal
     setShowMissionCompleteModal(true);
-  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile]);
+  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile, refetchSessions]);
 
   const handleMissionCompleteClose = useCallback(async () => {
     // Add creature to collection if one was found
@@ -776,7 +768,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="text-[10px] uppercase tracking-[0.25em] text-primary/70 font-medium">
-                  TOTAL ACCUMULATED TIME
+                  TODAY'S ACCUMULATED TIME
                 </span>
               </div>
               
@@ -785,7 +777,7 @@ const Index = () => {
                 <span 
                   className="text-5xl md:text-6xl font-mono font-black text-foreground tracking-tight tabular-nums drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
                 >
-                  {Math.floor(totalTime / 60)}
+                  {todayMinutes}
                 </span>
                 <span className="text-base font-mono uppercase tracking-widest text-muted-foreground font-medium">
                   mins
