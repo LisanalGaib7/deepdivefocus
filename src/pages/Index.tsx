@@ -701,11 +701,11 @@ const Index = () => {
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-6">
-            {/* Play/Pause Button - Glowing Glass Effect (Primary) */}
+            {/* Play/Pause Button - Theme-aware Glowing Glass Effect */}
             <Button
               onClick={handleStart}
               size="lg"
-              className="h-16 w-16 rounded-full p-0 bg-gradient-to-b from-cyan-400/80 to-blue-600/80 backdrop-blur-md border border-cyan-200/30 shadow-[0_0_25px_rgba(6,182,212,0.6),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_0_35px_rgba(6,182,212,0.8),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:from-cyan-300/90 hover:to-blue-500/90 transition-all duration-300 active:scale-95"
+              className="play-button-themed h-16 w-16 rounded-full p-0 backdrop-blur-md transition-all duration-300 active:scale-95"
             >
               {isRunning ? (
                 <Pause className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
@@ -714,12 +714,12 @@ const Index = () => {
               )}
             </Button>
             
-            {/* Reset Button - Dark Glass Effect (Secondary) */}
+            {/* Reset Button - Theme-aware Dark Glass Effect */}
             <Button
               onClick={handleReset}
               size="lg"
               variant="ghost"
-              className="h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] hover:bg-white/10 hover:border-white/30 hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.15),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 active:scale-95"
+              className="reset-button-themed h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all duration-300 active:scale-95"
             >
               <RotateCcw className="h-6 w-6" />
             </Button>
