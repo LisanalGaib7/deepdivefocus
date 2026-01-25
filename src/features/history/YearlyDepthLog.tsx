@@ -89,16 +89,25 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
   const { currentTheme } = useTheme();
   const themeColors = getThemeHeatmapColors(currentTheme);
 
+  // Helper to get local YYYY-MM-DD string (avoids UTC timezone shift)
+  const getLocalDateKey = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Aggregate sessions by date (sum all tasks for each day)
   const dailyData = useMemo(() => {
     const map: Record<string, number> = {};
 
     sessions.forEach((s) => {
       const date = new Date(s.timestamp);
-      const dateKey = date.toISOString().split("T")[0]; // YYYY-MM-DD
+      const dateKey = getLocalDateKey(date); // Use LOCAL date, not UTC
       map[dateKey] = (map[dateKey] || 0) + s.duration / 60;
     });
 
+    console.log('[YearlyDepthLog] Daily data aggregated:', map);
     return map;
   }, [sessions]);
 
@@ -116,7 +125,7 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
     currentDate.setHours(0, 0, 0, 0);
     
     while (currentDate <= yearEnd) {
-      const dateKey = currentDate.toISOString().split("T")[0];
+      const dateKey = getLocalDateKey(currentDate); // Use LOCAL date, not UTC
       const minutes = Math.round(dailyData[dateKey] || 0);
       
       allDays.push({
