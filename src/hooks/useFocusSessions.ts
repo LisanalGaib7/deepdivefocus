@@ -35,13 +35,14 @@ export const useFocusSessions = () => {
     return data as FocusSessionDB[];
   }, [user]);
 
-  // Add a new session
+  // Add a new session (is_verified = true for authentic timer completions)
   const addSession = useCallback(async (session: {
     task_name: string;
     duration: number;
     depth_reached: number;
     pearls_earned?: number;
     creature_id?: string | null;
+    is_verified?: boolean;
   }) => {
     if (!user) return { error: new Error('Not authenticated') };
 
@@ -54,6 +55,7 @@ export const useFocusSessions = () => {
         depth_reached: session.depth_reached,
         pearls_earned: session.pearls_earned || 0,
         creature_id: session.creature_id || null,
+        is_verified: session.is_verified ?? true, // Default to verified for timer completions
       })
       .select()
       .single();
