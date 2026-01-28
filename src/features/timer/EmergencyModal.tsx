@@ -18,9 +18,9 @@ interface EmergencyModalProps {
 export const EmergencyModal = ({ open, onClose, depth }: EmergencyModalProps) => {
   return (
     <AlertDialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <AlertDialogContent className="border-[hsl(var(--hud-emergency))] bg-background/95 backdrop-blur-sm max-w-sm">
+      <AlertDialogContent className="border border-[hsl(var(--hud-emergency)/0.4)] bg-background/95 backdrop-blur-md max-w-sm rounded-3xl shadow-2xl shadow-[hsl(var(--hud-emergency)/0.15)] overflow-hidden">
         {/* Emergency glow effect */}
-        <div className="absolute inset-0 rounded-lg animate-pulse opacity-20 bg-[hsl(var(--hud-emergency))]" />
+        <div className="absolute inset-0 rounded-3xl animate-pulse opacity-20 bg-[hsl(var(--hud-emergency))]" />
         
         <AlertDialogHeader className="relative">
           <div className="flex justify-center mb-4">
