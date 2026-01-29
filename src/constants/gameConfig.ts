@@ -31,17 +31,16 @@ export const OXYGEN_CONFIG = {
 // LOOT & RARITY SYSTEM
 // ======================
 export const RARITY_CONFIG = {
-  DEPTH_DIVISOR: 1000, // Normalize depth to 0-1.5+ range
-  WEIGHTS: {
-    COMMON: { base: 1.0, minimum: 0.05 },           // 1.0 → 0.05 (fast decay)
-    RARE: { base: 0.3, depthMultiplier: 0.25 },     // 0.3 → 0.675 at 1500m (linear)
-    LEGENDARY: { base: 0.05, depthMultiplier: 0.8 }, // 0.05 → 1.85 at 1500m (exponential ^2)
-  },
+  DEPTH_DIVISOR: 1000, // Normalize: depthRatio = depth/1000 (0-3 range for 0-3000m)
+  MAX_DEPTH: 3000,     // Reference max depth for balance calculations
+  // Target distribution at 3000m: Legendary 7%, Epic 13%, Rare 30%, Common+Uncommon 50%
 } as const;
 
 export const PEARL_VALUES = {
   Common: 10,
+  Uncommon: 25,
   Rare: 50,
+  Epic: 100,
   Legendary: 200,
 } as const;
 
