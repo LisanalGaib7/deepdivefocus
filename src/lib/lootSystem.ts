@@ -3,24 +3,29 @@ import { RARITY_CONFIG } from '@/constants/gameConfig';
 
 const COLLECTION_STORAGE_KEY = 'deepDiveCollection';
 
-// Rarity weights - higher depth increases rare/epic/legendary chances
+// Rarity weights - uses exponential scaling so Epic/Legendary overtake Rare at deep depths
 const getRarityWeight = (rarity: CreatureRarity, depth: number): number => {
-  const depthBonus = depth / RARITY_CONFIG.DEPTH_DIVISOR;
+  const depthRatio = depth / RARITY_CONFIG.DEPTH_DIVISOR; // Normalize: 0 at surface, 1.0 at 1000m, 1.5 at 1500m
   
   switch (rarity) {
     case 'Common':
+      // Fast linear decay: dominant at surface, nearly gone by 1000m
       return Math.max(
         RARITY_CONFIG.WEIGHTS.COMMON.minimum,
-        RARITY_CONFIG.WEIGHTS.COMMON.base + depthBonus * RARITY_CONFIG.WEIGHTS.COMMON.depthMultiplier
+        RARITY_CONFIG.WEIGHTS.COMMON.base - depthRatio * 0.95
       );
     case 'Uncommon':
-      return 0.4 + depthBonus * 0.2;
+      // Gentle increase, plateaus at deep depths
+      return 0.4 + Math.min(depthRatio, 1.0) * 0.2;
     case 'Rare':
-      return RARITY_CONFIG.WEIGHTS.RARE.base + depthBonus * RARITY_CONFIG.WEIGHTS.RARE.depthMultiplier;
+      // Moderate linear increase
+      return RARITY_CONFIG.WEIGHTS.RARE.base + depthRatio * RARITY_CONFIG.WEIGHTS.RARE.depthMultiplier;
     case 'Epic':
-      return 0.2 + depthBonus * 0.4; // Between Rare and Legendary
+      // Exponential scaling (^1.5) - overtakes Rare around 800m
+      return 0.1 + Math.pow(depthRatio, 1.5) * 0.7;
     case 'Legendary':
-      return RARITY_CONFIG.WEIGHTS.LEGENDARY.base + depthBonus * RARITY_CONFIG.WEIGHTS.LEGENDARY.depthMultiplier;
+      // Strongest exponential (^2) - overtakes all at max depth
+      return RARITY_CONFIG.WEIGHTS.LEGENDARY.base + Math.pow(depthRatio, 2) * RARITY_CONFIG.WEIGHTS.LEGENDARY.depthMultiplier;
     default:
       return 1;
   }
