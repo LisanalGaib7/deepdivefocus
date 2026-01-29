@@ -37,12 +37,14 @@ export const EmergencyModal = ({ open, onClose, depth }: EmergencyModalProps) =>
             <p className="font-robotic text-foreground uppercase tracking-wide">
               Oxygen depleted at {depth}m
             </p>
-            <p className="text-muted-foreground text-sm">
-              You left the focus zone too many times. Session aborted.
+            <p className="text-muted-foreground text-sm max-w-[80%] mx-auto">
+              Distractions detected.
+              <br />
+              Dive session aborted.
             </p>
             <div className="pt-2 border-t border-[hsl(var(--hud-emergency)/0.3)]">
               <p className="text-[hsl(var(--hud-emergency))] font-robotic text-xs uppercase tracking-widest">
-                ⚠ Loot Lost
+                ⚠ REWARDS LOST
               </p>
             </div>
           </AlertDialogDescription>
