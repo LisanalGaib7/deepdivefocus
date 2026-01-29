@@ -31,11 +31,11 @@ export const OXYGEN_CONFIG = {
 // LOOT & RARITY SYSTEM
 // ======================
 export const RARITY_CONFIG = {
-  DEPTH_DIVISOR: 1000, // Divisor for depth bonus calculation
+  DEPTH_DIVISOR: 1000, // Normalize depth to 0-1.5+ range
   WEIGHTS: {
-    COMMON: { base: 1, depthMultiplier: -0.5, minimum: 0.1 },
-    RARE: { base: 0.5, depthMultiplier: 0.3 },
-    LEGENDARY: { base: 0.1, depthMultiplier: 0.5 },
+    COMMON: { base: 1.0, minimum: 0.05 },           // 1.0 → 0.05 (fast decay)
+    RARE: { base: 0.3, depthMultiplier: 0.25 },     // 0.3 → 0.675 at 1500m (linear)
+    LEGENDARY: { base: 0.05, depthMultiplier: 0.8 }, // 0.05 → 1.85 at 1500m (exponential ^2)
   },
 } as const;
 
