@@ -3,29 +3,27 @@ import { RARITY_CONFIG } from '@/constants/gameConfig';
 
 const COLLECTION_STORAGE_KEY = 'deepDiveCollection';
 
-// Rarity weights - uses exponential scaling so Epic/Legendary overtake Rare at deep depths
+// Rarity weights calibrated for exact percentages at 3000m max depth:
+// Legendary: 7%, Epic: 13%, Rare: 30%, Common+Uncommon: 50%
 const getRarityWeight = (rarity: CreatureRarity, depth: number): number => {
-  const depthRatio = depth / RARITY_CONFIG.DEPTH_DIVISOR; // Normalize: 0 at surface, 1.0 at 1000m, 1.5 at 1500m
+  const depthRatio = depth / RARITY_CONFIG.DEPTH_DIVISOR; // 0 at surface, 3.0 at 3000m
   
   switch (rarity) {
     case 'Common':
-      // Fast linear decay: dominant at surface, nearly gone by 1000m
-      return Math.max(
-        RARITY_CONFIG.WEIGHTS.COMMON.minimum,
-        RARITY_CONFIG.WEIGHTS.COMMON.base - depthRatio * 0.95
-      );
+      // Decay from 1.0 → 0.5 (64% at surface → 5% at max)
+      return Math.max(0.1, 1.0 - depthRatio * 0.167);
     case 'Uncommon':
-      // Gentle increase, plateaus at deep depths
-      return 0.4 + Math.min(depthRatio, 1.0) * 0.2;
+      // Linear growth: 0.4 → 4.5 (26% at surface → 45% at max)
+      return 0.4 + depthRatio * 1.367;
     case 'Rare':
-      // Moderate linear increase
-      return RARITY_CONFIG.WEIGHTS.RARE.base + depthRatio * RARITY_CONFIG.WEIGHTS.RARE.depthMultiplier;
+      // Linear growth: 0.1 → 3.0 (6% at surface → 30% at max)
+      return 0.1 + depthRatio * 0.967;
     case 'Epic':
-      // Exponential scaling (^1.5) - overtakes Rare around 800m
-      return 0.1 + Math.pow(depthRatio, 1.5) * 0.7;
+      // Exponential (^1.5): 0.05 → 1.3 (3% at surface → 13% at max)
+      return 0.05 + Math.pow(depthRatio, 1.5) * 0.24;
     case 'Legendary':
-      // Strongest exponential (^2) - overtakes all at max depth
-      return RARITY_CONFIG.WEIGHTS.LEGENDARY.base + Math.pow(depthRatio, 2) * RARITY_CONFIG.WEIGHTS.LEGENDARY.depthMultiplier;
+      // Strongest exponential (^2): 0.01 → 0.7 (0.6% at surface → 7% at max)
+      return 0.01 + Math.pow(depthRatio, 2) * 0.0767;
     default:
       return 1;
   }
