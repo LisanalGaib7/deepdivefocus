@@ -125,19 +125,16 @@ const History = () => {
         <YearlyDepthLog sessions={allFormattedSessions} />
 
         {/* Time Range Filter */}
-        <div className="space-y-2">
-          <p className="text-xs text-center uppercase tracking-widest text-muted-foreground">
-            Filter Stats
-          </p>
+        <div className="space-y-3">
           <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
         </div>
 
         {/* Stat Cards - Based on filtered time range */}
         <div className="grid grid-cols-2 gap-4">
           <StatCard label="Today" value={`${todayMinutes}m`} color={primaryColor} />
-          <StatCard label="Sessions" value={filteredStats.totalSessions.toString()} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
-          <StatCard label="Total Focus" value={`${filteredStats.totalMinutes}m`} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
-          <StatCard label="Avg Session" value={`${filteredStats.avgSessionLength}m`} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
+          <StatCard label="Sessions" value={filteredStats.totalSessions.toString()} color={primaryColor} />
+          <StatCard label="Total Focus" value={`${filteredStats.totalMinutes}m`} color={primaryColor} />
+          <StatCard label="Avg Session" value={`${filteredStats.avgSessionLength}m`} color={primaryColor} />
         </div>
 
         {/* Weekly Bar Chart */}
@@ -347,15 +344,11 @@ interface StatCardProps {
   label: string;
   value: string;
   color: string;
-  subtitle?: string;
 }
 
-const StatCard = ({ label, value, color, subtitle }: StatCardProps) => (
+const StatCard = ({ label, value, color }: StatCardProps) => (
   <div className="bg-card rounded-2xl p-4 border border-border">
-    <div className="flex items-center gap-1">
-      <p className="text-xs text-muted-foreground mb-1">{label}</p>
-      {subtitle && <p className="text-[10px] text-muted-foreground/60 mb-1">{subtitle}</p>}
-    </div>
+    <p className="text-xs text-muted-foreground mb-1">{label}</p>
     <p className="text-2xl font-bold font-mono" style={{ color }}>
       {value}
     </p>
