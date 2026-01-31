@@ -143,11 +143,11 @@ const History = () => {
       return (
         <span className="inline-flex items-baseline">
           <span>{hours}</span>
-          <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">h</span>
+          <span className="text-3xl md:text-4xl ml-1 opacity-50 font-medium">h</span>
           {mins > 0 && (
             <>
               <span className="ml-2">{mins}</span>
-              <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+              <span className="text-3xl md:text-4xl ml-1 opacity-50 font-medium">m</span>
             </>
           )}
         </span>
@@ -156,7 +156,7 @@ const History = () => {
     return (
       <span className="inline-flex items-baseline">
         <span>{minutes}</span>
-        <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+        <span className="text-3xl md:text-4xl ml-1 opacity-50 font-medium">m</span>
       </span>
     );
   };
@@ -227,7 +227,7 @@ const History = () => {
                 </p>
                 <p className="text-3xl font-bold font-mono tracking-tight text-primary inline-flex items-baseline">
                   <span>{filteredStats.avgSessionLength}</span>
-                  <span className="text-lg ml-0.5 text-muted-foreground font-medium">m</span>
+                  <span className="text-lg ml-0.5 opacity-50 font-medium">m</span>
                 </p>
               </div>
             </div>
