@@ -166,36 +166,36 @@ const History = () => {
 
         {/* ===== BENTO GRID STATS ===== */}
         <div className="space-y-3">
-          {/* Hero Card - Full Width with Date Badge */}
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 relative">
-            {/* Date Badge - Top Right */}
-            {getDateRangeText(timeRange) && (
-              <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
-                <Calendar className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  {getDateRangeText(timeRange)}
-                </span>
-              </div>
-            )}
-            
-            {/* Left-aligned content */}
-            <div className="text-left">
-              <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
+          {/* Hero Card - Full Width with Corner Anchoring */}
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 min-h-[180px] flex flex-col justify-between">
+            {/* Top Row: Label + Date Badge */}
+            <div className="flex items-start justify-between">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">
                 Total Focus Time
               </p>
-              <p 
-                className="text-6xl md:text-7xl font-bold font-mono bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
-              >
-                {formatHeroTime(filteredStats.totalMinutes)}
-              </p>
+              {getDateRangeText(timeRange) && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
+                  <Calendar className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {getDateRangeText(timeRange)}
+                  </span>
+                </div>
+              )}
             </div>
+            
+            {/* Bottom: Big Number */}
+            <p 
+              className="text-6xl md:text-7xl font-bold font-mono bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
+            >
+              {formatHeroTime(filteredStats.totalMinutes)}
+            </p>
           </div>
 
-          {/* Sub Cards - 2 Columns */}
+          {/* Sub Cards - 2 Columns with Corner Anchoring */}
           <div className="grid grid-cols-2 gap-3">
             {/* Total Sessions */}
-            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10 min-h-[140px] flex flex-col justify-between">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Sessions
               </p>
               <p className="text-3xl font-bold font-mono text-primary">
@@ -204,8 +204,8 @@ const History = () => {
             </div>
 
             {/* Average Session */}
-            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10 min-h-[140px] flex flex-col justify-between">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Avg Session
               </p>
               <p className="text-3xl font-bold font-mono text-primary">
