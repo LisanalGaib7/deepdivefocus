@@ -135,14 +135,30 @@ const History = () => {
     );
   }
 
-  // Format total minutes for hero display
+  // Format total minutes for hero display - returns JSX with styled units
   const formatHeroTime = (minutes: number) => {
     if (minutes >= 60) {
       const hours = Math.floor(minutes / 60);
       const mins = minutes % 60;
-      return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+      return (
+        <span className="inline-flex items-baseline">
+          <span>{hours}</span>
+          <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">h</span>
+          {mins > 0 && (
+            <>
+              <span className="ml-2">{mins}</span>
+              <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+            </>
+          )}
+        </span>
+      );
     }
-    return `${minutes}m`;
+    return (
+      <span className="inline-flex items-baseline">
+        <span>{minutes}</span>
+        <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+      </span>
+    );
   };
 
   return (
@@ -183,10 +199,10 @@ const History = () => {
               )}
             </div>
             
-            {/* Big Number */}
-            <p className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
+            {/* Big Number with Styled Unit */}
+            <div className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
               {formatHeroTime(filteredStats.totalMinutes)}
-            </p>
+            </div>
           </div>
 
           {/* Sub Cards - 2 Columns with Tight Grouping */}
@@ -209,8 +225,9 @@ const History = () => {
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   Avg Session
                 </p>
-                <p className="text-3xl font-bold font-mono tracking-tight text-primary">
-                  {filteredStats.avgSessionLength}m
+                <p className="text-3xl font-bold font-mono tracking-tight text-primary inline-flex items-baseline">
+                  <span>{filteredStats.avgSessionLength}</span>
+                  <span className="text-lg ml-0.5 text-muted-foreground font-medium">m</span>
                 </p>
               </div>
             </div>
