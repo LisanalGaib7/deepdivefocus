@@ -227,7 +227,7 @@ const History = () => {
                 </p>
                 <p className="text-3xl font-bold font-mono tracking-tight text-primary inline-flex items-baseline">
                   <span>{filteredStats.avgSessionLength}</span>
-                  <span className="text-lg ml-0.5 text-muted-foreground font-medium">m</span>
+                  <span className="text-lg ml-0.5 text-primary/70 font-medium">m</span>
                 </p>
               </div>
             </div>
