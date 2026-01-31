@@ -44,7 +44,7 @@ const Index = () => {
   const { signOut, profile, updateProfile, isGuestMode, isAuthenticated } = useAuthContext();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
-  const { todayMinutes, getTaskTotalMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
+  const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
   
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
@@ -814,11 +814,22 @@ const Index = () => {
                         {task.text}
                       </p>
                     )}
-                    {task.timeSpentInSeconds > 0 && (
-                      <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-full">
-                        {formatTimeSpent(task.timeSpentInSeconds)}
-                      </span>
-                    )}
+                    {/* Show TODAY's accumulated time from database + current session time */}
+                    {(() => {
+                      const dbTodayMins = getTaskTodayMinutes(task.text);
+                      const sessionSeconds = task.timeSpentInSeconds;
+                      const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
+                      
+                      return totalTodaySeconds > 0 ? (
+                        <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-full">
+                          {formatTimeSpent(totalTodaySeconds)}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-muted-foreground/50 px-2 py-1 bg-muted/50 rounded-full">
+                          0m
+                        </span>
+                      );
+                    })()}
                     <Button
                       onClick={(e) => {
                         e.stopPropagation();
