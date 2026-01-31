@@ -147,7 +147,7 @@ const History = () => {
           {mins > 0 && (
             <>
               <span className="ml-2">{mins}</span>
-              <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+              <span className="text-3xl md:text-4xl ml-1 text-primary/70 font-medium">m</span>
             </>
           )}
         </span>
@@ -156,7 +156,7 @@ const History = () => {
     return (
       <span className="inline-flex items-baseline">
         <span>{minutes}</span>
-        <span className="text-3xl md:text-4xl ml-1 text-muted-foreground font-medium">m</span>
+        <span className="text-3xl md:text-4xl ml-1 text-primary/70 font-medium">m</span>
       </span>
     );
   };
