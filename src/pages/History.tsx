@@ -1,10 +1,37 @@
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
+import { Calendar } from "lucide-react";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
 import { useSessionStats, TimeRange } from "@/hooks/useSessionStats";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { YearlyDepthLog } from "@/features/history";
 import TimeRangeSelector from "@/components/common/TimeRangeSelector";
+
+// Helper to get date range text for badge
+const getDateRangeText = (range: TimeRange): string | null => {
+  const now = new Date();
+  
+  switch (range) {
+    case "today":
+      return format(now, "MMM d, yyyy");
+    case "week": {
+      const start = startOfWeek(now, { weekStartsOn: 0 });
+      const end = endOfWeek(now, { weekStartsOn: 0 });
+      return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
+    }
+    case "month": {
+      const start = startOfMonth(now);
+      const end = endOfMonth(now);
+      return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
+    }
+    case "year":
+      return format(now, "yyyy");
+    case "all":
+    default:
+      return null;
+  }
+};
 
 const History = () => {
   const { currentTheme } = useTheme();
@@ -138,11 +165,22 @@ const History = () => {
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
 
         {/* ===== BENTO GRID STATS ===== */}
-        <div className="space-y-4">
-          {/* Hero Card - Full Width */}
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10">
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-2">
+        <div className="space-y-3">
+          {/* Hero Card - Full Width with Date Badge */}
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 relative">
+            {/* Date Badge - Top Right */}
+            {getDateRangeText(timeRange) && (
+              <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
+                <Calendar className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">
+                  {getDateRangeText(timeRange)}
+                </span>
+              </div>
+            )}
+            
+            {/* Left-aligned content */}
+            <div className="text-left">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
                 Total Focus Time
               </p>
               <p 
@@ -154,7 +192,7 @@ const History = () => {
           </div>
 
           {/* Sub Cards - 2 Columns */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {/* Total Sessions */}
             <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
