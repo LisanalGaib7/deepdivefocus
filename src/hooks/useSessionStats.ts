@@ -3,6 +3,8 @@ import { useFocusSessions, FocusSessionDB } from './useFocusSessions';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { getSessions, addSession as addLocalSession, FocusSession } from '@/lib/sessionStorage';
 
+export type TimeRange = 'today' | 'week' | 'month' | 'year' | 'all';
+
 export interface SessionStats {
   sessions: FocusSessionDB[];
   localSessions: FocusSession[];
@@ -14,7 +16,16 @@ export interface SessionStats {
   loading: boolean;
   refetch: () => Promise<void>;
   getTaskTotalMinutes: (taskName: string) => number;
+  getTaskTodayMinutes: (taskName: string) => number;
+  getFilteredStats: (range: TimeRange) => FilteredStats;
   addLocalFocusSession: (session: Omit<FocusSession, 'id'>) => void;
+}
+
+export interface FilteredStats {
+  sessions: Array<{ id: string; taskName: string; duration: number; timestamp: number }>;
+  totalMinutes: number;
+  totalSessions: number;
+  avgSessionLength: number;
 }
 
 export const useSessionStats = (): SessionStats => {
@@ -131,7 +142,7 @@ export const useSessionStats = (): SessionStats => {
     return Math.round(totalMinutes / count);
   }, [totalSessions, totalMinutes]);
 
-  // Get total minutes for a specific task (by name)
+  // Get total minutes for a specific task (by name) - ALL TIME
   const getTaskTotalMinutes = useCallback((taskName: string): number => {
     if (isAuthenticated && !isGuestMode) {
       return Math.round(
@@ -148,6 +159,87 @@ export const useSessionStats = (): SessionStats => {
     }
   }, [sessions, localSessions, isAuthenticated, isGuestMode]);
 
+  // Get TODAY's minutes for a specific task (daily reset mode)
+  const getTaskTodayMinutes = useCallback((taskName: string): number => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTimestamp = today.getTime();
+    
+    if (isAuthenticated && !isGuestMode) {
+      return Math.round(
+        sessions
+          .filter(s => s.task_name === taskName && new Date(s.session_date).getTime() >= todayTimestamp)
+          .reduce((sum, s) => sum + s.duration / 60, 0)
+      );
+    } else {
+      return Math.round(
+        localSessions
+          .filter(s => s.taskName === taskName && s.timestamp >= todayTimestamp)
+          .reduce((sum, s) => sum + s.duration / 60, 0)
+      );
+    }
+  }, [sessions, localSessions, isAuthenticated, isGuestMode]);
+
+  // Get filtered stats by time range (for History page)
+  const getFilteredStats = useCallback((range: TimeRange): FilteredStats => {
+    const now = new Date();
+    let startTimestamp: number;
+    
+    switch (range) {
+      case 'today':
+        const today = new Date(now);
+        today.setHours(0, 0, 0, 0);
+        startTimestamp = today.getTime();
+        break;
+      case 'week':
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+        startTimestamp = startOfWeek.getTime();
+        break;
+      case 'month':
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        startTimestamp = startOfMonth.getTime();
+        break;
+      case 'year':
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        startTimestamp = startOfYear.getTime();
+        break;
+      case 'all':
+      default:
+        startTimestamp = 0;
+        break;
+    }
+    
+    // Normalize sessions to common format
+    const normalizedSessions = isAuthenticated && !isGuestMode
+      ? sessions.map(s => ({
+          id: s.id,
+          taskName: s.task_name,
+          duration: s.duration,
+          timestamp: new Date(s.session_date).getTime(),
+        }))
+      : localSessions.map(s => ({
+          id: s.id,
+          taskName: s.taskName,
+          duration: s.duration,
+          timestamp: s.timestamp,
+        }));
+    
+    // Filter by time range
+    const filteredSessions = normalizedSessions.filter(s => s.timestamp >= startTimestamp);
+    
+    const totalMins = Math.round(filteredSessions.reduce((sum, s) => sum + s.duration / 60, 0));
+    const count = filteredSessions.length;
+    
+    return {
+      sessions: filteredSessions,
+      totalMinutes: totalMins,
+      totalSessions: count,
+      avgSessionLength: count > 0 ? Math.round(totalMins / count) : 0,
+    };
+  }, [sessions, localSessions, isAuthenticated, isGuestMode]);
+
   return {
     sessions,
     localSessions,
@@ -159,6 +251,8 @@ export const useSessionStats = (): SessionStats => {
     loading,
     refetch: loadSessions,
     getTaskTotalMinutes,
+    getTaskTodayMinutes,
+    getFilteredStats,
     addLocalFocusSession,
   };
 };

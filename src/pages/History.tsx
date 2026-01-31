@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
-import { useSessionStats } from "@/hooks/useSessionStats";
+import { useSessionStats, TimeRange } from "@/hooks/useSessionStats";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { YearlyDepthLog } from "@/features/history";
+import TimeRangeSelector from "@/components/common/TimeRangeSelector";
 
 const History = () => {
   const { currentTheme } = useTheme();
@@ -11,24 +12,27 @@ const History = () => {
   const themePalette = getThemePalette(currentTheme);
   const { isGuestMode, isAuthenticated } = useAuthContext();
   
+  // Time range filter state - default to "all" for charts/stats
+  const [timeRange, setTimeRange] = useState<TimeRange>("all");
+  
   // Use unified session stats hook (single source of truth)
   const { 
     sessions, 
     localSessions,
     todayMinutes, 
-    totalMinutes, 
-    totalSessions, 
-    avgSessionLength, 
+    getFilteredStats,
     loading 
   } = useSessionStats();
   
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
 
-  // Combine and normalize sessions from both sources into unified format
-  const formattedSessions = useMemo(() => {
+  // Get filtered stats based on selected time range
+  const filteredStats = useMemo(() => getFilteredStats(timeRange), [getFilteredStats, timeRange]);
+
+  // ALL sessions normalized (for YearlyDepthLog - always shows full year)
+  const allFormattedSessions = useMemo(() => {
     if (isAuthenticated && !isGuestMode) {
-      // Database sessions
       return sessions.map(s => ({
         id: s.id,
         taskId: s.id,
@@ -37,7 +41,6 @@ const History = () => {
         timestamp: new Date(s.session_date).getTime(),
       }));
     } else {
-      // Local storage sessions (guest mode)
       return localSessions.map(s => ({
         id: s.id,
         taskId: s.taskId || s.id,
@@ -48,7 +51,7 @@ const History = () => {
     }
   }, [sessions, localSessions, isAuthenticated, isGuestMode]);
 
-  // Weekly data for bar chart - last 7 days including today
+  // Weekly data for bar chart - based on filtered sessions
   const weeklyData = useMemo(() => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const now = new Date();
@@ -64,7 +67,7 @@ const History = () => {
       endOfDay.setHours(23, 59, 59, 999);
       const endOfDayTime = endOfDay.getTime();
 
-      const dayMinutes = formattedSessions
+      const dayMinutes = filteredStats.sessions
         .filter((s) => s.timestamp >= startOfDay && s.timestamp <= endOfDayTime)
         .reduce((sum, s) => sum + s.duration / 60, 0);
 
@@ -74,15 +77,14 @@ const History = () => {
       });
     }
 
-    console.log('[History] Weekly data calculated:', result);
     return result;
-  }, [formattedSessions]);
+  }, [filteredStats.sessions]);
 
-  // Task breakdown for donut chart
+  // Task breakdown for donut chart - based on filtered sessions
   const taskBreakdown = useMemo(() => {
     const taskMap: Record<string, { name: string; minutes: number }> = {};
 
-    formattedSessions.forEach((s) => {
+    filteredStats.sessions.forEach((s) => {
       const key = s.taskName || "Untitled";
       if (!taskMap[key]) {
         taskMap[key] = { name: key, minutes: 0 };
@@ -94,9 +96,7 @@ const History = () => {
       .map((t) => ({ ...t, minutes: Math.round(t.minutes) }))
       .sort((a, b) => b.minutes - a.minutes)
       .slice(0, 5);
-  }, [formattedSessions]);
-
-  // Stats are now derived from useSessionStats hook (single source of truth)
+  }, [filteredStats.sessions]);
 
   if (loading) {
     return (
@@ -121,12 +121,23 @@ const History = () => {
           <p className="text-muted-foreground text-sm mt-2">Your focus journey</p>
         </div>
 
-        {/* Stat Cards */}
+        {/* FIXED: Yearly Depth Log - Always shows full year regardless of filter */}
+        <YearlyDepthLog sessions={allFormattedSessions} />
+
+        {/* Time Range Filter */}
+        <div className="space-y-2">
+          <p className="text-xs text-center uppercase tracking-widest text-muted-foreground">
+            Filter Stats
+          </p>
+          <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
+        </div>
+
+        {/* Stat Cards - Based on filtered time range */}
         <div className="grid grid-cols-2 gap-4">
           <StatCard label="Today" value={`${todayMinutes}m`} color={primaryColor} />
-          <StatCard label="Total Sessions" value={totalSessions.toString()} color={primaryColor} />
-          <StatCard label="Total Focus" value={`${totalMinutes}m`} color={primaryColor} />
-          <StatCard label="Avg Session" value={`${avgSessionLength}m`} color={primaryColor} />
+          <StatCard label="Sessions" value={filteredStats.totalSessions.toString()} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
+          <StatCard label="Total Focus" value={`${filteredStats.totalMinutes}m`} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
+          <StatCard label="Avg Session" value={`${filteredStats.avgSessionLength}m`} color={primaryColor} subtitle={timeRange !== 'all' ? `(${timeRange})` : undefined} />
         </div>
 
         {/* Weekly Bar Chart */}
@@ -218,7 +229,7 @@ const History = () => {
           </div>
         </div>
 
-        {/* Task Breakdown Donut Chart */}
+        {/* Task Breakdown Donut Chart - Based on filtered sessions */}
         {taskBreakdown.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-muted-foreground">Task Breakdown</h2>
@@ -327,9 +338,6 @@ const History = () => {
             </div>
           </div>
         )}
-
-        {/* Yearly Depth Log */}
-        <YearlyDepthLog sessions={formattedSessions} />
       </div>
     </div>
   );
@@ -339,11 +347,15 @@ interface StatCardProps {
   label: string;
   value: string;
   color: string;
+  subtitle?: string;
 }
 
-const StatCard = ({ label, value, color }: StatCardProps) => (
+const StatCard = ({ label, value, color, subtitle }: StatCardProps) => (
   <div className="bg-card rounded-2xl p-4 border border-border">
-    <p className="text-xs text-muted-foreground mb-1">{label}</p>
+    <div className="flex items-center gap-1">
+      <p className="text-xs text-muted-foreground mb-1">{label}</p>
+      {subtitle && <p className="text-[10px] text-muted-foreground/60 mb-1">{subtitle}</p>}
+    </div>
     <p className="text-2xl font-bold font-mono" style={{ color }}>
       {value}
     </p>
