@@ -167,28 +167,26 @@ const History = () => {
         {/* ===== BENTO GRID STATS ===== */}
         <div className="space-y-3">
           {/* Hero Card - Full Width with Tight Grouping */}
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 relative">
-            {/* Date Badge - Absolute Top Right */}
-            {getDateRangeText(timeRange) && (
-              <div className="absolute top-6 right-6 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
-                <Calendar className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  {getDateRangeText(timeRange)}
-                </span>
-              </div>
-            )}
-            
-            {/* Tight Label + Value Group */}
-            <div className="flex flex-col gap-1">
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+            {/* Header Row: Label + Date Badge (Flex Aligned) */}
+            <div className="flex justify-between items-center mb-2">
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
                 Total Focus Time
               </p>
-              <p 
-                className="text-6xl md:text-7xl font-bold font-mono bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
-              >
-                {formatHeroTime(filteredStats.totalMinutes)}
-              </p>
+              {getDateRangeText(timeRange) && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
+                  <Calendar className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {getDateRangeText(timeRange)}
+                  </span>
+                </div>
+              )}
             </div>
+            
+            {/* Big Number */}
+            <p className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
+              {formatHeroTime(filteredStats.totalMinutes)}
+            </p>
           </div>
 
           {/* Sub Cards - 2 Columns with Tight Grouping */}
@@ -199,7 +197,7 @@ const History = () => {
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   Sessions
                 </p>
-                <p className="text-3xl font-bold font-mono text-primary">
+                <p className="text-3xl font-bold font-mono tracking-tight text-primary">
                   {filteredStats.totalSessions}
                 </p>
               </div>
@@ -211,7 +209,7 @@ const History = () => {
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   Avg Session
                 </p>
-                <p className="text-3xl font-bold font-mono text-primary">
+                <p className="text-3xl font-bold font-mono tracking-tight text-primary">
                   {filteredStats.avgSessionLength}m
                 </p>
               </div>
