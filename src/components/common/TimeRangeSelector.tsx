@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { TimeRange } from "@/hooks/useSessionStats";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear } from "date-fns";
+import { Calendar } from "lucide-react";
 
 interface TimeRangeSelectorProps {
   value: TimeRange;
@@ -20,21 +21,19 @@ const getDateRangeText = (range: TimeRange): string | null => {
   
   switch (range) {
     case "today":
-      return format(now, "MMM d, yyyy");
+      return format(now, "MMMM d, yyyy");
     case "week": {
       const start = startOfWeek(now, { weekStartsOn: 0 });
       const end = endOfWeek(now, { weekStartsOn: 0 });
-      return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
+      return `${format(start, "MMM d")} – ${format(end, "MMM d, yyyy")}`;
     }
     case "month": {
       const start = startOfMonth(now);
       const end = endOfMonth(now);
-      return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
+      return `${format(start, "MMM d")} – ${format(end, "MMM d, yyyy")}`;
     }
     case "year": {
-      const start = startOfYear(now);
-      const end = endOfYear(now);
-      return `${format(start, "MMM d, yyyy")} – ${format(end, "MMM d, yyyy")}`;
+      return format(now, "yyyy");
     }
     case "all":
     default:
@@ -46,7 +45,7 @@ const TimeRangeSelector = ({ value, onChange }: TimeRangeSelectorProps) => {
   const dateRangeText = useMemo(() => getDateRangeText(value), [value]);
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-3">
       <div className="flex flex-wrap justify-center gap-2">
         {timeRangeOptions.map((option) => (
           <button
@@ -63,7 +62,12 @@ const TimeRangeSelector = ({ value, onChange }: TimeRangeSelectorProps) => {
         ))}
       </div>
       {dateRangeText && (
-        <p className="text-xs text-muted-foreground/70">{dateRangeText}</p>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
+          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-xs font-medium text-muted-foreground">
+            {dateRangeText}
+          </span>
+        </div>
       )}
     </div>
   );
