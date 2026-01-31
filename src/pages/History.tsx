@@ -108,9 +108,19 @@ const History = () => {
     );
   }
 
+  // Format total minutes for hero display
+  const formatHeroTime = (minutes: number) => {
+    if (minutes >= 60) {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    }
+    return `${minutes}m`;
+  };
+
   return (
     <div className="h-screen bg-background text-foreground overflow-y-auto">
-      <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-8">
+      <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6">
         {/* Header */}
         <div className="text-center">
           <h1 
@@ -125,212 +135,239 @@ const History = () => {
         <YearlyDepthLog sessions={allFormattedSessions} />
 
         {/* Time Range Filter */}
-        <div className="space-y-3">
-          <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
-        </div>
+        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
 
-        {/* Stat Cards - Based on filtered time range */}
-        <div className="grid grid-cols-2 gap-4">
-          <StatCard label="Today" value={`${todayMinutes}m`} color={primaryColor} />
-          <StatCard label="Sessions" value={filteredStats.totalSessions.toString()} color={primaryColor} />
-          <StatCard label="Total Focus" value={`${filteredStats.totalMinutes}m`} color={primaryColor} />
-          <StatCard label="Avg Session" value={`${filteredStats.avgSessionLength}m`} color={primaryColor} />
-        </div>
-
-        {/* Weekly Bar Chart */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold text-muted-foreground">Weekly Focus</h2>
-          <div className="bg-card rounded-2xl p-4 border border-border">
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart 
-                data={weeklyData} 
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                onMouseLeave={() => setActiveBarIndex(null)}
+        {/* ===== BENTO GRID STATS ===== */}
+        <div className="space-y-4">
+          {/* Hero Card - Full Width */}
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-2">
+                Total Focus Time
+              </p>
+              <p 
+                className="text-6xl md:text-7xl font-bold font-mono bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
               >
-                <defs>
-                  <filter id="bar-glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                    <feFlood floodColor={primaryColor} floodOpacity="0.6"/>
-                    <feComposite in2="coloredBlur" operator="in"/>
-                    <feMerge>
-                      <feMergeNode/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-                <XAxis 
-                  dataKey="day" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: "#737373", fontSize: 12 }}
-                />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: "#737373", fontSize: 11 }}
-                  tickFormatter={(v) => `${v}m`}
-                />
-                <Tooltip
-                  cursor={{ fill: 'transparent' }}
-                  wrapperStyle={{ zIndex: 1000, pointerEvents: 'none' }}
-                  offset={15}
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div
-                          className="rounded-lg px-3 py-2 bg-background border"
-                          style={{
-                            borderColor: primaryColor,
-                            boxShadow: `0 0 20px ${primaryColor}66`,
-                          }}
-                        >
-                          <p className="text-foreground text-xs font-medium mb-1">{label}</p>
-                          <p className="font-mono font-bold" style={{ color: primaryColor }}>
-                            {payload[0].value} min
-                          </p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar 
-                  dataKey="minutes" 
-                  radius={[6, 6, 0, 0]}
-                  onMouseEnter={(_, index) => setActiveBarIndex(index)}
-                  shape={(props: any) => {
-                    const { x, y, width, height, index } = props;
-                    const isActive = activeBarIndex === index;
-                    const isDimmed = activeBarIndex !== null && activeBarIndex !== index;
-                    
-                    return (
-                      <rect
-                        x={x}
-                        y={y}
-                        width={width}
-                        height={height}
-                        rx={6}
-                        ry={6}
-                        fill={primaryColor}
-                        opacity={isDimmed ? 0.3 : 1}
-                        style={{
-                          filter: isActive ? `url(#bar-glow) brightness(1.3)` : 'none',
-                          transition: 'all 0.3s ease',
-                        }}
-                      />
-                    );
-                  }}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+                {formatHeroTime(filteredStats.totalMinutes)}
+              </p>
+            </div>
+          </div>
+
+          {/* Sub Cards - 2 Columns */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Total Sessions */}
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                Sessions
+              </p>
+              <p className="text-3xl font-bold font-mono text-primary">
+                {filteredStats.totalSessions}
+              </p>
+            </div>
+
+            {/* Average Session */}
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                Avg Session
+              </p>
+              <p className="text-3xl font-bold font-mono text-primary">
+                {filteredStats.avgSessionLength}m
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Task Breakdown Donut Chart - Based on filtered sessions */}
-        {taskBreakdown.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold text-muted-foreground">Task Breakdown</h2>
-            <div className="bg-card rounded-2xl p-4 border border-border">
-              <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
-                <ResponsiveContainer width="100%" height={180} className="md:w-1/2">
-                  <PieChart>
-                    <defs>
-                      {themePalette.map((color, index) => (
-                        <filter key={`glow-${index}`} id={`glow-${index}`} x="-50%" y="-50%" width="200%" height="200%">
-                          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                          <feFlood floodColor={color} floodOpacity="0.6"/>
-                          <feComposite in2="coloredBlur" operator="in"/>
-                          <feMerge>
-                            <feMergeNode/>
-                            <feMergeNode in="SourceGraphic"/>
-                          </feMerge>
-                        </filter>
-                      ))}
-                    </defs>
-                    <Pie
-                      data={taskBreakdown}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={40}
-                      outerRadius={70}
-                      dataKey="minutes"
-                      paddingAngle={2}
-                      stroke="hsl(var(--background))"
-                      strokeWidth={2}
-                      onMouseEnter={(_, index) => setActiveIndex(index)}
-                      onMouseLeave={() => setActiveIndex(null)}
-                      activeIndex={activeIndex !== null ? activeIndex : undefined}
-                      activeShape={(props: any) => {
-                        const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, index } = props;
-                        return (
-                          <g>
-                            <Sector
-                              cx={cx}
-                              cy={cy}
-                              innerRadius={innerRadius}
-                              outerRadius={outerRadius * 1.1}
-                              startAngle={startAngle}
-                              endAngle={endAngle}
-                              fill={fill}
-                              stroke="none"
-                              style={{
-                                filter: `url(#glow-${index}) brightness(1.3)`,
-                                transition: 'all 0.25s ease-out',
-                              }}
-                            />
-                          </g>
-                        );
-                      }}
-                    >
-                      {taskBreakdown.map((_, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={themePalette[index % themePalette.length]}
-                          opacity={activeIndex === null ? 1 : activeIndex === index ? 1 : 0.4}
-                          style={{ transition: 'all 0.25s ease-out' }}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      wrapperStyle={{ zIndex: 1000, pointerEvents: 'none' }}
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const data = payload[0];
-                          const sliceColor = themePalette[taskBreakdown.findIndex(t => t.name === data.name) % themePalette.length];
-                          return (
-                            <div
-                              className="rounded-lg px-3 py-2 bg-background/95 border"
-                              style={{
-                                borderColor: sliceColor,
-                                boxShadow: `0 0 20px ${sliceColor}66`,
-                              }}
-                            >
-                              <p className="text-foreground text-xs font-bold mb-1">{data.name}</p>
-                              <p className="font-mono font-bold" style={{ color: sliceColor }}>
-                                {data.value} min
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
+        {/* ===== CHART SECTION ===== */}
+        {/* Weekly Bar Chart */}
+        <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+          <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Weekly Focus</h2>
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart 
+              data={weeklyData} 
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              onMouseLeave={() => setActiveBarIndex(null)}
+            >
+              <defs>
+                <filter id="bar-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feFlood floodColor={primaryColor} floodOpacity="0.6"/>
+                  <feComposite in2="coloredBlur" operator="in"/>
+                  <feMerge>
+                    <feMergeNode/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <XAxis 
+                dataKey="day" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: "#737373", fontSize: 12 }}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: "#737373", fontSize: 11 }}
+                tickFormatter={(v) => `${v}m`}
+              />
+              <Tooltip
+                cursor={{ fill: 'transparent' }}
+                wrapperStyle={{ zIndex: 1000, pointerEvents: 'none' }}
+                offset={15}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div
+                        className="rounded-lg px-3 py-2 bg-background border"
+                        style={{
+                          borderColor: primaryColor,
+                          boxShadow: `0 0 20px ${primaryColor}66`,
+                        }}
+                      >
+                        <p className="text-foreground text-xs font-medium mb-1">{label}</p>
+                        <p className="font-mono font-bold" style={{ color: primaryColor }}>
+                          {payload[0].value} min
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar 
+                dataKey="minutes" 
+                radius={[6, 6, 0, 0]}
+                onMouseEnter={(_, index) => setActiveBarIndex(index)}
+                shape={(props: any) => {
+                  const { x, y, width, height, index } = props;
+                  const isActive = activeBarIndex === index;
+                  const isDimmed = activeBarIndex !== null && activeBarIndex !== index;
+                  
+                  return (
+                    <rect
+                      x={x}
+                      y={y}
+                      width={width}
+                      height={height}
+                      rx={6}
+                      ry={6}
+                      fill={primaryColor}
+                      opacity={isDimmed ? 0.3 : 1}
+                      style={{
+                        filter: isActive ? `url(#bar-glow) brightness(1.3)` : 'none',
+                        transition: 'all 0.3s ease',
                       }}
                     />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="w-full space-y-2 md:flex-1">
-                  {taskBreakdown.map((task, index) => (
-                    <div key={task.name} className="flex items-center gap-2 text-sm">
-                      <div
-                        className="w-3 h-3 rounded-full shrink-0"
-                        style={{ backgroundColor: themePalette[index % themePalette.length] }}
+                  );
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Task Breakdown Donut Chart */}
+        {taskBreakdown.length > 0 && (
+          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+            <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Task Breakdown</h2>
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
+              <ResponsiveContainer width="100%" height={160} className="md:w-1/2">
+                <PieChart>
+                  <defs>
+                    {themePalette.map((color, index) => (
+                      <filter key={`glow-${index}`} id={`glow-${index}`} x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                        <feFlood floodColor={color} floodOpacity="0.6"/>
+                        <feComposite in2="coloredBlur" operator="in"/>
+                        <feMerge>
+                          <feMergeNode/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    ))}
+                  </defs>
+                  <Pie
+                    data={taskBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={35}
+                    outerRadius={60}
+                    dataKey="minutes"
+                    paddingAngle={2}
+                    stroke="hsl(var(--background))"
+                    strokeWidth={2}
+                    onMouseEnter={(_, index) => setActiveIndex(index)}
+                    onMouseLeave={() => setActiveIndex(null)}
+                    activeIndex={activeIndex !== null ? activeIndex : undefined}
+                    activeShape={(props: any) => {
+                      const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, index } = props;
+                      return (
+                        <g>
+                          <Sector
+                            cx={cx}
+                            cy={cy}
+                            innerRadius={innerRadius}
+                            outerRadius={outerRadius * 1.1}
+                            startAngle={startAngle}
+                            endAngle={endAngle}
+                            fill={fill}
+                            stroke="none"
+                            style={{
+                              filter: `url(#glow-${index}) brightness(1.3)`,
+                              transition: 'all 0.25s ease-out',
+                            }}
+                          />
+                        </g>
+                      );
+                    }}
+                  >
+                    {taskBreakdown.map((_, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={themePalette[index % themePalette.length]}
+                        opacity={activeIndex === null ? 1 : activeIndex === index ? 1 : 0.4}
+                        style={{ transition: 'all 0.25s ease-out' }}
                       />
-                      <span className="text-muted-foreground truncate flex-1">{task.name}</span>
-                      <span className="font-mono font-medium" style={{ color: themePalette[index % themePalette.length] }}>
-                        {task.minutes}m
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    wrapperStyle={{ zIndex: 1000, pointerEvents: 'none' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0];
+                        const sliceColor = themePalette[taskBreakdown.findIndex(t => t.name === data.name) % themePalette.length];
+                        return (
+                          <div
+                            className="rounded-lg px-3 py-2 bg-background/95 border"
+                            style={{
+                              borderColor: sliceColor,
+                              boxShadow: `0 0 20px ${sliceColor}66`,
+                            }}
+                          >
+                            <p className="text-foreground text-xs font-bold mb-1">{data.name}</p>
+                            <p className="font-mono font-bold" style={{ color: sliceColor }}>
+                              {data.value} min
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="w-full space-y-2 md:flex-1">
+                {taskBreakdown.map((task, index) => (
+                  <div key={task.name} className="flex items-center gap-2 text-sm">
+                    <div
+                      className="w-3 h-3 rounded-full shrink-0"
+                      style={{ backgroundColor: themePalette[index % themePalette.length] }}
+                    />
+                    <span className="text-muted-foreground truncate flex-1">{task.name}</span>
+                    <span className="font-mono font-medium" style={{ color: themePalette[index % themePalette.length] }}>
+                      {task.minutes}m
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -339,20 +376,5 @@ const History = () => {
     </div>
   );
 };
-
-interface StatCardProps {
-  label: string;
-  value: string;
-  color: string;
-}
-
-const StatCard = ({ label, value, color }: StatCardProps) => (
-  <div className="bg-card rounded-2xl p-4 border border-border">
-    <p className="text-xs text-muted-foreground mb-1">{label}</p>
-    <p className="text-2xl font-bold font-mono" style={{ color }}>
-      {value}
-    </p>
-  </div>
-);
 
 export default History;
