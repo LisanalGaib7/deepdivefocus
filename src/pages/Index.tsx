@@ -69,7 +69,7 @@ const Index = () => {
   
   // Gamification hook - engine level starts at 1
   const engineLevel = 1; // TODO: Load from user profile when persistence is added
-  const { depth, oxygen, isEmergency, resetDive } = useGamification({
+  const { depth, oxygen, isEmergency, elapsedSeconds, resetDive } = useGamification({
     isDiving: isRunning,
     engineLevel,
   });
@@ -278,12 +278,14 @@ const Index = () => {
   const handleMissionComplete = useCallback(async () => {
     // Capture current values immediately (avoid stale closures)
     const currentDepth = depth;
-    const currentDuration = setDuration;
+    // Use actual elapsed time instead of set duration for accurate tracking
+    const currentDuration = elapsedSeconds;
     const taskName = selectedTask?.text || "Focus Session";
     
     console.log('[MissionComplete] Starting save:', { 
       currentDepth, 
       currentDuration, 
+      elapsedSeconds,
       taskName, 
       isGuestMode, 
       isAuthenticated 
@@ -333,7 +335,7 @@ const Index = () => {
     
     // Show the mission complete modal
     setShowMissionCompleteModal(true);
-  }, [depth, setDuration, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession]);
+  }, [depth, elapsedSeconds, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession]);
 
   // Handle timer completion separately to avoid closure issues
   useEffect(() => {
@@ -342,10 +344,10 @@ const Index = () => {
       setIsRunning(false);
       playCompletionSound();
       
-      console.log('[Timer] Session complete, saving...', { setDuration, depth });
+      console.log('[Timer] Session complete, saving...', { elapsedSeconds, depth });
       handleMissionComplete();
     }
-  }, [timeLeft, isRunning, playCompletionSound, handleMissionComplete, setDuration, depth]);
+  }, [timeLeft, isRunning, playCompletionSound, handleMissionComplete, elapsedSeconds, depth]);
 
   const handleMissionCompleteClose = useCallback(async () => {
     // Add creature to collection if one was found
