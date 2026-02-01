@@ -10,6 +10,7 @@ interface UseGamificationReturn {
   depth: number;
   oxygen: number;
   isEmergency: boolean;
+  elapsedSeconds: number;
   resetDive: () => void;
 }
 
@@ -20,38 +21,55 @@ export const useGamification = ({
   const [depth, setDepth] = useState(0);
   const [oxygen, setOxygen] = useState<number>(OXYGEN_CONFIG.MAX_OXYGEN);
   const [isEmergency, setIsEmergency] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
-  const startTimeRef = useRef<number | null>(null);
+  // Refs for tracking time - accumulate elapsed time across pauses
+  const sessionStartRef = useRef<number | null>(null);
+  const accumulatedTimeRef = useRef<number>(0); // Time accumulated before current pause
   const hiddenAtRef = useRef<number | null>(null);
   const depthAtPenaltyRef = useRef<number>(0);
 
-  // Reset dive state
+  // Reset dive state - only called when mission completes or user explicitly resets
   const resetDive = useCallback(() => {
     setDepth(0);
     setOxygen(OXYGEN_CONFIG.MAX_OXYGEN);
     setIsEmergency(false);
-    startTimeRef.current = null;
+    setElapsedSeconds(0);
+    sessionStartRef.current = null;
+    accumulatedTimeRef.current = 0;
     hiddenAtRef.current = null;
     depthAtPenaltyRef.current = 0;
   }, []);
 
   // Depth calculation: 5 * engineLevel * (timeElapsed ^ 0.7)
+  // Now preserves accumulated time across pauses
   useEffect(() => {
     if (!isDiving) {
-      startTimeRef.current = null;
+      // When pausing, save accumulated time (don't reset!)
+      if (sessionStartRef.current !== null) {
+        const currentSegmentTime = (Date.now() - sessionStartRef.current) / 1000;
+        accumulatedTimeRef.current += currentSegmentTime;
+        sessionStartRef.current = null;
+      }
       return;
     }
 
-    // Set start time when diving begins
-    if (startTimeRef.current === null) {
-      startTimeRef.current = Date.now();
+    // Resume diving - start new segment from now
+    if (sessionStartRef.current === null) {
+      sessionStartRef.current = Date.now();
     }
 
     const interval = setInterval(() => {
-      if (startTimeRef.current === null || isEmergency) return;
+      if (sessionStartRef.current === null || isEmergency) return;
 
-      const elapsedSeconds = (Date.now() - startTimeRef.current) / 1000;
-      const newDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(elapsedSeconds, DEPTH_CONFIG.DEPTH_EXPONENT);
+      // Total elapsed = accumulated from previous segments + current segment
+      const currentSegmentTime = (Date.now() - sessionStartRef.current) / 1000;
+      const totalElapsed = accumulatedTimeRef.current + currentSegmentTime;
+      
+      setElapsedSeconds(Math.floor(totalElapsed));
+      
+      // Depth based on total elapsed time (continuous dive)
+      const newDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(totalElapsed, DEPTH_CONFIG.DEPTH_EXPONENT);
       setDepth(Math.floor(newDepth));
       depthAtPenaltyRef.current = newDepth;
     }, 100);
@@ -97,6 +115,7 @@ export const useGamification = ({
     depth,
     oxygen,
     isEmergency,
+    elapsedSeconds,
     resetDive,
   };
 };
