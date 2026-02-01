@@ -4,6 +4,7 @@ import { DEPTH_CONFIG, OXYGEN_CONFIG } from "@/constants/gameConfig";
 interface UseGamificationProps {
   isDiving: boolean;
   engineLevel: number;
+  hullLevel?: number; // For max depth calculation
 }
 
 interface UseGamificationReturn {
@@ -11,17 +12,24 @@ interface UseGamificationReturn {
   oxygen: number;
   isEmergency: boolean;
   elapsedSeconds: number;
+  isAtMaxDepth: boolean;
+  maxDepth: number;
   resetDive: () => void;
 }
 
 export const useGamification = ({
   isDiving,
   engineLevel,
+  hullLevel = 1,
 }: UseGamificationProps): UseGamificationReturn => {
   const [depth, setDepth] = useState(0);
   const [oxygen, setOxygen] = useState<number>(OXYGEN_CONFIG.MAX_OXYGEN);
   const [isEmergency, setIsEmergency] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isAtMaxDepth, setIsAtMaxDepth] = useState(false);
+
+  // Calculate max depth based on hull level
+  const maxDepth = DEPTH_CONFIG.BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
 
   // Refs for tracking time - accumulate elapsed time across pauses
   const sessionStartRef = useRef<number | null>(null);
@@ -29,16 +37,21 @@ export const useGamification = ({
   const hiddenAtRef = useRef<number | null>(null);
   const depthAtPenaltyRef = useRef<number>(0);
 
+  // Track if we've shown the max depth toast
+  const maxDepthToastShownRef = useRef(false);
+
   // Reset dive state - only called when mission completes or user explicitly resets
   const resetDive = useCallback(() => {
     setDepth(0);
     setOxygen(OXYGEN_CONFIG.MAX_OXYGEN);
     setIsEmergency(false);
     setElapsedSeconds(0);
+    setIsAtMaxDepth(false);
     sessionStartRef.current = null;
     accumulatedTimeRef.current = 0;
     hiddenAtRef.current = null;
     depthAtPenaltyRef.current = 0;
+    maxDepthToastShownRef.current = false;
   }, []);
 
   // Depth calculation: 5 * engineLevel * (timeElapsed ^ 0.7)
@@ -68,14 +81,17 @@ export const useGamification = ({
       
       setElapsedSeconds(Math.floor(totalElapsed));
       
-      // Depth based on total elapsed time (continuous dive)
-      const newDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(totalElapsed, DEPTH_CONFIG.DEPTH_EXPONENT);
-      setDepth(Math.floor(newDepth));
-      depthAtPenaltyRef.current = newDepth;
+      // Depth based on total elapsed time (continuous dive), capped at maxDepth
+      const calculatedDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(totalElapsed, DEPTH_CONFIG.DEPTH_EXPONENT);
+      const cappedDepth = Math.min(calculatedDepth, maxDepth);
+      
+      setDepth(Math.floor(cappedDepth));
+      setIsAtMaxDepth(calculatedDepth >= maxDepth);
+      depthAtPenaltyRef.current = cappedDepth;
     }, 100);
 
     return () => clearInterval(interval);
-  }, [isDiving, engineLevel, isEmergency]);
+  }, [isDiving, engineLevel, isEmergency, maxDepth]);
 
   // Visibility change detection for oxygen penalty
   useEffect(() => {
@@ -116,6 +132,8 @@ export const useGamification = ({
     oxygen,
     isEmergency,
     elapsedSeconds,
+    isAtMaxDepth,
+    maxDepth,
     resetDive,
   };
 };

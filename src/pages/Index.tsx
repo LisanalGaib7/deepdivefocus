@@ -69,10 +69,13 @@ const Index = () => {
   
   // Gamification hook - engine level starts at 1
   const engineLevel = 1; // TODO: Load from user profile when persistence is added
-  const { depth, oxygen, isEmergency, elapsedSeconds, resetDive } = useGamification({
+  const hullLevel = 1; // TODO: Load from user profile when persistence is added
+  const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
     engineLevel,
+    hullLevel,
   });
+  const maxDepthToastShownRef = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Load tasks from localStorage
@@ -102,6 +105,21 @@ const Index = () => {
       setShowEmergencyModal(true);
     }
   }, [isEmergency, isRunning]);
+
+  // Show toast when max depth is reached
+  useEffect(() => {
+    if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
+      maxDepthToastShownRef.current = true;
+      toast.info(`Max Depth Reached: ${maxDepth.toLocaleString()}m`, {
+        description: "Maintaining depth... Hull at maximum pressure.",
+        duration: 4000,
+      });
+    }
+    // Reset toast flag when starting a new dive
+    if (!isRunning) {
+      maxDepthToastShownRef.current = false;
+    }
+  }, [isAtMaxDepth, isRunning, maxDepth]);
 
   const selectedTask = tasks.find(t => t.id === selectedTaskId);
 
