@@ -112,14 +112,14 @@ const Index = () => {
       maxDepthToastShownRef.current = true;
       toast.info(`Max Depth Reached: ${maxDepth.toLocaleString()}m`, {
         description: "Maintaining depth... Hull at maximum pressure.",
-        duration: 4000,
+        duration: 5000,
       });
     }
     // Reset toast flag when starting a new dive
     if (!isRunning) {
       maxDepthToastShownRef.current = false;
     }
-  }, [isAtMaxDepth, isRunning, maxDepth]);
+  }, [isAtMaxDepth, isRunning, maxDepth, depth]);
 
   const selectedTask = tasks.find(t => t.id === selectedTaskId);
 
