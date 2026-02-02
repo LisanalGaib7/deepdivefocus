@@ -111,12 +111,12 @@ const Index = () => {
     if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
       maxDepthToastShownRef.current = true;
       toast.success(
-        <span className="text-amber-400 font-bold">🏆 Maximum Depth Reached!</span>, 
+        <span className="text-amber-400 font-bold drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">🏆 Maximum Depth Reached!</span>, 
         {
-          description: <span className="text-amber-100/90">Incredible focus! To explore deeper zones, you will need to upgrade your vessel.</span>,
+          description: <span className="!text-slate-300 block mt-1">Incredible focus! To explore deeper zones, you will need to upgrade your vessel.</span>,
           duration: 5000,
           position: "top-center",
-          className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)]",
+          className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] [&>div]:!text-slate-300",
         }
       );
     }
