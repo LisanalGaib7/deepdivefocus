@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,9 @@ import { toast } from "sonner";
 import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 import BottomNav from "@/components/common/BottomNav";
 import GuidebookModal from "@/components/common/GuidebookModal";
+
+// Feature components
+import { EngineeringBayModal } from "@/features/hangar";
 
 // Timer feature components
 import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
@@ -62,6 +65,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
+  const [showEngineeringBay, setShowEngineeringBay] = useState(false);
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
   const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
@@ -512,8 +516,22 @@ const Index = () => {
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
-          {/* Top Right Controls - Guidebook & Logout */}
+          {/* Top Right Controls - Hangar, Guidebook & Logout */}
           <div className="absolute top-4 right-4 flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setShowEngineeringBay(true)}
+                  className="p-2 text-muted-foreground hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all duration-300"
+                  aria-label="Engineering Bay"
+                >
+                  <Wrench className="w-5 h-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
+                ENGINEERING BAY
+              </TooltipContent>
+            </Tooltip>
             <GuidebookModal />
             <Tooltip>
               <TooltipTrigger asChild>
@@ -1026,6 +1044,19 @@ const Index = () => {
         maxDepth={completedSessionDepth}
         creature={rewardCreature}
         sessionDuration={completedSessionDuration}
+      />
+      
+      {/* Engineering Bay Modal */}
+      <EngineeringBayModal
+        open={showEngineeringBay}
+        onClose={() => setShowEngineeringBay(false)}
+        engineLevel={engineLevel}
+        hullLevel={hullLevel}
+        currentPearls={profile?.total_pearls || 0}
+        onUpgrade={(moduleId) => {
+          // TODO: Implement upgrade logic with pearl deduction
+          toast.success(`Upgraded ${moduleId}!`);
+        }}
       />
     </>
   );
