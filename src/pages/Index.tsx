@@ -688,11 +688,19 @@ const Index = () => {
               
               {/* Depth Display - shown when diving */}
               {isRunning && (
-                <div className="flex items-center gap-2 mt-2" style={{ mixBlendMode: "difference", color: "white" }}>
-                  <Anchor className="h-4 w-4" />
-                  <span className="font-robotic text-xl tracking-wider">
-                    {depth}m
-                  </span>
+                <div className="flex flex-col items-center mt-2">
+                  <div className="flex items-center gap-2" style={{ mixBlendMode: "difference", color: "white" }}>
+                    <Anchor className="h-4 w-4" />
+                    <span className="font-robotic text-xl tracking-wider">
+                      {depth}m
+                    </span>
+                  </div>
+                  {/* Next Zone Locked indicator - shown at max depth */}
+                  {isAtMaxDepth && (
+                    <p className="text-xs text-muted-foreground mt-1 opacity-70">
+                      Next Zone: Abyss (Locked 🔒)
+                    </p>
+                  )}
                 </div>
               )}
               
