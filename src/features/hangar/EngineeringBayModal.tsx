@@ -105,7 +105,7 @@ export const EngineeringBayModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-black/95 border-cyan-500/30 max-w-lg max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="bg-black/95 border-cyan-500/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea">
         {/* Blueprint grid background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg opacity-10">
           <div 
