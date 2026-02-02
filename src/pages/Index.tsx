@@ -110,16 +110,22 @@ const Index = () => {
   useEffect(() => {
     if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
       maxDepthToastShownRef.current = true;
-      toast.success(
-        <span className="text-amber-400 font-bold drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">🏆 Maximum Depth Reached!</span>, 
+      // Nuclear option: bypass Sonner's title/description rendering by injecting our own JSX content.
+      toast(
+        <div className="flex flex-col gap-1">
+          <p className="text-amber-400 font-bold text-base flex items-center gap-2">
+            <span className="text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">🏆</span>
+            <span className="drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">Maximum Depth Reached!</span>
+          </p>
+          <p className="!text-slate-200 text-sm font-normal">
+            Incredible focus! To explore deeper zones, you will need to upgrade your vessel.
+          </p>
+        </div>,
         {
-          description: "Incredible focus! To explore deeper zones, you will need to upgrade your vessel.",
           duration: 5000,
           position: "top-center",
-          // Force description visibility + stack title/description vertically regardless of default Sonner styles
-          className:
-            "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] [&_[data-description]]:!text-slate-300 [&_[data-description]]:!font-medium [&_[data-content]]:!flex [&_[data-content]]:!flex-col [&_[data-content]]:!gap-1",
-          descriptionClassName: "!text-slate-300 !font-medium",
+          className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] !p-4",
+          // IMPORTANT: intentionally no `description` prop here
         }
       );
     }
