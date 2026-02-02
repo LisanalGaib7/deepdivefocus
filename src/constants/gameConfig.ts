@@ -17,7 +17,7 @@ export const DEPTH_CONFIG = {
   // Formula: DEPTH_MULTIPLIER * engineLevel * (timeElapsed ^ DEPTH_EXPONENT)
   
   // Hull depth limits by armor level (future: submarine upgrades)
-  BASE_MAX_DEPTH: 2000,  // Default max depth for hull level 1 (~75 min to reach)
+  BASE_MAX_DEPTH: 100,  // TEMP: Lowered for testing (original: 2000)
   DEPTH_PER_HULL_LEVEL: 500, // Additional depth per hull upgrade
   // Formula: BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_PER_HULL_LEVEL
 } as const;
