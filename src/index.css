@@ -256,29 +256,31 @@ All colors MUST be HSL.
     animation: float 2s ease-in-out infinite;
   }
 
-  /* Deep Sea themed scrollbar */
+  /* Deep Sea themed scrollbar - Sci-Fi energy capsule style */
   .scrollbar-deep-sea {
     scrollbar-width: thin;
-    scrollbar-color: hsl(185 100% 30%) transparent;
+    scrollbar-color: hsl(var(--hud-cyan)) transparent;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar {
+    width: 6px;
     height: 6px;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-track {
-    background: hsl(0 0% 5%);
+    background: rgba(15, 23, 42, 0.5);
     border-radius: 9999px;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-thumb {
-    background: hsl(185 100% 25%);
+    background: hsl(var(--hud-cyan) / 0.6);
     border-radius: 9999px;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-thumb:hover {
-    background: hsl(185 100% 40%);
+    background: hsl(var(--hud-cyan) / 0.9);
+    box-shadow: 0 0 8px hsl(var(--hud-cyan) / 0.6);
   }
 
 
