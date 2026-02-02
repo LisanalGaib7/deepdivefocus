@@ -113,10 +113,13 @@ const Index = () => {
       toast.success(
         <span className="text-amber-400 font-bold drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">🏆 Maximum Depth Reached!</span>, 
         {
-          description: <span className="!text-slate-300 block mt-1">Incredible focus! To explore deeper zones, you will need to upgrade your vessel.</span>,
+          description: "Incredible focus! To explore deeper zones, you will need to upgrade your vessel.",
           duration: 5000,
           position: "top-center",
-          className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] [&>div]:!text-slate-300",
+          // Force description visibility + stack title/description vertically regardless of default Sonner styles
+          className:
+            "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] [&_[data-description]]:!text-slate-300 [&_[data-description]]:!font-medium [&_[data-content]]:!flex [&_[data-content]]:!flex-col [&_[data-content]]:!gap-1",
+          descriptionClassName: "!text-slate-300 !font-medium",
         }
       );
     }
