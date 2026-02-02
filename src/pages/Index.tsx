@@ -110,9 +110,10 @@ const Index = () => {
   useEffect(() => {
     if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
       maxDepthToastShownRef.current = true;
-      toast.info(`Max Depth Reached: ${maxDepth.toLocaleString()}m`, {
-        description: "Maintaining depth... Hull at maximum pressure.",
+      toast.warning(`⚠️ Hull Limit Reached (${maxDepth.toLocaleString()}m)`, {
+        description: "Depth capped. Upgrade your submarine to dive deeper.",
         duration: 5000,
+        position: "top-center",
       });
     }
     // Reset toast flag when starting a new dive
