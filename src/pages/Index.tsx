@@ -110,13 +110,15 @@ const Index = () => {
   useEffect(() => {
     if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
       maxDepthToastShownRef.current = true;
-      toast.success(`Maximum Depth Reached!`, {
-        description: "Incredible focus! To explore deeper zones, you will need to upgrade your vessel.",
-        duration: 5000,
-        position: "top-center",
-        icon: <span className="drop-shadow-[0_0_15px_rgba(251,191,36,0.9)]">🏆</span>,
-        className: "border-2 border-amber-400 bg-slate-950/95 backdrop-blur-md shadow-[0_0_30px_-5px_rgba(251,191,36,0.7)]",
-      });
+      toast.success(
+        <span className="text-amber-400 font-bold">🏆 Maximum Depth Reached!</span>, 
+        {
+          description: <span className="text-amber-100/90">Incredible focus! To explore deeper zones, you will need to upgrade your vessel.</span>,
+          duration: 5000,
+          position: "top-center",
+          className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)]",
+        }
+      );
     }
     // Reset toast flag when starting a new dive
     if (!isRunning) {
