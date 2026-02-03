@@ -16,7 +16,7 @@ import {
   Lock,
   Circle
 } from "lucide-react";
-import { DEPTH_CONFIG } from "@/constants/gameConfig";
+import { DEPTH_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 
 interface UpgradeModule {
   id: string;
@@ -54,7 +54,7 @@ export const EngineeringBayModal = ({
   const currentMaxDepth = DEPTH_CONFIG.BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
   const nextMaxDepth = currentMaxDepth + DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
 
-  // Define upgrade modules
+  // Define upgrade modules with hardcore pricing
   const modules: UpgradeModule[] = [
     {
       id: "hull",
@@ -65,7 +65,7 @@ export const EngineeringBayModal = ({
       currentValue: `${currentMaxDepth.toLocaleString()}m`,
       nextValue: `${nextMaxDepth.toLocaleString()}m`,
       description: "Advanced titanium plating to withstand crushing depths.",
-      cost: hullLevel * 500,
+      cost: getUpgradeCost(hullLevel),
       unlocked: true,
     },
     {
@@ -77,7 +77,7 @@ export const EngineeringBayModal = ({
       currentValue: `${100 + (engineLevel - 1) * 20}%`,
       nextValue: `${100 + engineLevel * 20}%`,
       description: "Upgraded propulsion system for faster descent speed.",
-      cost: engineLevel * 400,
+      cost: getUpgradeCost(engineLevel),
       unlocked: true,
     },
     {
@@ -89,7 +89,7 @@ export const EngineeringBayModal = ({
       currentValue: "100%",
       nextValue: "120%",
       description: "Enhanced life support for extended dive operations.",
-      cost: 600,
+      cost: getUpgradeCost(1), // Locked at tier 1
       unlocked: false,
     },
   ];
