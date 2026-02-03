@@ -68,7 +68,7 @@ export const MissionCompleteModal = ({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="bg-card border-hud-cyan/30 max-w-md max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+      <AlertDialogContent className="bg-card border-hud-cyan/30 max-w-md max-h-[90vh] overflow-y-auto scrollbar-deep-sea p-4 sm:p-6">
         {/* Header with scan lines effect */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
           <div className="absolute inset-0 bg-gradient-to-b from-hud-cyan/5 to-transparent" />
