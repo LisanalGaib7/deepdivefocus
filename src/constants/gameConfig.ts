@@ -67,3 +67,26 @@ export const DEFAULT_UPGRADE_LEVELS = {
   oxygenTank: 1,
   hullArmor: 1,
 } as const;
+
+// ======================
+// UPGRADE COSTS (HARDCORE MODE)
+// ======================
+// Cost to upgrade FROM tier N to tier N+1
+// Index 0 = cost to go from Tier 1 → Tier 2
+export const UPGRADE_COSTS = {
+  tier2: 2_000,    // Tier 1 → 2: Significant initial effort
+  tier3: 8_000,    // Tier 2 → 3: Mid-game milestone
+  tier4: 20_000,   // Tier 3 → 4: Late-game achievement
+  tier5: 50_000,   // Tier 4 → 5: End-game goal (months of focus)
+} as const;
+
+// Helper to get upgrade cost based on current tier
+export const getUpgradeCost = (currentTier: number): number => {
+  switch (currentTier) {
+    case 1: return UPGRADE_COSTS.tier2;
+    case 2: return UPGRADE_COSTS.tier3;
+    case 3: return UPGRADE_COSTS.tier4;
+    case 4: return UPGRADE_COSTS.tier5;
+    default: return 0; // Max tier reached
+  }
+};
