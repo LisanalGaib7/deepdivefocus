@@ -186,6 +186,32 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  /* Global Sci-Fi Scrollbar - applies to entire app */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(187 100% 35%) hsl(222 47% 5%);
+  }
+
+  html::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: hsl(222 47% 5%);
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: hsl(187 100% 35%);
+    border-radius: 9999px;
+    border: 2px solid hsl(222 47% 5%);
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background: hsl(187 100% 50%);
+    box-shadow: 0 0 10px hsl(187 100% 50% / 0.6);
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
