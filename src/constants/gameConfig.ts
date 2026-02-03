@@ -41,12 +41,13 @@ export const RARITY_CONFIG = {
   // Target distribution at 3000m: Legendary 7%, Epic 13%, Rare 30%, Common+Uncommon 50%
 } as const;
 
+// Single source of truth for pearl rewards by rarity tier
 export const PEARL_VALUES = {
   Common: 10,
   Uncommon: 25,
   Rare: 50,
-  Epic: 100,
-  Legendary: 200,
+  Epic: 150,
+  Legendary: 500,
 } as const;
 
 // ======================
