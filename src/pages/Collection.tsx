@@ -18,7 +18,7 @@ import {
   Bug,
   Cloud,
   Smile,
-  Gem,
+  Circle,
   LucideIcon,
 } from "lucide-react";
 import { CREATURES, Creature } from "@/data/creatures";
@@ -473,7 +473,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
           </span>
           {unlocked && (
             <span className="text-[10px] flex items-center gap-0.5 text-amber-300 font-mono">
-              <Gem size={10} className="text-amber-400" />
+              <Circle size={10} className="text-amber-400 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
               {creature.pearls}
             </span>
           )}

@@ -13,7 +13,8 @@ import {
   ChevronRight,
   Gauge,
   ArrowUp,
-  Lock
+  Lock,
+  Circle
 } from "lucide-react";
 import { DEPTH_CONFIG } from "@/constants/gameConfig";
 
@@ -144,8 +145,8 @@ export const EngineeringBayModal = ({
                 <p className="text-lg font-robotic text-cyan-400 tracking-wide">VOYAGER-{hullLevel}</p>
               </div>
               <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-1.5">
+                <Circle className="h-4 w-4 text-amber-400 fill-amber-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
                 <span className="text-amber-400 font-robotic text-sm">{currentPearls.toLocaleString()}</span>
-                <span className="text-amber-400/60 text-xs">PEARLS</span>
               </div>
             </div>
 
@@ -246,7 +247,7 @@ export const EngineeringBayModal = ({
                               </div>
                             ) : (
                               <div className="flex items-center gap-2">
-                                <ArrowUp className="h-3 w-3" />
+                                <Circle className="h-3 w-3 fill-current drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]" />
                                 <span>{module.cost}</span>
                               </div>
                             )}

@@ -11,7 +11,7 @@ import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
 import { 
   Anchor, 
-  Gem, 
+  Circle, 
   Sparkles, 
   Fish, 
   Shell, 
@@ -188,8 +188,8 @@ export const MissionCompleteModal = ({
 
                 {/* Pearl reward */}
                 <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-border">
-                  <Gem className="h-4 w-4 text-yellow-400" />
-                  <span className="text-yellow-400 font-robotic text-sm">
+                  <Circle className="h-4 w-4 text-amber-400 fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]" />
+                  <span className="text-amber-400 font-robotic text-sm">
                     +{pearls} PEARLS
                   </span>
                 </div>
