@@ -1,5 +1,5 @@
 import { Creature, getCreaturesAtDepth, CreatureRarity } from '@/data/creatures';
-import { RARITY_CONFIG } from '@/constants/gameConfig';
+import { RARITY_CONFIG, PEARL_VALUES } from '@/constants/gameConfig';
 
 const COLLECTION_STORAGE_KEY = 'deepDiveCollection';
 
@@ -75,19 +75,7 @@ export const isCreatureCollected = (creatureId: string): boolean => {
   return getCollection().includes(creatureId);
 };
 
-// Get pearl value - now uses the creature's direct pearl value
-export const getPearlValue = (rarity: CreatureRarity, creature?: Creature): number => {
-  // If creature is provided, use its pearl value directly
-  if (creature) {
-    return creature.pearls;
-  }
-  // Fallback to default values for backwards compatibility
-  const defaults: Record<CreatureRarity, number> = {
-    Common: 10,
-    Uncommon: 40,
-    Rare: 60,
-    Epic: 100,
-    Legendary: 200,
-  };
-  return defaults[rarity] ?? 10;
+// Get pearl value - always derived from rarity tier (single source of truth)
+export const getPearlValue = (rarity: CreatureRarity): number => {
+  return PEARL_VALUES[rarity] ?? PEARL_VALUES.Common;
 };

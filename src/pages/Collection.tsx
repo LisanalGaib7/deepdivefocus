@@ -22,6 +22,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { CREATURES, Creature } from "@/data/creatures";
+import { getPearlValue } from "@/lib/lootSystem";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useTheme, Theme } from "@/hooks/useTheme";
@@ -474,7 +475,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
           {unlocked && (
             <span className="text-[10px] flex items-center gap-0.5 text-amber-300 font-mono">
               <Circle size={10} className="text-amber-400 fill-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.8)]" />
-              {creature.pearls}
+              {getPearlValue(creature.rarity)}
             </span>
           )}
         </div>
