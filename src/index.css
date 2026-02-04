@@ -282,10 +282,10 @@ All colors MUST be HSL.
     animation: float 2s ease-in-out infinite;
   }
 
-  /* Deep Sea themed scrollbar - Sci-Fi energy capsule style */
+  /* Deep Sea themed scrollbar - Sci-Fi energy capsule style (theme-aware) */
   .scrollbar-deep-sea {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--hud-cyan)) transparent;
+    scrollbar-color: hsl(var(--primary)) transparent;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar {
@@ -294,19 +294,19 @@ All colors MUST be HSL.
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.5);
+    background: hsl(var(--background) / 0.5);
     border-radius: 9999px;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-thumb {
-    background: hsl(var(--hud-cyan) / 0.6);
+    background: hsl(var(--primary) / 0.6);
     border-radius: 9999px;
     transition: all 0.2s ease;
   }
 
   .scrollbar-deep-sea::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--hud-cyan) / 0.9);
-    box-shadow: 0 0 8px hsl(var(--hud-cyan) / 0.6);
+    background: hsl(var(--primary) / 0.9);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.6);
   }
 
 
