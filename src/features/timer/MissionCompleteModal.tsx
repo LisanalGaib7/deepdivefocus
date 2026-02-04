@@ -68,23 +68,23 @@ export const MissionCompleteModal = ({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="bg-card border-hud-cyan/30 max-w-md max-h-[90vh] overflow-y-auto scrollbar-deep-sea p-4 sm:p-6">
+        <AlertDialogContent className="bg-card border-primary/30 max-w-md max-h-[90vh] overflow-y-auto scrollbar-deep-sea p-4 sm:p-6">
         {/* Header with scan lines effect */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
-          <div className="absolute inset-0 bg-gradient-to-b from-hud-cyan/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         </div>
 
         <AlertDialogHeader className="relative space-y-2">
           <div className="flex items-center justify-center mb-2">
             <div className="relative">
-              <div className="absolute inset-0 bg-hud-cyan/20 blur-xl rounded-full" />
-              <div className="relative bg-hud-cyan/10 border border-hud-cyan/50 rounded-full p-3">
-                <Anchor className="h-6 w-6 text-hud-cyan" />
+              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+              <div className="relative bg-primary/10 border border-primary/50 rounded-full p-3">
+                <Anchor className="h-6 w-6 text-primary" />
               </div>
             </div>
           </div>
 
-          <AlertDialogTitle className="text-center font-robotic text-xl tracking-widest text-hud-cyan">
+          <AlertDialogTitle className="text-center font-robotic text-xl tracking-widest text-primary">
             SURFACE REACHED
           </AlertDialogTitle>
 
@@ -101,7 +101,7 @@ export const MissionCompleteModal = ({
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
               MAX DEPTH
             </p>
-            <p className="text-xl font-robotic text-hud-cyan">{maxDepth}m</p>
+            <p className="text-xl font-robotic text-primary">{maxDepth}m</p>
           </div>
           <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
@@ -119,12 +119,12 @@ export const MissionCompleteModal = ({
             <div className="bg-muted/20 border border-border rounded-xl p-4 text-center relative overflow-hidden">
               {/* Glow effect for new discoveries */}
               {isNewDiscovery && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-hud-cyan/10 to-transparent animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
               )}
 
               <div className="relative">
                 {isNewDiscovery && (
-                  <div className="flex items-center justify-center gap-1 text-hud-cyan text-xs font-robotic tracking-wider mb-2">
+                  <div className="flex items-center justify-center gap-1 text-primary text-xs font-robotic tracking-wider mb-2">
                     <Sparkles className="h-3 w-3" />
                     <span>NEW DISCOVERY</span>
                     <Sparkles className="h-3 w-3" />
@@ -135,8 +135,8 @@ export const MissionCompleteModal = ({
                   {(() => {
                     const IconComponent = iconMap[creature.icon] || HelpCircle;
                     return (
-                      <div className="p-3 rounded-full bg-background/50 border border-hud-cyan/30" style={{ boxShadow: '0 0 20px hsl(var(--hud-cyan) / 0.5)' }}>
-                        <IconComponent size={36} className="text-hud-cyan drop-shadow-[0_0_12px_hsl(var(--hud-cyan))]" />
+                      <div className="p-3 rounded-full bg-background/50 border border-primary/30" style={{ boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' }}>
+                        <IconComponent size={36} className="text-primary drop-shadow-[0_0_12px_hsl(var(--primary))]" />
                       </div>
                     );
                   })()}
@@ -153,7 +153,7 @@ export const MissionCompleteModal = ({
                 <p
                   className={`text-xs font-robotic tracking-widest uppercase ${
                     creature.rarity === 'Common' ? 'text-gray-400' :
-                    creature.rarity === 'Rare' ? 'text-cyan-400' :
+                    creature.rarity === 'Rare' ? 'text-primary' :
                     'text-amber-400'
                   }`}
                 >
@@ -179,7 +179,7 @@ export const MissionCompleteModal = ({
                     
                     return (
                       <p key={index} className="text-xs text-gray-300 font-robotic tracking-wide">
-                        <span className="text-hud-cyan/60 mr-2">•</span>
+                        <span className="text-primary/60 mr-2">•</span>
                         {cleanTrait}
                       </p>
                     );
@@ -202,7 +202,7 @@ export const MissionCompleteModal = ({
           <Button
             onClick={onClose}
             variant="outline"
-            className="w-full bg-transparent border border-cyan-500 text-cyan-400 font-robotic uppercase tracking-widest h-11 transition-all duration-300 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(6,182,212,0.5)]"
+            className="w-full bg-transparent border border-primary text-primary font-robotic uppercase tracking-widest h-11 transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
           >
             STORE DATA
           </Button>
