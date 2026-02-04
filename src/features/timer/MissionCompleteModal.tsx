@@ -101,13 +101,13 @@ export const MissionCompleteModal = ({
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
               MAX DEPTH
             </p>
-            <p className="text-xl font-robotic text-primary">{maxDepth}m</p>
+            <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">{maxDepth}m</p>
           </div>
           <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
             <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
               DIVE TIME
             </p>
-            <p className="text-xl font-robotic text-foreground">
+            <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
               {formatDuration(sessionDuration)}
             </p>
           </div>
