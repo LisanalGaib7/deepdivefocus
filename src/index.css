@@ -186,10 +186,10 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  /* Global Sci-Fi Scrollbar - applies to entire app */
+  /* Global Sci-Fi Scrollbar - Theme-aware, applies to entire app */
   html {
     scrollbar-width: thin;
-    scrollbar-color: hsl(187 100% 35%) hsl(222 47% 5%);
+    scrollbar-color: hsl(var(--primary)) hsl(var(--background));
   }
 
   html::-webkit-scrollbar {
@@ -198,18 +198,18 @@ All colors MUST be HSL.
   }
 
   html::-webkit-scrollbar-track {
-    background: hsl(222 47% 5%);
+    background: hsl(var(--background));
   }
 
   html::-webkit-scrollbar-thumb {
-    background: hsl(187 100% 35%);
+    background: hsl(var(--primary));
     border-radius: 9999px;
-    border: 2px solid hsl(222 47% 5%);
+    border: 2px solid hsl(var(--background));
   }
 
   html::-webkit-scrollbar-thumb:hover {
-    background: hsl(187 100% 50%);
-    box-shadow: 0 0 10px hsl(187 100% 50% / 0.6);
+    background: hsl(var(--primary) / 0.8);
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.6);
   }
 
   body {
