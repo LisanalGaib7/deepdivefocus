@@ -1,45 +1,11 @@
-import { useState, useEffect } from "react";
-import { useAuthContext } from "@/contexts/AuthContext";
-import { Theme } from "@/hooks/useTheme";
-
-const themes: { id: Theme; label: string; colors: string[] }[] = [
-  { id: "ocean", label: "Ocean", colors: ["#0ea5e9", "#3b82f6"] },
-  { id: "sage", label: "Sage", colors: ["#86efac", "#22c55e"] },
-  { id: "rose", label: "Rose", colors: ["#fda4af", "#f43f5e"] },
-  { id: "lavender", label: "Lavender", colors: ["#c4b5fd", "#8b5cf6"] },
-  { id: "mono", label: "Mono", colors: ["#e5e5e5", "#737373"] },
-];
+import { themes, type Theme } from "@/hooks/useTheme";
+import { useThemeContext } from "@/contexts/ThemeContext";
 
 const ThemeSwitcher = () => {
-  const [activeTheme, setActiveTheme] = useState<Theme>("ocean");
-  const { profile, updateProfile, isAuthenticated } = useAuthContext();
+  const { theme: activeTheme, setTheme } = useThemeContext();
 
-  useEffect(() => {
-    // Load theme from profile if authenticated, otherwise from localStorage
-    if (isAuthenticated && profile?.theme_color) {
-      const theme = profile.theme_color as Theme;
-      if (themes.find((t) => t.id === theme)) {
-        setActiveTheme(theme);
-        document.documentElement.setAttribute("data-theme", theme);
-      }
-    } else {
-      const saved = localStorage.getItem("deepDiveTheme") as Theme | null;
-      if (saved && themes.find((t) => t.id === saved)) {
-        setActiveTheme(saved);
-        document.documentElement.setAttribute("data-theme", saved);
-      }
-    }
-  }, [isAuthenticated, profile?.theme_color]);
-
-  const handleThemeChange = async (theme: Theme) => {
-    setActiveTheme(theme);
-    localStorage.setItem("deepDiveTheme", theme);
-    document.documentElement.setAttribute("data-theme", theme);
-
-    // Save to database if authenticated
-    if (isAuthenticated) {
-      await updateProfile({ theme_color: theme });
-    }
+  const handleThemeChange = (next: Theme) => {
+    void setTheme(next);
   };
 
   return (
