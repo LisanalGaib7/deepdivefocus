@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { DEPTH_CONFIG, OXYGEN_CONFIG } from "@/constants/gameConfig";
+import { DEPTH_CONFIG, OXYGEN_CONFIG, getHullMaxDepth, getEngineMultiplier } from "@/constants/gameConfig";
 
 interface UseGamificationProps {
   isDiving: boolean;
@@ -28,8 +28,9 @@ export const useGamification = ({
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isAtMaxDepth, setIsAtMaxDepth] = useState(false);
 
-  // Calculate max depth based on hull level
-  const maxDepth = DEPTH_CONFIG.BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
+  // Get max depth and engine multiplier from centralized config
+  const maxDepth = getHullMaxDepth(hullLevel);
+  const engineMultiplier = getEngineMultiplier(engineLevel);
 
   // Refs for tracking time - accumulate elapsed time across pauses
   const sessionStartRef = useRef<number | null>(null);
@@ -81,8 +82,8 @@ export const useGamification = ({
       
       setElapsedSeconds(Math.floor(totalElapsed));
       
-      // Depth based on total elapsed time (continuous dive), capped at maxDepth
-      const calculatedDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineLevel * Math.pow(totalElapsed, DEPTH_CONFIG.DEPTH_EXPONENT);
+      // Depth = 5 * engineMultiplier * (time ^ 0.7), capped at maxDepth
+      const calculatedDepth = DEPTH_CONFIG.DEPTH_MULTIPLIER * engineMultiplier * Math.pow(totalElapsed, DEPTH_CONFIG.DEPTH_EXPONENT);
       const cappedDepth = Math.min(calculatedDepth, maxDepth);
       
       setDepth(Math.floor(cappedDepth));

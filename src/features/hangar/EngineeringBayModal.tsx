@@ -16,7 +16,7 @@ import {
   Lock,
   Circle
 } from "lucide-react";
-import { DEPTH_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { getUpgradeCost, getHullMaxDepth, getEngineSpeedPercent } from "@/constants/gameConfig";
 
 interface UpgradeModule {
   id: string;
@@ -50,9 +50,11 @@ export const EngineeringBayModal = ({
 }: EngineeringBayModalProps) => {
   const [upgrading, setUpgrading] = useState<string | null>(null);
 
-  // Calculate current max depth based on hull level
-  const currentMaxDepth = DEPTH_CONFIG.BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
-  const nextMaxDepth = currentMaxDepth + DEPTH_CONFIG.DEPTH_PER_HULL_LEVEL;
+  // Calculate stats based on tier using centralized helpers
+  const currentMaxDepth = getHullMaxDepth(hullLevel);
+  const nextMaxDepth = getHullMaxDepth(hullLevel + 1);
+  const currentSpeed = getEngineSpeedPercent(engineLevel);
+  const nextSpeed = getEngineSpeedPercent(engineLevel + 1);
 
   // Define upgrade modules with hardcore pricing
   const modules: UpgradeModule[] = [
@@ -74,8 +76,8 @@ export const EngineeringBayModal = ({
       icon: Zap,
       currentTier: engineLevel,
       maxTier: 5,
-      currentValue: `${100 + (engineLevel - 1) * 20}%`,
-      nextValue: `${100 + engineLevel * 20}%`,
+      currentValue: `${currentSpeed}%`,
+      nextValue: `${nextSpeed}%`,
       description: "Upgraded propulsion system for faster descent speed.",
       cost: getUpgradeCost(engineLevel),
       unlocked: true,
@@ -158,7 +160,7 @@ export const EngineeringBayModal = ({
               </div>
               <div className="bg-black/40 border border-cyan-500/20 rounded-lg p-3 text-center">
                 <p className="text-[10px] text-cyan-400/50 font-robotic tracking-wider mb-1">DIVE SPEED</p>
-                <p className="text-lg font-robotic text-cyan-400">{100 + (engineLevel - 1) * 20}%</p>
+                <p className="text-lg font-robotic text-cyan-400">{currentSpeed}%</p>
               </div>
             </div>
           </div>
