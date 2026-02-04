@@ -14,13 +14,32 @@ export const TIMER_CONFIG = {
 export const DEPTH_CONFIG = {
   DEPTH_MULTIPLIER: 5,   // Base multiplier for depth calculation
   DEPTH_EXPONENT: 0.7,   // Time exponent for depth curve
-  // Formula: DEPTH_MULTIPLIER * engineLevel * (timeElapsed ^ DEPTH_EXPONENT)
+  // Formula: DEPTH_MULTIPLIER * engineMultiplier * (timeElapsed ^ DEPTH_EXPONENT)
   
-  // Hull depth limits by armor level (future: submarine upgrades)
-  BASE_MAX_DEPTH: 2000, // Maximum depth at hull level 1
-  DEPTH_PER_HULL_LEVEL: 500, // Additional depth per hull upgrade
-  // Formula: BASE_MAX_DEPTH + (hullLevel - 1) * DEPTH_PER_HULL_LEVEL
+  // Hull max depths by tier (physics-based balance)
+  HULL_MAX_DEPTHS: [2000, 3500, 6000, 9000, 12000] as readonly number[],
+  // Tier 1: 2000m, Tier 2: 3500m, Tier 3: 6000m, Tier 4: 9000m, Tier 5: 12000m (Challenger Deep)
 } as const;
+
+// Engine speed multipliers by tier (physics-based balance)
+// Higher multipliers needed to overcome time^0.7 drag curve
+export const ENGINE_MULTIPLIERS = [1.0, 1.75, 3.0, 4.5, 6.0] as const;
+// Tier 1: 100%, Tier 2: 175%, Tier 3: 300%, Tier 4: 450%, Tier 5: 600%
+
+// Helper functions
+export const getHullMaxDepth = (tier: number): number => {
+  const index = Math.min(Math.max(tier - 1, 0), DEPTH_CONFIG.HULL_MAX_DEPTHS.length - 1);
+  return DEPTH_CONFIG.HULL_MAX_DEPTHS[index];
+};
+
+export const getEngineMultiplier = (tier: number): number => {
+  const index = Math.min(Math.max(tier - 1, 0), ENGINE_MULTIPLIERS.length - 1);
+  return ENGINE_MULTIPLIERS[index];
+};
+
+export const getEngineSpeedPercent = (tier: number): number => {
+  return Math.round(getEngineMultiplier(tier) * 100);
+};
 
 // ======================
 // OXYGEN & PENALTY SYSTEM
@@ -77,7 +96,7 @@ export const UPGRADE_COSTS = {
   tier2: 2_000,    // Tier 1 → 2: Significant initial effort
   tier3: 8_000,    // Tier 2 → 3: Mid-game milestone
   tier4: 20_000,   // Tier 3 → 4: Late-game achievement
-  tier5: 50_000,   // Tier 4 → 5: End-game goal (months of focus)
+  tier5: 40_000,   // Tier 4 → 5: End-game goal (months of focus)
 } as const;
 
 // Helper to get upgrade cost based on current tier
