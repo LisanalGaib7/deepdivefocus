@@ -29,31 +29,30 @@ import { useFocusSessions } from "@/hooks/useFocusSessions";
 import { useSessionStats } from "@/hooks/useSessionStats";
 import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
-import { useDeepDiveAudio, SoundType } from "@/hooks/useDeepDiveAudio";
+import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
+import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature } from "@/data/creatures";
 import { rollForCreature } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
-
-// Task type with time tracking
-interface Task {
-  id: string;
-  text: string;
-  isCompleted: boolean;
-  timeSpentInSeconds: number;
-}
-
 
 const Index = () => {
   const { signOut, profile, updateProfile, isGuestMode, isAuthenticated } = useAuthContext();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
+  const { 
+    tasks, 
+    addTask, 
+    updateTask, 
+    deleteTask, 
+    incrementTimeSpent,
+    saveTimeSpent,
+  } = useTasks();
   
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
   const [isRunning, setIsRunning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
@@ -82,25 +81,13 @@ const Index = () => {
   const maxDepthToastShownRef = useRef(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Load tasks from localStorage
+  // Auto-select first uncompleted task when tasks load
   useEffect(() => {
-    const savedTasks = localStorage.getItem("deepDiveTasks");
-    if (savedTasks) {
-      const parsedTasks = JSON.parse(savedTasks);
-      setTasks(parsedTasks);
-      // Auto-select first uncompleted task
-      const firstUncompleted = parsedTasks.find((t: Task) => !t.isCompleted);
+    if (tasks.length > 0 && !selectedTaskId) {
+      const firstUncompleted = tasks.find((t: LocalTask) => !t.isCompleted);
       if (firstUncompleted) setSelectedTaskId(firstUncompleted.id);
     }
-  }, []);
-
-
-  // Save tasks to localStorage whenever they change
-  useEffect(() => {
-    if (tasks.length > 0) {
-      localStorage.setItem("deepDiveTasks", JSON.stringify(tasks));
-    }
-  }, [tasks]);
+  }, [tasks, selectedTaskId]);
 
   // Handle emergency ascent (oxygen depleted)
   useEffect(() => {
@@ -156,13 +143,7 @@ const Index = () => {
           
           // Add time to selected task (local tracking during session)
           if (selectedTaskId) {
-            setTasks(prevTasks => 
-              prevTasks.map(task => 
-                task.id === selectedTaskId 
-                  ? { ...task, timeSpentInSeconds: task.timeSpentInSeconds + 1 }
-                  : task
-              )
-            );
+            incrementTimeSpent(selectedTaskId);
           }
           
           return newTime;
@@ -171,7 +152,7 @@ const Index = () => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, selectedTaskId]);
+  }, [isRunning, selectedTaskId, incrementTimeSpent]);
 
 
   // Calculate angle from mouse/touch position (0 at top, clockwise 0-360)
@@ -318,6 +299,11 @@ const Index = () => {
     const currentDuration = elapsedSeconds;
     const taskName = selectedTask?.text || "Focus Session";
     
+    // Save accumulated time to database for selected task
+    if (selectedTask) {
+      await saveTimeSpent(selectedTask.id, selectedTask.timeSpentInSeconds);
+    }
+    
     console.log('[MissionComplete] Starting save:', { 
       currentDepth, 
       currentDuration, 
@@ -371,7 +357,7 @@ const Index = () => {
     
     // Show the mission complete modal
     setShowMissionCompleteModal(true);
-  }, [depth, elapsedSeconds, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession]);
+  }, [depth, elapsedSeconds, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession, saveTimeSpent]);
 
   // Handle timer completion separately to avoid closure issues
   useEffect(() => {
@@ -404,19 +390,13 @@ const Index = () => {
   }, [rewardCreature, addCreature, setDuration, resetDive]);
 
   // Task management functions
-  const handleAddTask = (e: React.FormEvent) => {
+  const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newTaskText.trim() && tasks.length < TIMER_CONFIG.MAX_TASKS) {
-      const newTask: Task = {
-        id: Date.now().toString(),
-        text: newTaskText.trim(),
-        isCompleted: false,
-        timeSpentInSeconds: 0,
-      };
-      setTasks(prev => [...prev, newTask]);
+      const newTask = await addTask(newTaskText.trim());
       setNewTaskText("");
       // Auto-select if no task selected
-      if (!selectedTaskId) {
+      if (!selectedTaskId && newTask) {
         setSelectedTaskId(newTask.id);
       }
     }
@@ -429,43 +409,33 @@ const Index = () => {
   };
 
   const handleToggleComplete = (taskId: string) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId 
-          ? { ...task, isCompleted: !task.isCompleted }
-          : task
-      )
-    );
-    // If completing the selected task, select next uncompleted
     const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      updateTask(taskId, { isCompleted: !task.isCompleted });
+    }
+    // If completing the selected task, select next uncompleted
     if (task && !task.isCompleted && selectedTaskId === taskId) {
       const nextUncompleted = tasks.find(t => t.id !== taskId && !t.isCompleted);
       setSelectedTaskId(nextUncompleted?.id || null);
     }
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    setTasks(prev => prev.filter(t => t.id !== taskId));
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
     if (selectedTaskId === taskId) {
       const remaining = tasks.filter(t => t.id !== taskId && !t.isCompleted);
       setSelectedTaskId(remaining[0]?.id || null);
     }
   };
 
-  const handleStartEdit = (task: Task) => {
+  const handleStartEdit = (task: LocalTask) => {
     setEditingTaskId(task.id);
     setEditingText(task.text);
   };
 
   const handleSaveEdit = () => {
     if (editingTaskId && editingText.trim()) {
-      setTasks(prev => 
-        prev.map(task => 
-          task.id === editingTaskId 
-            ? { ...task, text: editingText.trim() }
-            : task
-        )
-      );
+      updateTask(editingTaskId, { text: editingText.trim() });
     }
     setEditingTaskId(null);
     setEditingText("");
