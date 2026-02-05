@@ -143,9 +143,9 @@ export const MissionCompleteModal = ({
                 </div>
 
                 <h3
-                  className={`text-lg font-bold mb-0.5 ${getRarityColor(
+                  className={`text-2xl font-robotic font-bold tracking-wide mb-1 ${getRarityColor(
                     creature.rarity
-                  )}`}
+                  )} drop-shadow-[0_0_10px_hsl(var(--primary))]`}
                 >
                   {creature.name}
                 </h3>
@@ -161,7 +161,7 @@ export const MissionCompleteModal = ({
                 </p>
 
                 {/* Traits List */}
-                <div className="flex flex-col items-center gap-0.5 mt-3">
+                <div className="flex flex-wrap justify-center gap-2 mt-3">
                   {creature.description.split('//').map((trait, index) => {
                     // Prettify the trait string
                     let cleanTrait = trait.trim();
@@ -178,10 +178,12 @@ export const MissionCompleteModal = ({
                       .join(' ');
                     
                     return (
-                      <p key={index} className="text-xs text-gray-300 font-robotic tracking-wide">
-                        <span className="text-primary/60 mr-2">•</span>
+                      <span 
+                        key={index} 
+                        className="bg-muted/50 border border-border/50 rounded-md px-3 py-1 text-xs text-muted-foreground font-robotic uppercase tracking-wider"
+                      >
                         {cleanTrait}
-                      </p>
+                      </span>
                     );
                   })}
                 </div>
