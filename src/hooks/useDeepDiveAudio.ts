@@ -1,10 +1,10 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 
-// Centralized sound URLs
+// Centralized sound URLs - using reliable Google-hosted audio
 const SOUND_URLS = {
-  rain: "https://assets.mixkit.co/active_storage/sfx/2492/2492-preview.mp3",
-  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
-  whiteNoise: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
+  rain: "https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg",
+  ocean: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg",
+  whiteNoise: "https://actions.google.com/sounds/v1/weather/wind_strong.ogg",
 } as const;
 
 // Default volume levels for each sound
@@ -47,6 +47,12 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
       const audio = new Audio(SOUND_URLS[soundType]);
       audio.loop = true;
       audio.volume = DEFAULT_VOLUMES[soundType];
+      
+      // Add error handling for debugging
+      audio.onerror = () => {
+        console.error(`[Audio Error] Failed to load ${soundType}:`, SOUND_URLS[soundType]);
+      };
+      
       audioRefs.current[soundType] = audio;
     });
 
