@@ -1,10 +1,10 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 
-// Centralized sound URLs - using reliable Google-hosted audio
+// Centralized sound URLs - using MP3 for cross-device compatibility (iOS/Android/Desktop)
 const SOUND_URLS = {
-  rain: "https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg",
-  ocean: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg",
-  whiteNoise: "https://actions.google.com/sounds/v1/weather/wind_strong.ogg",
+  rain: "https://cdn.pixabay.com/audio/2022/10/30/audio_69f96e4ed5.mp3",
+  ocean: "https://cdn.pixabay.com/audio/2024/11/10/audio_e06d5b6827.mp3",
+  whiteNoise: "https://cdn.pixabay.com/audio/2022/03/15/audio_942f658389.mp3",
 } as const;
 
 // Default volume levels for each sound
@@ -44,7 +44,9 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   useEffect(() => {
     // Create audio elements for each sound type
     (Object.keys(SOUND_URLS) as SoundType[]).forEach((soundType) => {
-      const audio = new Audio(SOUND_URLS[soundType]);
+      const audio = new Audio();
+      audio.crossOrigin = "anonymous";
+      audio.src = SOUND_URLS[soundType];
       audio.loop = true;
       audio.volume = DEFAULT_VOLUMES[soundType];
       
