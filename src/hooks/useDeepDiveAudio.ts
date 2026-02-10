@@ -2,9 +2,9 @@ import { useRef, useEffect, useCallback, useState } from "react";
 
 // Centralized sound URLs
 const SOUND_URLS = {
-  rain: "https://assets.mixkit.co/active_storage/sfx/2492/2492-preview.mp3",
+  rain: "/rain.mp3",
   ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
-  whiteNoise: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
+  whiteNoise: "/whitenoise.mp3",
 } as const;
 
 // Default volume levels for each sound
