@@ -94,6 +94,7 @@ export type Database = {
           created_at: string
           id: string
           is_completed: boolean
+          last_active_date: string | null
           time_spent_seconds: number
           title: string
           updated_at: string
@@ -103,6 +104,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_completed?: boolean
+          last_active_date?: string | null
           time_spent_seconds?: number
           title: string
           updated_at?: string
@@ -112,6 +114,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_completed?: boolean
+          last_active_date?: string | null
           time_spent_seconds?: number
           title?: string
           updated_at?: string
