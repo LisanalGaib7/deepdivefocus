@@ -1,10 +1,10 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 
-// Centralized sound URLs - using MP3 for cross-device compatibility (iOS/Android/Desktop)
+// Centralized sound URLs
 const SOUND_URLS = {
-  rain: "https://cdn.pixabay.com/audio/2022/10/30/audio_69f96e4ed5.mp3",
-  ocean: "https://cdn.pixabay.com/audio/2024/11/10/audio_e06d5b6827.mp3",
-  whiteNoise: "https://cdn.pixabay.com/audio/2022/03/15/audio_942f658389.mp3",
+  rain: "https://assets.mixkit.co/active_storage/sfx/2492/2492-preview.mp3",
+  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
+  whiteNoise: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
 } as const;
 
 // Default volume levels for each sound
@@ -44,17 +44,9 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   useEffect(() => {
     // Create audio elements for each sound type
     (Object.keys(SOUND_URLS) as SoundType[]).forEach((soundType) => {
-      const audio = new Audio();
-      audio.crossOrigin = "anonymous";
-      audio.src = SOUND_URLS[soundType];
+      const audio = new Audio(SOUND_URLS[soundType]);
       audio.loop = true;
       audio.volume = DEFAULT_VOLUMES[soundType];
-      
-      // Add error handling for debugging
-      audio.onerror = () => {
-        console.error(`[Audio Error] Failed to load ${soundType}:`, SOUND_URLS[soundType]);
-      };
-      
       audioRefs.current[soundType] = audio;
     });
 
