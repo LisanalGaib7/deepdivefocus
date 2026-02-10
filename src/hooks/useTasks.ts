@@ -3,23 +3,25 @@
  import { useAuthContext } from '@/contexts/AuthContext';
  import { toast } from 'sonner';
  
- export interface Task {
-   id: string;
-   user_id: string;
-   title: string;
-   is_completed: boolean;
-   time_spent_seconds: number;
-   created_at: string;
-   updated_at: string;
- }
- 
- // Local task interface for guest mode compatibility
- export interface LocalTask {
-   id: string;
-   text: string;
-   isCompleted: boolean;
-   timeSpentInSeconds: number;
- }
+export interface Task {
+  id: string;
+  user_id: string;
+  title: string;
+  is_completed: boolean;
+  time_spent_seconds: number;
+  last_active_date: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Local task interface for guest mode compatibility
+export interface LocalTask {
+  id: string;
+  text: string;
+  isCompleted: boolean;
+  timeSpentInSeconds: number;
+  lastActiveDate: string;
+}
  
  const GUEST_TASKS_KEY = 'deepDiveTasks';
  
@@ -28,24 +30,43 @@
    const [tasks, setTasks] = useState<LocalTask[]>([]);
    const [loading, setLoading] = useState(true);
  
-   // Convert DB task to local format
-   const dbToLocal = (dbTask: Task): LocalTask => ({
-     id: dbTask.id,
-     text: dbTask.title,
-     isCompleted: dbTask.is_completed,
-     timeSpentInSeconds: dbTask.time_spent_seconds,
-   });
+  // Get today's local date string
+  const getTodayLocal = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  };
+
+  // Convert DB task to local format, resetting time if date changed
+  const dbToLocal = (dbTask: Task): LocalTask => {
+    const today = getTodayLocal();
+    const needsReset = dbTask.last_active_date !== today;
+    return {
+      id: dbTask.id,
+      text: dbTask.title,
+      isCompleted: dbTask.is_completed,
+      timeSpentInSeconds: needsReset ? 0 : dbTask.time_spent_seconds,
+      lastActiveDate: needsReset ? today : (dbTask.last_active_date || today),
+    };
+  };
  
    // Fetch tasks from database
    const fetchTasks = useCallback(async () => {
      if (!user || isGuestMode) {
-       // Load from localStorage for guests
-       const saved = localStorage.getItem(GUEST_TASKS_KEY);
-       if (saved) {
-         setTasks(JSON.parse(saved));
-       }
-       setLoading(false);
-       return;
+        // Load from localStorage for guests, with daily reset
+        const saved = localStorage.getItem(GUEST_TASKS_KEY);
+        if (saved) {
+          const today = getTodayLocal();
+          const parsed: LocalTask[] = JSON.parse(saved);
+          const resetTasks = parsed.map(t => 
+            t.lastActiveDate !== today 
+              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today } 
+              : t
+          );
+          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(resetTasks));
+          setTasks(resetTasks);
+        }
+        setLoading(false);
+        return;
      }
  
      const { data, error } = await supabase
@@ -54,12 +75,26 @@
        .eq('user_id', user.id)
        .order('created_at', { ascending: true });
  
-     if (error) {
-       console.error('Error fetching tasks:', error);
-       toast.error('Failed to load tasks');
-     } else {
-       setTasks((data || []).map(dbToLocal));
-     }
+      if (error) {
+        console.error('Error fetching tasks:', error);
+        toast.error('Failed to load tasks');
+      } else {
+        const localTasks = (data || []).map(dbToLocal);
+        setTasks(localTasks);
+        
+        // Reset time in DB for tasks from a previous day
+        const today = getTodayLocal();
+        for (const dbTask of (data || [])) {
+          if (dbTask.last_active_date !== today) {
+            supabase
+              .from('tasks')
+              .update({ time_spent_seconds: 0, last_active_date: today } as any)
+              .eq('id', dbTask.id)
+              .eq('user_id', user!.id)
+              .then();
+          }
+        }
+      }
      setLoading(false);
    }, [user, isGuestMode]);
  
@@ -69,12 +104,13 @@
  
      if (!user || isGuestMode) {
        // Guest mode: local storage
-       const newTask: LocalTask = {
-         id: Date.now().toString(),
-         text: title.trim(),
-         isCompleted: false,
-         timeSpentInSeconds: 0,
-       };
+        const newTask: LocalTask = {
+          id: Date.now().toString(),
+          text: title.trim(),
+          isCompleted: false,
+          timeSpentInSeconds: 0,
+          lastActiveDate: getTodayLocal(),
+        };
        setTasks(prev => {
          const updated = [...prev, newTask];
          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
@@ -181,27 +217,29 @@
      );
    }, []);
  
-   // Save accumulated time to database (call at session end)
-   const saveTimeSpent = useCallback(async (taskId: string, totalSeconds: number) => {
-     if (!user || isGuestMode) {
-       // Already saved in local state
-       const saved = localStorage.getItem(GUEST_TASKS_KEY);
-       if (saved) {
-         const parsed = JSON.parse(saved);
-         const updated = parsed.map((t: LocalTask) =>
-           t.id === taskId ? { ...t, timeSpentInSeconds: totalSeconds } : t
-         );
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
-       }
-       return;
-     }
- 
-     await supabase
-       .from('tasks')
-       .update({ time_spent_seconds: totalSeconds })
-       .eq('id', taskId)
-       .eq('user_id', user.id);
-   }, [user, isGuestMode]);
+    // Save accumulated time to database (call at session end)
+    const saveTimeSpent = useCallback(async (taskId: string, totalSeconds: number) => {
+      const today = getTodayLocal();
+      
+      if (!user || isGuestMode) {
+        // Already saved in local state
+        const saved = localStorage.getItem(GUEST_TASKS_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          const updated = parsed.map((t: LocalTask) =>
+            t.id === taskId ? { ...t, timeSpentInSeconds: totalSeconds, lastActiveDate: today } : t
+          );
+          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+        }
+        return;
+      }
+
+      await supabase
+        .from('tasks')
+        .update({ time_spent_seconds: totalSeconds, last_active_date: today } as any)
+        .eq('id', taskId)
+        .eq('user_id', user.id);
+    }, [user, isGuestMode]);
  
    // Initial fetch
    useEffect(() => {

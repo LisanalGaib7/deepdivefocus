@@ -1,0 +1,1 @@
+ALTER TABLE public.tasks ADD COLUMN last_active_date TEXT;
