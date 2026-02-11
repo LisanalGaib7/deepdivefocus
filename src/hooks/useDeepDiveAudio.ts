@@ -112,23 +112,14 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
     });
   }, []);
 
-  // Play completion sound using Web Audio API
+  // Play completion alarm sound using local mp3 file
   const playCompletionSound = useCallback(() => {
-    const ctx = audioContextRef.current;
-    if (!ctx) return;
-
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    oscillator.frequency.value = 800;
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
-
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 1);
+    const alarm = new Audio('/alarm.mp3');
+    alarm.volume = 1.0;
+    alarm.preload = 'auto';
+    alarm.play()
+      .then(() => console.log('[Audio Debug] Alarm playing'))
+      .catch((err) => console.error('[Audio Debug] Alarm play failed:', err));
   }, []);
 
   // Count of active sounds
