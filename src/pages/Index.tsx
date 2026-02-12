@@ -292,26 +292,11 @@ const Index = () => {
     resetDive();
   };
 
-  const handleMissionComplete = useCallback(async () => {
+  const handleMissionComplete = useCallback(() => {
     // Capture current values immediately (avoid stale closures)
     const currentDepth = depth;
-    // Use actual elapsed time instead of set duration for accurate tracking
     const currentDuration = elapsedSeconds;
     const taskName = selectedTask?.text || "Focus Session";
-    
-    // Save accumulated time to database for selected task
-    if (selectedTask) {
-      await saveTimeSpent(selectedTask.id, selectedTask.timeSpentInSeconds);
-    }
-    
-    console.log('[MissionComplete] Starting save:', { 
-      currentDepth, 
-      currentDuration, 
-      elapsedSeconds,
-      taskName, 
-      isGuestMode, 
-      isAuthenticated 
-    });
     
     // Store current depth and duration before reset
     setCompletedSessionDepth(currentDepth);
@@ -321,42 +306,45 @@ const Index = () => {
     const creature = rollForCreature(currentDepth);
     setRewardCreature(creature);
     
-    // Save session based on auth mode
-    if (isAuthenticated && !isGuestMode) {
-      // Authenticated: save to database
-      const result = await addSession({
-        task_name: taskName,
-        duration: currentDuration,
-        depth_reached: currentDepth,
-        pearls_earned: Math.floor(currentDepth / 10),
-        creature_id: creature?.id || null,
-      });
-      console.log('[MissionComplete] DB save result:', result);
-      
-      // Update total depth in profile
-      if (profile) {
-        updateProfile({ 
-          total_depth: (profile.total_depth || 0) + currentDepth,
-          total_pearls: (profile.total_pearls || 0) + Math.floor(currentDepth / 10),
-        });
-      }
-    } else {
-      // Guest mode: save to localStorage
-      addLocalFocusSession({
-        taskId: selectedTask?.id || null,
-        taskName: taskName,
-        duration: currentDuration,
-        timestamp: Date.now(),
-      });
-      console.log('[MissionComplete] Local session saved');
-    }
-
-    // Refetch sessions to update "Today's Focus" display
-    await refetchSessions();
-    console.log('[MissionComplete] Sessions refetched');
-    
-    // Show the mission complete modal
+    // Show the mission complete modal INSTANTLY
     setShowMissionCompleteModal(true);
+    
+    // Fire all async saves in the background (non-blocking)
+    (async () => {
+      try {
+        if (selectedTask) {
+          saveTimeSpent(selectedTask.id, selectedTask.timeSpentInSeconds);
+        }
+        
+        if (isAuthenticated && !isGuestMode) {
+          await addSession({
+            task_name: taskName,
+            duration: currentDuration,
+            depth_reached: currentDepth,
+            pearls_earned: Math.floor(currentDepth / 10),
+            creature_id: creature?.id || null,
+          });
+          
+          if (profile) {
+            updateProfile({ 
+              total_depth: (profile.total_depth || 0) + currentDepth,
+              total_pearls: (profile.total_pearls || 0) + Math.floor(currentDepth / 10),
+            });
+          }
+        } else {
+          addLocalFocusSession({
+            taskId: selectedTask?.id || null,
+            taskName: taskName,
+            duration: currentDuration,
+            timestamp: Date.now(),
+          });
+        }
+
+        await refetchSessions();
+      } catch (err) {
+        console.error('[MissionComplete] Background save error:', err);
+      }
+    })();
   }, [depth, elapsedSeconds, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession, saveTimeSpent]);
 
   // Handle timer completion separately to avoid closure issues
