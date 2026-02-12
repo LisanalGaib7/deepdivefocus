@@ -282,6 +282,16 @@ All colors MUST be HSL.
     animation: float 2s ease-in-out infinite;
   }
 
+  /* CRT Scanline scroll animation for submarine HUD timer */
+  @keyframes scanline-scroll {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 100vh;
+    }
+  }
+
   /* Deep Sea themed scrollbar - Sci-Fi energy capsule style (theme-aware) */
   .scrollbar-deep-sea {
     scrollbar-width: thin;
