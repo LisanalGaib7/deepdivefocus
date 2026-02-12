@@ -511,10 +511,10 @@ const Index = () => {
         {/* Header - hidden in focus mode */}
         {!isRunning && (
           <div className="text-center space-y-1 pt-8 md:pt-0 px-12 md:px-0">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-ocean bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-ocean bg-clip-text text-transparent">
               DEEP DIVE
             </h1>
-            <p className="text-muted-foreground text-xs sm:text-sm">Deep work without distractions</p>
+            <p className="text-foreground/60 text-sm sm:text-base font-medium">Deep work without distractions</p>
           </div>
         )}
 
@@ -669,7 +669,7 @@ const Index = () => {
             {/* Timer display with mix-blend-mode for contrast */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <div 
-                className="text-6xl md:text-7xl font-bold tabular-nums tracking-tight font-mono"
+                className="text-6xl md:text-7xl font-extrabold tabular-nums tracking-tight font-mono"
                 style={{ mixBlendMode: "difference", color: "white" }}
               >
                 {formatTime(isDragging ? setDuration : timeLeft)}
@@ -680,7 +680,7 @@ const Index = () => {
                 <div className="flex flex-col items-center mt-2">
                   <div className="flex items-center gap-2" style={{ mixBlendMode: "difference", color: "white" }}>
                     <Anchor className="h-4 w-4" />
-                    <span className="font-robotic text-xl tracking-wider">
+                    <span className="font-robotic text-xl font-bold tracking-wider">
                       {depth}m
                     </span>
                   </div>
@@ -747,10 +747,10 @@ const Index = () => {
         {/* Focus Mode: Show only selected task when running */}
         {isRunning && selectedTask && !selectedTask.isCompleted && (
           <div className="text-center animate-fade-in">
-            <p className="text-2xl md:text-3xl font-bold text-foreground">
+            <p className="text-2xl md:text-3xl font-extrabold text-foreground">
               {selectedTask.text}
             </p>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm font-semibold text-foreground/60 mt-2">
               Focused: {formatTimeSpent(selectedTask.timeSpentInSeconds)}
             </p>
           </div>
@@ -761,10 +761,10 @@ const Index = () => {
           <div className="space-y-4 animate-fade-in w-full max-w-md md:max-w-lg mx-auto">
             <form onSubmit={handleAddTask} className="space-y-2">
               <div className="flex justify-between items-center px-1 mb-2">
-                <span className="text-xs uppercase tracking-widest text-primary/70">
+                <span className="text-xs uppercase tracking-widest text-primary font-bold">
                   MISSION OBJECTIVE
                 </span>
-                <span className="text-xs uppercase tracking-widest text-muted-foreground font-mono">
+                <span className="text-xs uppercase tracking-widest text-foreground/50 font-mono font-semibold">
                   SLOT [{tasks.length}/{TIMER_CONFIG.MAX_TASKS}]
                 </span>
               </div>
@@ -826,8 +826,8 @@ const Index = () => {
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <p className={`flex-1 text-base font-medium ${
-                        task.isCompleted ? "line-through text-muted-foreground" : ""
+                      <p className={`flex-1 text-base font-bold ${
+                        task.isCompleted ? "line-through text-muted-foreground" : "text-foreground"
                       }`}>
                         {task.text}
                       </p>
@@ -839,11 +839,11 @@ const Index = () => {
                       const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
                       
                       return totalTodaySeconds > 0 ? (
-                        <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-full">
+                        <span className="text-xs font-semibold text-foreground/70 px-2 py-1 bg-muted rounded-full">
                           {formatTimeSpent(totalTodaySeconds)}
                         </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground/50 px-2 py-1 bg-muted/50 rounded-full">
+                        <span className="text-xs font-semibold text-foreground/30 px-2 py-1 bg-muted/50 rounded-full">
                           0m
                         </span>
                       );
@@ -891,7 +891,7 @@ const Index = () => {
               {/* Label with status indicator */}
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="text-[10px] uppercase tracking-[0.25em] text-primary/70 font-medium">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
                   TODAY'S ACCUMULATED TIME
                 </span>
               </div>
@@ -903,7 +903,7 @@ const Index = () => {
                 >
                   {todayMinutes}
                 </span>
-                <span className="text-base font-mono uppercase tracking-widest text-muted-foreground font-medium">
+                <span className="text-base font-mono uppercase tracking-widest text-foreground/50 font-bold">
                   mins
                 </span>
               </div>
@@ -915,7 +915,7 @@ const Index = () => {
             {/* Bottom Section - Theme Controls */}
             {!isRunning && (
               <div className="flex flex-col items-center gap-2 px-8 py-4 animate-fade-in">
-                <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/50 font-medium">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-foreground/40 font-bold">
                   CALIBRATION
                 </span>
                 <ThemeSwitcher />
@@ -933,7 +933,7 @@ const Index = () => {
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Volume2 className={`h-5 w-5 ${activeSoundsCount > 0 ? "text-foreground" : ""}`} />
-              <span className="text-sm">
+              <span className="text-sm font-semibold">
                 Ambient Sounds {activeSoundsCount > 0 && `(${activeSoundsCount})`}
               </span>
             </Button>
