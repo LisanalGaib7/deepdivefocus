@@ -38,9 +38,9 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   });
 
   const audioRefs = useRef<{ [K in SoundType]?: HTMLAudioElement }>({});
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const alarmRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio elements
+  // Initialize audio elements + preload alarm
   useEffect(() => {
     // Create audio elements for each sound type
     (Object.keys(SOUND_URLS) as SoundType[]).forEach((soundType) => {
@@ -50,8 +50,12 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
       audioRefs.current[soundType] = audio;
     });
 
-    // Initialize AudioContext for completion sound
-    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    // Preload alarm sound into memory
+    const alarm = new Audio('/alarm.mp3');
+    alarm.preload = 'auto';
+    alarm.volume = 1.0;
+    alarm.load();
+    alarmRef.current = alarm;
 
     // Cleanup on unmount
     return () => {
@@ -61,7 +65,10 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
           audio.src = "";
         }
       });
-      audioContextRef.current?.close();
+      if (alarmRef.current) {
+        alarmRef.current.pause();
+        alarmRef.current.src = "";
+      }
     };
   }, []);
 
@@ -112,14 +119,15 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
     });
   }, []);
 
-  // Play completion alarm sound using local mp3 file
+  // Play preloaded completion alarm instantly
   const playCompletionSound = useCallback(() => {
-    const alarm = new Audio('/alarm.mp3');
-    alarm.volume = 1.0;
-    alarm.preload = 'auto';
-    alarm.play()
-      .then(() => console.log('[Audio Debug] Alarm playing'))
-      .catch((err) => console.error('[Audio Debug] Alarm play failed:', err));
+    const alarm = alarmRef.current;
+    if (alarm) {
+      alarm.currentTime = 0;
+      alarm.play()
+        .then(() => console.log('[Audio Debug] Alarm playing'))
+        .catch((err) => console.error('[Audio Debug] Alarm play failed:', err));
+    }
   }, []);
 
   // Count of active sounds
