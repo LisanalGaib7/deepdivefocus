@@ -518,7 +518,7 @@ const Index = () => {
           </div>
         )}
 
-        {/* Timer Circle - Solid Analog Dial */}
+        {/* Timer Circle - Submarine HUD Gauge */}
         <div className="flex flex-col items-center gap-6">
           <div className="relative select-none">
             <svg 
@@ -530,58 +530,62 @@ const Index = () => {
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
             >
-              {/* Background - black disc */}
+              <defs>
+                {/* Glow filter for active segments */}
+                <filter id="gaugeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+                <filter id="gaugeGlowIntense" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Dark background disc */}
               <circle
                 cx="150"
                 cy="150"
-                r="130"
-                className="fill-background"
+                r="135"
+                fill="hsl(var(--background))"
                 stroke="hsl(var(--border))"
-                strokeWidth="2"
+                strokeWidth="1"
               />
-              
-              {/* Solid pie-chart fill (theme-colored disc that depletes) */}
-              {displayProgress > 0 && (
-                <path
-                  d={(() => {
-                    const centerX = 150;
-                    const centerY = 150;
-                    const radius = 128;
-                    const anglePercent = displayProgress / 100;
-                    const endAngle = -90 + (anglePercent * 360);
-                    const startAngle = -90;
-                    
-                    const startX = centerX + radius * Math.cos(startAngle * Math.PI / 180);
-                    const startY = centerY + radius * Math.sin(startAngle * Math.PI / 180);
-                    const endX = centerX + radius * Math.cos(endAngle * Math.PI / 180);
-                    const endY = centerY + radius * Math.sin(endAngle * Math.PI / 180);
-                    
-                    const largeArcFlag = anglePercent > 0.5 ? 1 : 0;
-                    
-                    if (anglePercent >= 0.9999) {
-                      return `M ${centerX} ${centerY} m -${radius} 0 a ${radius} ${radius} 0 1 1 ${radius * 2} 0 a ${radius} ${radius} 0 1 1 -${radius * 2} 0`;
-                    }
-                    
-                    return `M ${centerX} ${centerY} L ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
-                  })()}
-                  className="fill-primary"
-                  style={{
-                    transition: isDragging ? "none" : "d 1s linear",
-                  }}
-                />
-              )}
-              
-              {/* Tick marks around the edge */}
+
+              {/* Inner dark ring for depth */}
+              <circle
+                cx="150"
+                cy="150"
+                r="105"
+                fill="none"
+                stroke="hsl(var(--border))"
+                strokeWidth="1"
+                opacity="0.5"
+              />
+
+              {/* Segmented gauge ring - 60 segments */}
               {Array.from({ length: 60 }).map((_, i) => {
-                const angle = (i * 6 - 90) * (Math.PI / 180);
+                const segAngle = (i * 6 - 90) * (Math.PI / 180);
+                const nextAngle = ((i + 1) * 6 - 90.5) * (Math.PI / 180);
                 const isMajor = i % 5 === 0;
-                const outerR = 130;
-                const innerR = isMajor ? 115 : 122;
-                const x1 = 150 + outerR * Math.cos(angle);
-                const y1 = 150 + outerR * Math.sin(angle);
-                const x2 = 150 + innerR * Math.cos(angle);
-                const y2 = 150 + innerR * Math.sin(angle);
-                
+                const outerR = 132;
+                const innerR = isMajor ? 112 : 118;
+
+                // Is this segment within the active range?
+                const segmentPercent = (i / 60) * 100;
+                const maxPercent = (setDuration / TIMER_CONFIG.MAX_TIME_SECONDS) * 100;
+                const currentPercent = displayProgress;
+                const isActive = segmentPercent < currentPercent;
+                const isInSetRange = segmentPercent < maxPercent;
+
+                const x1 = 150 + outerR * Math.cos(segAngle);
+                const y1 = 150 + outerR * Math.sin(segAngle);
+                const x2 = 150 + innerR * Math.cos(segAngle);
+                const y2 = 150 + innerR * Math.sin(segAngle);
+
                 return (
                   <line
                     key={i}
@@ -589,20 +593,42 @@ const Index = () => {
                     y1={y1}
                     x2={x2}
                     y2={y2}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeWidth={isMajor ? 2 : 1}
-                    opacity={isMajor ? 0.6 : 0.3}
+                    stroke={
+                      isActive
+                        ? "hsl(var(--primary))"
+                        : "hsl(var(--muted-foreground))"
+                    }
+                    strokeWidth={isMajor ? 3 : 2}
+                    opacity={isActive ? 1 : (isMajor ? 0.25 : 0.1)}
+                    strokeLinecap="round"
+                    filter={isActive ? "url(#gaugeGlow)" : undefined}
+                    style={{
+                      transition: isDragging ? "none" : "opacity 0.3s, stroke 0.3s",
+                    }}
                   />
                 );
               })}
-              
+
+              {/* Outer bezel ring */}
+              <circle
+                cx="150"
+                cy="150"
+                r="136"
+                fill="none"
+                stroke="hsl(var(--primary))"
+                strokeWidth="1.5"
+                opacity="0.3"
+              />
+
               {/* Numeric labels every 5 minutes */}
               {[5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].map((minutes) => {
                 const angle = ((minutes / 60) * 360 - 90) * (Math.PI / 180);
-                const labelR = 145; // Position labels outside the dial
+                const labelR = 145;
                 const x = 150 + labelR * Math.cos(angle);
                 const y = 150 + labelR * Math.sin(angle);
-                
+                const segmentPercent = (minutes / 60) * 100;
+                const isActive = segmentPercent <= displayProgress;
+
                 return (
                   <text
                     key={minutes}
@@ -610,103 +636,97 @@ const Index = () => {
                     y={y}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    className="fill-muted-foreground text-[10px] font-medium"
-                    style={{ fontFamily: 'system-ui, sans-serif' }}
+                    fill={isActive ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+                    className="text-[10px] font-bold"
+                    style={{ fontFamily: "'Orbitron', monospace" }}
+                    opacity={isActive ? 0.9 : 0.4}
                   >
                     {minutes}
                   </text>
                 );
               })}
-              
-              {/* Knob indicator at the edge of the pie slice */}
+
+              {/* Knob indicator at the edge */}
               {displayProgress > 0 && (() => {
                 const anglePercent = displayProgress / 100;
                 const endAngle = (-90 + (anglePercent * 360)) * (Math.PI / 180);
-                const knobR = 128;
+                const knobR = 132;
                 const knobX = 150 + knobR * Math.cos(endAngle);
                 const knobY = 150 + knobR * Math.sin(endAngle);
-                
+
                 return (
-                  <g>
-                    {/* Knob outer ring */}
+                  <g filter="url(#gaugeGlowIntense)">
                     <circle
                       cx={knobX}
                       cy={knobY}
-                      r="10"
-                      className="fill-background stroke-primary"
+                      r="8"
+                      fill="hsl(var(--background))"
+                      stroke="hsl(var(--primary))"
                       strokeWidth="3"
                     />
-                    {/* Knob inner dot */}
                     <circle
                       cx={knobX}
                       cy={knobY}
-                      r="4"
-                      className="fill-primary"
+                      r="3"
+                      fill="hsl(var(--primary))"
                     />
                   </g>
                 );
               })()}
-              
-              {/* Outer ring border */}
+
+              {/* Invisible hit area */}
               <circle
                 cx="150"
                 cy="150"
-                r="130"
-                fill="none"
-                stroke="hsl(var(--border))"
-                strokeWidth="3"
-              />
-              
-              {/* Invisible hit area for drag */}
-              <circle
-                cx="150"
-                cy="150"
-                r="130"
+                r="136"
                 fill="transparent"
               />
             </svg>
-            
-            {/* Timer display with mix-blend-mode for contrast */}
+
+            {/* Center display - LED style with CRT scanline overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <div 
-                className="text-6xl md:text-7xl font-extrabold tabular-nums tracking-tight font-mono"
-                style={{ mixBlendMode: "difference", color: "white" }}
+              {/* CRT Scanline overlay */}
+              <div
+                className="absolute inset-0 rounded-full pointer-events-none overflow-hidden opacity-[0.04]"
+                style={{
+                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(var(--foreground)) 2px, hsl(var(--foreground)) 3px)",
+                  backgroundSize: "100% 3px",
+                  animation: "scanline-scroll 8s linear infinite",
+                }}
+              />
+
+              {/* Timer digits */}
+              <div
+                className="text-5xl md:text-6xl font-extrabold tabular-nums tracking-wider font-robotic text-primary drop-shadow-[0_0_20px_hsl(var(--primary)/0.6)]"
               >
                 {formatTime(isDragging ? setDuration : timeLeft)}
               </div>
-              
+
               {/* Depth Display - shown when diving */}
               {isRunning && (
                 <div className="flex flex-col items-center mt-2">
-                  <div className="flex items-center gap-2" style={{ mixBlendMode: "difference", color: "white" }}>
+                  <div className="flex items-center gap-2 text-primary/80">
                     <Anchor className="h-4 w-4" />
-                    <span className="font-robotic text-xl font-bold tracking-wider">
+                    <span className="font-robotic text-lg font-bold tracking-wider">
                       {depth}m
                     </span>
                   </div>
-                  {/* Next Zone Locked indicator - shown at max depth */}
                   {isAtMaxDepth && (
-                    <p className="text-xs text-muted-foreground mt-1 opacity-70">
-                      Next Zone: Abyss (Locked 🔒)
+                    <p className="text-xs text-primary/40 font-robotic mt-1">
+                      ZONE LOCKED 🔒
                     </p>
                   )}
                 </div>
               )}
-              
+
               {!isRunning && !isDragging && (
-                <p 
-                  className="text-xs mt-2"
-                  style={{ mixBlendMode: "difference", color: "white" }}
-                >
-                  Drag to set time
+                <p className="text-xs mt-2 text-primary/50 font-robotic tracking-wider">
+                  DRAG TO SET
                 </p>
               )}
               {isDragging && (
-                <p 
-                  className="text-xs mt-2 animate-pulse"
-                  style={{ mixBlendMode: "difference", color: "white" }}
-                >
-                  {formatTime(setDuration)} — Release to confirm
+                <p className="text-xs mt-2 animate-pulse text-primary/70 font-robotic tracking-wider">
+                  {formatTime(setDuration)} — RELEASE
                 </p>
               )}
             </div>
