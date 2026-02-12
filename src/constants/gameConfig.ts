@@ -1,4 +1,22 @@
 // ======================
+// AUDIO PATHS
+// ======================
+export const AUDIO_PATHS = {
+  rain: "/rain.mp3",
+  ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3",
+  whiteNoise: "/whitenoise.mp3",
+  alarm: "/alarm.mp3",
+} as const;
+
+// Default volume levels for each ambient sound
+export const DEFAULT_VOLUMES = {
+  rain: 0.5,
+  ocean: 0.4,
+  whiteNoise: 0.3,
+  alarm: 1.0,
+} as const;
+
+// ======================
 // TIMER CONFIGURATION
 // ======================
 export const TIMER_CONFIG = {
