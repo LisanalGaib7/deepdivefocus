@@ -697,7 +697,7 @@ const Index = () => {
 
               {/* Timer digits */}
               <div
-                className="text-5xl md:text-6xl font-extrabold tabular-nums tracking-wider font-robotic text-primary drop-shadow-[0_0_20px_hsl(var(--primary)/0.6)]"
+                className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-wider font-robotic text-primary drop-shadow-[0_0_20px_hsl(var(--primary)/0.6)]"
               >
                 {formatTime(isDragging ? setDuration : timeLeft)}
               </div>
