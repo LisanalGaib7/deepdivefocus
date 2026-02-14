@@ -1036,6 +1036,28 @@ const Index = () => {
           toast.success(`Upgraded ${moduleId}!`);
         }}
       />
+
+      {/* DEV TRIGGER - Remove after testing */}
+      <button
+        onClick={() => {
+          setRewardCreature({
+            id: 'jellyfish',
+            name: 'Neon Jellyfish',
+            minDepth: 100,
+            rarity: 'Uncommon',
+            description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
+            icon: 'Sparkles',
+            pearls: 30,
+            traits: ['Glow', 'Toxic'],
+          });
+          setCompletedSessionDepth(250);
+          setCompletedSessionDuration(1500);
+          setShowMissionCompleteModal(true);
+        }}
+        className="fixed bottom-20 right-4 z-50 bg-red-500 text-white p-2 rounded text-xs"
+      >
+        🕵️‍♂️ Test Discovery
+      </button>
     </>
   );
 };
