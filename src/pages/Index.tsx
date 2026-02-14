@@ -526,7 +526,7 @@ const Index = () => {
               className={`w-72 h-72 md:w-80 md:h-80 touch-none ${
                 !isRunning ? "cursor-grab" : "cursor-default"
               } ${isDragging ? "cursor-grabbing" : ""}`}
-              viewBox="0 0 300 300"
+              viewBox="-20 -20 340 340"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
             >
