@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
-import neonJellyfish from "@/assets/neon-jellyfish-transparent.png";
+import PixelCreature from "@/components/common/PixelCreature";
 import { 
   Anchor, 
   Circle, 
@@ -134,12 +134,7 @@ export const MissionCompleteModal = ({
 
                 <div className="flex justify-center mb-2">
                   <div className="p-3 rounded-full bg-background/50 border border-primary/30" style={{ boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' }}>
-                    <img 
-                      src={neonJellyfish} 
-                      alt={creature.name} 
-                      className="w-10 h-10 object-contain drop-shadow-[0_0_12px_hsl(var(--primary))]" 
-                      style={{ filter: 'drop-shadow(0 0 8px hsl(var(--primary)))' }}
-                    />
+                    <PixelCreature className="w-10 h-10" />
                   </div>
                 </div>
 
