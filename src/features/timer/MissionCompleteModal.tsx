@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
-import neonJellyfish from "@/assets/neon-jellyfish.png";
+import neonJellyfish from "@/assets/neon-jellyfish-transparent.png";
 import { 
   Anchor, 
   Circle, 
