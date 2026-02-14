@@ -159,7 +159,7 @@ const Auth = () => {
             >
               DEEP DIVE
             </h1>
-            <p className="font-robotic text-sm tracking-widest text-primary/70">
+            <p className="font-robotic text-sm tracking-widest text-primary">
               {isSignUp ? 'CREW REGISTRATION' : 'PILOT AUTHENTICATION'}
             </p>
           </div>
@@ -286,7 +286,7 @@ const Auth = () => {
         <button
           type="button"
           onClick={handleGuestMode}
-          className="w-full text-center text-muted-foreground/70 hover:text-primary text-sm font-mono tracking-wide transition-colors duration-300 py-2"
+          className="w-full text-center text-muted-foreground hover:text-primary text-sm font-mono tracking-wide transition-colors duration-300 py-2"
         >
           ▸ CONTINUE AS GUEST (DEMO MODE)
         </button>
@@ -307,7 +307,7 @@ const Auth = () => {
         </p>
 
         {/* Version */}
-        <p className="text-center font-robotic text-xs tracking-wider text-muted-foreground/50">
+        <p className="text-center font-robotic text-xs tracking-wider text-muted-foreground">
           v1.0.0 // DIVE SYSTEMS ONLINE
         </p>
       </div>
