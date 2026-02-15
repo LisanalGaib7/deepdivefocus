@@ -134,7 +134,7 @@ export const MissionCompleteModal = ({
 
                 <div className="flex justify-center mb-2">
                   <div className="p-3 rounded-full bg-background/50 border border-primary/30" style={{ boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' }}>
-                    <PixelCreature className="w-10 h-10" />
+                    <PixelCreature type={creature.id} className="w-10 h-10" />
                   </div>
                 </div>
 
