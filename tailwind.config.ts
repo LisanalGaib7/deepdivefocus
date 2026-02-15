@@ -112,10 +112,10 @@ export default {
           },
         },
         "creature-swim": {
-          "0%": { transform: "translateX(-3px) scaleX(1)" },
-          "25%": { transform: "translateX(0px) scaleX(0.92)" },
-          "50%": { transform: "translateX(3px) scaleX(1)" },
-          "75%": { transform: "translateX(0px) scaleX(0.92)" },
+          "0%, 100%": { transform: "translateX(-2px) scaleX(1)" },
+          "25%": { transform: "translateX(0px) scaleX(0.93)" },
+          "50%": { transform: "translateX(2px) scaleX(1)" },
+          "75%": { transform: "translateX(0px) scaleX(0.93)" },
         },
         "creature-bounce": {
           "0%, 100%": { transform: "translateY(0)" },
