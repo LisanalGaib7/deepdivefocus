@@ -31,7 +31,7 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
-import { Creature } from "@/data/creatures";
+import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
 
@@ -1040,16 +1040,9 @@ const Index = () => {
       {/* DEV TRIGGER - Remove after testing */}
       <button
         onClick={() => {
-          setRewardCreature({
-            id: 'jellyfish',
-            name: 'Neon Jellyfish',
-            minDepth: 100,
-            rarity: 'Uncommon',
-            description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
-            icon: 'Sparkles',
-            pearls: 30,
-            traits: ['Glow', 'Toxic'],
-          });
+          const commonCreatures = CREATURES.filter(c => c.rarity === 'Common');
+          const pick = commonCreatures[Math.floor(Math.random() * commonCreatures.length)];
+          setRewardCreature(pick);
           setCompletedSessionDepth(250);
           setCompletedSessionDuration(1500);
           setShowMissionCompleteModal(true);
