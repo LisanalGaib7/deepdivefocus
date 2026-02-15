@@ -135,13 +135,25 @@ const getCreatureData = (type: string): GridData => {
   }
 };
 
+const getCreatureAnimation = (type: string): string => {
+  switch (type) {
+    case 'sardine': return 'animate-creature-swim';
+    case 'crab': return 'animate-creature-bounce';
+    case 'starfish': return 'animate-creature-breathe';
+    case 'seahorse': return 'animate-creature-float';
+    case 'jellyfish':
+    default: return 'animate-creature-float';
+  }
+};
+
 const PixelCreature = ({ type = 'jellyfish', className = "w-32 h-32" }: PixelCreatureProps) => {
   const { grid, colorMap, glowColor } = getCreatureData(type);
+  const animClass = getCreatureAnimation(type);
 
   return (
     <svg
       viewBox="0 0 16 16"
-      className={className}
+      className={`${className} ${animClass}`}
       style={{
         filter: `drop-shadow(0 0 8px ${glowColor}) drop-shadow(0 0 16px ${glowColor}66)`,
         imageRendering: "pixelated",
