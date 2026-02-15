@@ -112,8 +112,10 @@ export default {
           },
         },
         "creature-swim": {
-          "0%, 100%": { transform: "rotate(-3deg) translateX(-2px)" },
-          "50%": { transform: "rotate(3deg) translateX(2px)" },
+          "0%": { transform: "translateX(-3px) scaleX(1)" },
+          "25%": { transform: "translateX(0px) scaleX(0.92)" },
+          "50%": { transform: "translateX(3px) scaleX(1)" },
+          "75%": { transform: "translateX(0px) scaleX(0.92)" },
         },
         "creature-bounce": {
           "0%, 100%": { transform: "translateY(0)" },
@@ -135,7 +137,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "fade-in": "fade-in 0.5s ease-out",
-        "creature-swim": "creature-swim 0.6s ease-in-out infinite",
+        "creature-swim": "creature-swim 0.4s ease-in-out infinite",
         "creature-bounce": "creature-bounce 0.8s ease-in-out infinite",
         "creature-breathe": "creature-breathe 3s ease-in-out infinite",
         "creature-float": "creature-float 4s ease-in-out infinite",
