@@ -137,7 +137,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "fade-in": "fade-in 0.5s ease-out",
-        "creature-swim": "creature-swim 0.4s ease-in-out infinite",
+        "creature-swim": "creature-swim 1.2s ease-in-out infinite",
         "creature-bounce": "creature-bounce 0.8s ease-in-out infinite",
         "creature-breathe": "creature-breathe 3s ease-in-out infinite",
         "creature-float": "creature-float 4s ease-in-out infinite",
