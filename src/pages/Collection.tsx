@@ -178,15 +178,14 @@ const Collection = () => {
         setLoading(false);
         return;
       }
-      if (isAuthenticated) {
-        setLoading(true);
-        const creatures = await fetchCreatures();
-        setCollectedIds(creatures.map(c => c.creature_id));
-        setLoading(false);
-      }
+      // Load for both authenticated users AND guest mode
+      setLoading(true);
+      const creatures = await fetchCreatures();
+      setCollectedIds(creatures.map(c => c.creature_id));
+      setLoading(false);
     };
     loadCreatures();
-  }, [isAuthenticated, fetchCreatures]);
+  }, [fetchCreatures]);
 
   const isCollected = (creatureId: string) => collectedIds.includes(creatureId);
   const collectedCount = collectedIds.length;
