@@ -212,7 +212,6 @@ export default {
           "85%": { transform: "scale(1.01) translateY(0px)", filter: "brightness(1.1) drop-shadow(0 0 20px #aa66ff) drop-shadow(0 0 8px #00eeff)" },
         },
       },
-      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
