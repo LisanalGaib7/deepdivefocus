@@ -36,7 +36,7 @@ import { rollForCreature } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
 
 const Index = () => {
-  const { signOut, profile, updateProfile, isGuestMode, isAuthenticated } = useAuthContext();
+  const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
@@ -69,6 +69,7 @@ const Index = () => {
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
   const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
   const [isDiveTransition, setIsDiveTransition] = useState(false);
+  const [collectionRefreshKey, setCollectionRefreshKey] = useState(0);
   
   // Gamification hook - engine level starts at 1
   const engineLevel = 1; // TODO: Load from user profile when persistence is added
@@ -370,6 +371,10 @@ const Index = () => {
     setTimeLeft(setDuration);
     resetDive();
     
+    // Trigger Collection & Engineering Bay to refresh with latest data
+    setCollectionRefreshKey(prev => prev + 1);
+    refetchProfile();
+    
     if (rewardCreature) {
       toast.success("Creature added to collection!", {
         description: `${rewardCreature.name} saved!`,
@@ -469,7 +474,7 @@ const Index = () => {
       {activeTab === "history" ? (
         <History />
       ) : activeTab === "collection" ? (
-        <Collection />
+        <Collection key={collectionRefreshKey} />
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
