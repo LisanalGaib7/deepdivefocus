@@ -138,14 +138,14 @@ export const CREATURES: Creature[] = [
     traits: ['Mythical', 'Massive'],
   },
   {
-    id: 'blobfish',
-    name: 'Blobfish',
+    id: 'volcano_snail',
+    name: 'Magma Volcano Snail',
     minDepth: 900,
     rarity: 'Epic',
-    description: 'UNIT.BLOB // STRUCTURE_UNSTABLE // AESTHETICS_ERR',
-    icon: 'Cloud',
+    description: 'UNIT.SNAIL // SHELL_IRON // CORE_MOLTEN',
+    icon: 'Flame',
     pearls: 120,
-    traits: ['Soft', 'Meme'],
+    traits: ['Armored', 'Magma'],
   },
   // TIER 4: THE ABYSS (1000m+)
   {

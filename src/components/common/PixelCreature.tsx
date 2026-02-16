@@ -285,27 +285,27 @@ const krakenSpawn = (): GridData => ({
   glowColor: "#ff6622",
 });
 
-const blobfish = (): GridData => ({
+const volcanoSnail = (): GridData => ({
   grid: [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
-    [0,0,1,1,1,3,3,1,1,3,3,1,1,1,0,0],
-    [0,0,1,1,1,3,3,1,1,3,3,1,1,1,0,0],
-    [0,0,1,1,1,1,1,2,2,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,2,2,2,2,1,1,1,0,0,0],
-    [0,0,0,0,1,1,1,2,2,1,1,1,0,0,0,0],
-    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,2,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,2,1,2,1,1,1,0,0,0],
+    [0,0,0,0,1,1,2,1,1,1,2,1,1,0,0,0],
+    [0,0,0,0,1,2,1,1,1,1,1,2,1,0,0,0],
+    [0,0,0,1,1,1,2,1,1,1,2,1,1,0,0,0],
+    [0,0,0,1,1,1,1,2,2,2,1,1,0,0,0,0],
+    [0,0,3,3,1,1,1,1,1,1,1,0,0,0,0,0],
+    [0,3,2,3,3,3,3,3,3,3,3,3,3,0,0,0],
+    [3,2,2,2,3,2,3,2,3,2,3,2,3,3,0,0],
+    [0,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   ],
-  colorMap: { 1: "#e8a0a0", 2: "#cc7088", 3: "#2a1a2e" },
-  glowColor: "#e8a0a0",
+  colorMap: { 1: "#2a2a2a", 2: "#ff4400", 3: "#444444" },
+  glowColor: "#ff4400",
 });
 
 const spectralShark = (): GridData => ({
@@ -344,7 +344,7 @@ const getCreatureData = (type: string): GridData => {
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
     case 'giant_squid': return krakenSpawn();
-    case 'blobfish': return blobfish();
+    case 'volcano_snail': return volcanoSnail();
     case 'glowing_shark': return spectralShark();
     case 'jellyfish':
     default: return jellyfish();
@@ -364,7 +364,7 @@ const getCreatureAnimation = (type: string): string => {
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';
     case 'giant_squid': return 'animate-creature-writhe';
-    case 'blobfish': return 'animate-creature-jiggle';
+    case 'volcano_snail': return 'animate-creature-magma';
     case 'glowing_shark': return 'animate-creature-ghost';
     case 'jellyfish':
     default: return 'animate-creature-float';
