@@ -147,8 +147,9 @@ export default {
           "60%": { transform: "scale(0.96)", opacity: "0.8" },
         },
         "creature-wingflap": {
-          "0%, 100%": { transform: "scaleY(1) translateY(0)" },
-          "50%": { transform: "scaleY(0.85) translateY(3px)" },
+          "0%, 100%": { transform: "scaleY(1) translateY(0px)" },
+          "30%": { transform: "scaleY(0.88) translateY(2px)" },
+          "60%": { transform: "scaleY(1.04) translateY(-3px)" },
         },
         "creature-lure": {
           "0%, 100%": { filter: "drop-shadow(0 0 8px var(--tw-shadow-color, #00ffee)) brightness(1)" },
@@ -177,7 +178,7 @@ export default {
         "creature-slither": "creature-slither 0.8s ease-in-out infinite",
         "creature-glide": "creature-glide 5s ease-in-out infinite",
         "creature-pulse": "creature-pulse 3s ease-in-out infinite",
-        "creature-wingflap": "creature-wingflap 4.5s ease-in-out infinite",
+        "creature-wingflap": "creature-wingflap 5s ease-in-out infinite",
         "creature-lure": "creature-lure 2s ease-in-out infinite",
         "creature-shuffle": "creature-shuffle 0.6s linear infinite",
       },
