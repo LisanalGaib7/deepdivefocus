@@ -165,19 +165,6 @@ export default {
           "60%": { transform: "translateX(-1px) translateY(-0.5px)" },
           "75%": { transform: "translateX(0.5px) translateY(0.5px)" },
         },
-        "creature-writhe": {
-          "0%, 100%": { transform: "scale(1) rotate(0deg)" },
-          "20%": { transform: "scale(1.04) rotate(1.5deg)" },
-          "40%": { transform: "scale(0.97) rotate(-1deg)" },
-          "60%": { transform: "scale(1.03) rotate(1deg)" },
-          "80%": { transform: "scale(0.98) rotate(-1.5deg)" },
-        },
-        "creature-jiggle": {
-          "0%, 100%": { transform: "scaleX(1) scaleY(1)" },
-          "25%": { transform: "scaleX(1.06) scaleY(0.94)" },
-          "50%": { transform: "scaleX(0.95) scaleY(1.05)" },
-          "75%": { transform: "scaleX(1.04) scaleY(0.96)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -194,8 +181,6 @@ export default {
         "creature-wingflap": "creature-wingflap 5s ease-in-out infinite",
         "creature-lure": "creature-lure 2s ease-in-out infinite",
         "creature-shuffle": "creature-shuffle 0.6s linear infinite",
-        "creature-writhe": "creature-writhe 3s ease-in-out infinite",
-        "creature-jiggle": "creature-jiggle 2.5s ease-in-out infinite",
       },
     },
   },
