@@ -1040,8 +1040,8 @@ const Index = () => {
       {/* DEV TRIGGER - Remove after testing */}
       <button
         onClick={() => {
-          const commonCreatures = CREATURES.filter(c => c.rarity === 'Common');
-          const pick = commonCreatures[Math.floor(Math.random() * commonCreatures.length)];
+          const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Common' || c.rarity === 'Uncommon');
+          const pick = eligibleCreatures[Math.floor(Math.random() * eligibleCreatures.length)];
           setRewardCreature(pick);
           setCompletedSessionDepth(250);
           setCompletedSessionDuration(1500);
