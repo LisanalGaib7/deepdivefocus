@@ -343,9 +343,9 @@ const getCreatureData = (type: string): GridData => {
     case 'manta': return mantaRay();
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
-    case 'kraken_spawn': return krakenSpawn();
+    case 'giant_squid': return krakenSpawn();
     case 'blobfish': return blobfish();
-    case 'spectral_shark': return spectralShark();
+    case 'glowing_shark': return spectralShark();
     case 'jellyfish':
     default: return jellyfish();
   }
@@ -363,9 +363,9 @@ const getCreatureAnimation = (type: string): string => {
     case 'manta': return 'animate-creature-wingflap';
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';
-    case 'kraken_spawn': return 'animate-creature-writhe';
+    case 'giant_squid': return 'animate-creature-writhe';
     case 'blobfish': return 'animate-creature-jiggle';
-    case 'spectral_shark': return 'animate-creature-ghost';
+    case 'glowing_shark': return 'animate-creature-ghost';
     case 'jellyfish':
     default: return 'animate-creature-float';
   }
