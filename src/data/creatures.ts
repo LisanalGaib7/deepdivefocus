@@ -1,6 +1,6 @@
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
 
-export type CreatureRarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary';
+export type CreatureRarity = "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary";
 
 export interface Creature {
   id: string;
@@ -16,181 +16,187 @@ export interface Creature {
 export const CREATURES: Creature[] = [
   // TIER 1: SHALLOW WATERS (0m - 100m)
   {
-    id: 'sardine',
-    name: 'Silver Sardine',
+    id: "sardine",
+    name: "Silver Sardine",
     minDepth: 0,
-    rarity: 'Common',
-    description: 'UNIT.SARDINE // BASIC_LIFEFORM // SIGNAL_WEAK',
-    icon: 'Fish',
+    rarity: "Common",
+    description: "UNIT.SARDINE // BASIC_LIFEFORM // SIGNAL_WEAK",
+    icon: "Fish",
     pearls: 10,
-    traits: ['Basic', 'Swarm'],
+    traits: ["Basic", "Swarm"],
   },
   {
-    id: 'crab',
-    name: 'Hermit Crab',
+    id: "crab",
+    name: "Hermit Crab",
     minDepth: 25,
-    rarity: 'Common',
-    description: 'UNIT.CRAB // SHELL_DETECTED // MOBILITY_LOW',
-    icon: 'Shell',
+    rarity: "Common",
+    description: "UNIT.CRAB // SHELL_DETECTED // MOBILITY_LOW",
+    icon: "Shell",
     pearls: 10,
-    traits: ['Shell', 'Defensive'],
+    traits: ["Shell", "Defensive"],
   },
   {
-    id: 'starfish',
-    name: 'Crimson Starfish',
+    id: "starfish",
+    name: "Crimson Starfish",
     minDepth: 50,
-    rarity: 'Common',
-    description: 'UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY',
-    icon: 'Star',
+    rarity: "Common",
+    description: "UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY",
+    icon: "Star",
     pearls: 15,
-    traits: ['Regenerative', 'Static'],
+    traits: ["Regenerative", "Static"],
   },
   {
-    id: 'seahorse',
-    name: 'Drift Seahorse',
+    id: "seahorse",
+    name: "Drift Seahorse",
     minDepth: 75,
-    rarity: 'Common',
-    description: 'UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE',
-    icon: 'Waves',
+    rarity: "Common",
+    description: "UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE",
+    icon: "Waves",
     pearls: 15,
-    traits: ['Camouflage', 'Fragile'],
+    traits: ["Camouflage", "Fragile"],
   },
   // TIER 2: TWILIGHT ZONE (100m - 500m)
   {
-    id: 'jellyfish',
-    name: 'Neon Jellyfish',
+    id: "jellyfish",
+    name: "Neon Jellyfish",
     minDepth: 100,
-    rarity: 'Uncommon',
-    description: 'UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING',
-    icon: 'Sparkles',
+    rarity: "Uncommon",
+    description: "UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING",
+    icon: "Sparkles",
     pearls: 30,
-    traits: ['Bioluminescent', 'Toxic'],
+    traits: ["Bioluminescent", "Toxic"],
   },
   {
-    id: 'electric_eel',
-    name: 'Electric Eel',
+    id: "electric_eel",
+    name: "Electric Eel",
     minDepth: 120,
-    rarity: 'Uncommon',
-    description: 'UNIT.EEL // HIGH_VOLTAGE // BATTERY_DETECTED',
-    icon: 'Zap',
+    rarity: "Uncommon",
+    description: "UNIT.EEL // HIGH_VOLTAGE // BATTERY_DETECTED",
+    icon: "Zap",
     pearls: 40,
-    traits: ['Electric', 'Danger'],
+    traits: ["Electric", "Danger"],
   },
   {
-    id: 'turtle',
-    name: 'Ancient Sea Turtle',
+    id: "turtle",
+    name: "Ancient Sea Turtle",
     minDepth: 180,
-    rarity: 'Uncommon',
-    description: 'UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED',
-    icon: 'Shield',
+    rarity: "Uncommon",
+    description: "UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED",
+    icon: "Shield",
     pearls: 45,
-    traits: ['Ancient', 'Wise'],
+    traits: ["Ancient", "Wise"],
   },
   {
-    id: 'octopus',
-    name: 'Phantom Octopus',
+    id: "octopus",
+    name: "Phantom Octopus",
     minDepth: 250,
-    rarity: 'Uncommon',
-    description: 'UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED',
-    icon: 'Grip',
+    rarity: "Uncommon",
+    description: "UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED",
+    icon: "Grip",
     pearls: 50,
-    traits: ['Intelligent', 'Camouflage'],
+    traits: ["Intelligent", "Camouflage"],
   },
   {
-    id: 'manta',
-    name: 'Shadow Manta Ray',
+    id: "manta",
+    name: "Shadow Manta Ray",
     minDepth: 400,
-    rarity: 'Rare',
-    description: 'UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE',
-    icon: 'Wind',
+    rarity: "Rare",
+    description: "UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE",
+    icon: "Wind",
     pearls: 60,
-    traits: ['Majestic', 'Silent'],
+    traits: ["Majestic", "Silent"],
   },
   // TIER 3: MIDNIGHT ZONE (500m - 1000m)
   {
-    id: 'anglerfish',
-    name: 'Abyssal Anglerfish',
+    id: "anglerfish",
+    name: "Abyssal Anglerfish",
     minDepth: 500,
-    rarity: 'Rare',
-    description: 'UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX',
-    icon: 'Flashlight',
+    rarity: "Rare",
+    description: "UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX",
+    icon: "Flashlight",
     pearls: 70,
-    traits: ['Apex', 'Lure'],
+    traits: ["Apex", "Lure"],
   },
   {
-    id: 'giant_isopod',
-    name: 'Giant Isopod',
+    id: "giant_isopod",
+    name: "Giant Isopod",
     minDepth: 600,
-    rarity: 'Rare',
-    description: 'UNIT.ISOPOD // SCAVENGER // ARMOR_HEAVY',
-    icon: 'Bug',
+    rarity: "Rare",
+    description: "UNIT.ISOPOD // SCAVENGER // ARMOR_HEAVY",
+    icon: "Bug",
     pearls: 75,
-    traits: ['Tank', 'Ancient'],
+    traits: ["Tank", "Ancient"],
   },
   {
-    id: 'giant_squid',
-    name: 'Kraken Spawn',
+    id: "giant_squid",
+    name: "Kraken Spawn",
     minDepth: 750,
-    rarity: 'Epic',
-    description: 'UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED',
-    icon: 'Anchor',
+    rarity: "Epic",
+    description: "UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED",
+    icon: "Anchor",
     pearls: 100,
-    traits: ['Mythical', 'Massive'],
+    traits: ["Mythical", "Massive"],
   },
   {
-    id: 'volcano_snail',
-    name: 'Magma Volcano Snail',
+    id: "volcano_snail",
+    name: "Magma Volcano Snail",
     minDepth: 900,
-    rarity: 'Epic',
-    description: 'UNIT.SNAIL // SHELL_IRON // CORE_MOLTEN',
-    icon: 'Flame',
+    rarity: "Epic",
+    description: "UNIT.SNAIL // SHELL_IRON // CORE_MOLTEN",
+    icon: "Flame",
     pearls: 120,
-    traits: ['Armored', 'Magma'],
+    traits: ["Armored", "Magma"],
   },
   // TIER 4: THE ABYSS (1000m+)
   {
-    id: 'glowing_shark',
-    name: 'Spectral Shark',
+    id: "glowing_shark",
+    name: "Spectral Shark",
     minDepth: 1000,
-    rarity: 'Epic',
-    description: 'UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL',
-    icon: 'Ghost',
+    rarity: "Epic",
+    description: "UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL",
+    icon: "Ghost",
     pearls: 150,
-    traits: ['Spectral', 'Predator'],
+    traits: ["Spectral", "Predator"],
   },
   {
-    id: 'solar_golden_dragonfish',
-    name: 'Solar Golden Dragonfish',
+    id: "solar_golden_dragonfish",
+    name: "Solar Golden Dragonfish",
     minDepth: 1300,
-    rarity: 'Legendary',
-    description: 'UNIT.DRAGON // SOLAR_CORE // RADIANCE_INFINITE',
-    icon: 'Sun',
+    rarity: "Legendary",
+    description: "UNIT.DRAGON // SOLAR_CORE // RADIANCE_INFINITE",
+    icon: "Sun",
     pearls: 500,
-    traits: ['Radiant', 'Majestic'],
+    traits: ["Radiant", "Majestic"],
   },
   {
-    id: 'astral_leviathan',
-    name: 'Astral Leviathan',
+    id: "astral_leviathan",
+    name: "Astral Leviathan",
     minDepth: 1500,
-    rarity: 'Legendary',
-    description: 'UNIT.??? // COSMOS_BOUND // STARS_WITHIN',
-    icon: 'Skull',
+    rarity: "Legendary",
+    description: "UNIT.DRAGON // COSMOS_BOUND // STARS_WITHIN",
+    icon: "Skull",
     pearls: 500,
-    traits: ['Cosmic', 'Ancient'],
+    traits: ["Cosmic", "Ancient"],
   },
 ];
 
 export const getCreaturesAtDepth = (depth: number): Creature[] => {
-  return CREATURES.filter(creature => creature.minDepth <= depth);
+  return CREATURES.filter((creature) => creature.minDepth <= depth);
 };
 
 export const getRarityColor = (rarity: CreatureRarity): string => {
   switch (rarity) {
-    case 'Common': return 'text-muted-foreground';
-    case 'Uncommon': return 'text-emerald-400';
-    case 'Rare': return 'text-hud-cyan';
-    case 'Epic': return 'text-purple-400 drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]';
-    case 'Legendary': return 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]';
-    default: return 'text-foreground';
+    case "Common":
+      return "text-muted-foreground";
+    case "Uncommon":
+      return "text-emerald-400";
+    case "Rare":
+      return "text-hud-cyan";
+    case "Epic":
+      return "text-purple-400 drop-shadow-[0_0_5px_rgba(192,132,252,0.5)]";
+    case "Legendary":
+      return "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]";
+    default:
+      return "text-foreground";
   }
 };
