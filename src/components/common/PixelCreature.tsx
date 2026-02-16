@@ -331,6 +331,52 @@ const spectralShark = (): GridData => ({
   glowColor: "#66eeff",
 });
 
+const solarGoldenDragonfish = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,3,2,2,3,0,0,0,0,0],
+    [0,0,0,0,0,0,3,2,4,2,2,3,0,0,0,0],
+    [0,0,0,3,3,3,2,2,2,2,2,2,3,0,0,0],
+    [0,0,3,1,1,2,2,1,1,2,2,2,2,3,0,0],
+    [0,3,1,1,1,1,5,1,1,1,2,2,2,2,3,0],
+    [3,1,1,1,1,1,5,1,1,1,1,2,2,2,2,0],
+    [0,3,1,1,1,1,1,1,1,1,2,2,2,2,3,0],
+    [0,0,3,1,1,2,2,1,1,2,2,2,2,3,0,0],
+    [0,0,0,3,3,3,2,2,2,2,2,2,3,0,0,0],
+    [0,0,0,0,0,0,3,2,2,2,2,3,0,0,0,0],
+    [0,0,0,0,0,0,0,3,3,3,3,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#ffd700", 2: "#ff8800", 3: "#ffaa00", 4: "#ffffff", 5: "#221100" },
+  glowColor: "#ffd700",
+});
+
+const astralLeviathan = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,4,0,0,0,0,1,1,3,1,1,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,1,1,4,0,0,0],
+    [0,0,0,0,0,0,1,1,5,5,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,4,0,0],
+    [0,4,0,0,1,1,3,1,1,3,0,0,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
+    [0,0,1,1,4,1,1,3,0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0,0,0,0,4,0,0,0,0],
+    [0,0,1,1,3,1,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,2,2,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#2a1a4e", 2: "#1a0a3e", 3: "#6644cc", 4: "#ffffff", 5: "#00eeff" },
+  glowColor: "#6644cc",
+});
+
 const getCreatureData = (type: string): GridData => {
   switch (type) {
     case 'sardine': return sardine();
@@ -346,6 +392,8 @@ const getCreatureData = (type: string): GridData => {
     case 'giant_squid': return krakenSpawn();
     case 'volcano_snail': return volcanoSnail();
     case 'glowing_shark': return spectralShark();
+    case 'solar_golden_dragonfish': return solarGoldenDragonfish();
+    case 'astral_leviathan': return astralLeviathan();
     case 'jellyfish':
     default: return jellyfish();
   }
@@ -366,6 +414,8 @@ const getCreatureAnimation = (type: string): string => {
     case 'giant_squid': return 'animate-creature-writhe';
     case 'volcano_snail': return 'animate-creature-magma';
     case 'glowing_shark': return 'animate-creature-ghost';
+    case 'solar_golden_dragonfish': return 'animate-creature-radiant';
+    case 'astral_leviathan': return 'animate-creature-cosmic';
     case 'jellyfish':
     default: return 'animate-creature-float';
   }
