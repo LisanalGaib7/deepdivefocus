@@ -7,8 +7,7 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useTheme, Theme } from "@/hooks/useTheme";
 import PixelCreature from "@/components/common/PixelCreature";
 
-// ===== TESTING FLAG: Set to true to unlock all creatures for visual verification =====
-const UNLOCK_ALL_FOR_TESTING = true;
+const UNLOCK_ALL_FOR_TESTING = false;
 
 // Theme color mapping for dynamic styling
 const getThemeColors = (theme: Theme) => {

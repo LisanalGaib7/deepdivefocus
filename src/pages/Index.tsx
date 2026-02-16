@@ -1037,24 +1037,6 @@ const Index = () => {
         }}
       />
 
-      {/* DEV TRIGGER - Remove after testing */}
-      <button
-        onClick={() => {
-          // TEMP: Legendary-only testing
-          // const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Common' || c.rarity === 'Uncommon');
-          // const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Rare');
-          // const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Epic');
-          const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Legendary');
-          const pick = eligibleCreatures[Math.floor(Math.random() * eligibleCreatures.length)];
-          setRewardCreature(pick);
-          setCompletedSessionDepth(250);
-          setCompletedSessionDuration(1500);
-          setShowMissionCompleteModal(true);
-        }}
-        className="fixed bottom-20 right-4 z-50 bg-red-500 text-white p-2 rounded text-xs"
-      >
-        🕵️‍♂️ Test Discovery
-      </button>
     </>
   );
 };
