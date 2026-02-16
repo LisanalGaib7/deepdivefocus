@@ -9,11 +9,39 @@ export interface UserCreatureDB {
   unlocked_at: string;
 }
 
+const GUEST_CREATURES_KEY = 'deepdive_guest_creatures';
+
+const getGuestCreatures = (): string[] => {
+  try {
+    const stored = localStorage.getItem(GUEST_CREATURES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveGuestCreature = (creatureId: string) => {
+  const existing = getGuestCreatures();
+  if (!existing.includes(creatureId)) {
+    existing.push(creatureId);
+    localStorage.setItem(GUEST_CREATURES_KEY, JSON.stringify(existing));
+  }
+};
+
 export const useUserCreatures = () => {
-  const { user } = useAuthContext();
+  const { user, isGuestMode } = useAuthContext();
 
   // Fetch all creatures for the user
-  const fetchCreatures = useCallback(async () => {
+  const fetchCreatures = useCallback(async (): Promise<UserCreatureDB[]> => {
+    if (isGuestMode) {
+      return getGuestCreatures().map(id => ({
+        id: `guest-${id}`,
+        user_id: 'guest-user',
+        creature_id: id,
+        unlocked_at: new Date().toISOString(),
+      }));
+    }
+
     if (!user) return [];
 
     const { data, error } = await supabase
@@ -28,10 +56,17 @@ export const useUserCreatures = () => {
     }
 
     return data as UserCreatureDB[];
-  }, [user]);
+  }, [user, isGuestMode]);
 
   // Add a creature to collection
   const addCreature = useCallback(async (creatureId: string) => {
+    if (isGuestMode) {
+      const existing = getGuestCreatures();
+      const alreadyExists = existing.includes(creatureId);
+      if (!alreadyExists) saveGuestCreature(creatureId);
+      return { data: { creature_id: creatureId }, error: null, alreadyExists };
+    }
+
     if (!user) return { error: new Error('Not authenticated') };
 
     // Check if already exists
@@ -43,7 +78,6 @@ export const useUserCreatures = () => {
       .maybeSingle();
 
     if (existing) {
-      // Already collected
       return { data: existing, error: null, alreadyExists: true };
     }
 
@@ -62,10 +96,14 @@ export const useUserCreatures = () => {
     }
 
     return { data, error: null, alreadyExists: false };
-  }, [user]);
+  }, [user, isGuestMode]);
 
   // Check if creature is collected
   const isCreatureCollected = useCallback(async (creatureId: string) => {
+    if (isGuestMode) {
+      return getGuestCreatures().includes(creatureId);
+    }
+
     if (!user) return false;
 
     const { data } = await supabase
@@ -76,7 +114,7 @@ export const useUserCreatures = () => {
       .maybeSingle();
 
     return !!data;
-  }, [user]);
+  }, [user, isGuestMode]);
 
   return {
     fetchCreatures,

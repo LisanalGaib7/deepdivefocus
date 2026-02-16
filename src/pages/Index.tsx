@@ -32,7 +32,7 @@ import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature, CREATURES } from "@/data/creatures";
-import { rollForCreature } from "@/lib/lootSystem";
+import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG } from "@/constants/gameConfig";
 
 const Index = () => {
@@ -317,22 +317,33 @@ const Index = () => {
           saveTimeSpent(selectedTask.id, selectedTask.timeSpentInSeconds);
         }
         
+        const basePearls = Math.floor(currentDepth / 10);
+        const creatureBonus = creature ? getPearlValue(creature.rarity as any) : 0;
+        const totalPearls = basePearls + creatureBonus;
+
         if (isAuthenticated && !isGuestMode) {
           await addSession({
             task_name: taskName,
             duration: currentDuration,
             depth_reached: currentDepth,
-            pearls_earned: Math.floor(currentDepth / 10),
+            pearls_earned: totalPearls,
             creature_id: creature?.id || null,
           });
           
           if (profile) {
             updateProfile({ 
               total_depth: (profile.total_depth || 0) + currentDepth,
-              total_pearls: (profile.total_pearls || 0) + Math.floor(currentDepth / 10),
+              total_pearls: (profile.total_pearls || 0) + totalPearls,
             });
           }
         } else {
+          // Guest mode: update in-memory profile pearls
+          if (profile) {
+            updateProfile({ 
+              total_pearls: (profile.total_pearls || 0) + totalPearls,
+              total_depth: (profile.total_depth || 0) + currentDepth,
+            });
+          }
           addLocalFocusSession({
             taskId: selectedTask?.id || null,
             taskName: taskName,

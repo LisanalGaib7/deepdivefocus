@@ -39,6 +39,12 @@ export const useAuth = () => {
 
   // Update profile
   const updateProfile = useCallback(async (updates: Partial<UserProfile>) => {
+    // Guest mode: update in-memory profile only
+    if (isGuestMode) {
+      setProfile(prev => prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : prev);
+      return { error: null };
+    }
+
     if (!user) return { error: new Error('Not authenticated') };
 
     const { error } = await supabase
@@ -56,7 +62,7 @@ export const useAuth = () => {
     if (newProfile) setProfile(newProfile);
 
     return { error: null };
-  }, [user, fetchProfile]);
+  }, [user, isGuestMode, fetchProfile]);
 
   // Sign up with email/password
   const signUp = useCallback(async (email: string, password: string) => {
