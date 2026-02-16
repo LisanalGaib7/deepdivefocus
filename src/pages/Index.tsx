@@ -1040,9 +1040,10 @@ const Index = () => {
       {/* DEV TRIGGER - Remove after testing */}
       <button
         onClick={() => {
-          // TEMP: Rare-only testing
+          // TEMP: Epic-only testing
           // const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Common' || c.rarity === 'Uncommon');
-          const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Rare');
+          // const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Rare');
+          const eligibleCreatures = CREATURES.filter(c => c.rarity === 'Epic');
           const pick = eligibleCreatures[Math.floor(Math.random() * eligibleCreatures.length)];
           setRewardCreature(pick);
           setCompletedSessionDepth(250);
