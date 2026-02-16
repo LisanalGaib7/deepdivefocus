@@ -262,6 +262,52 @@ const giantIsopod = (): GridData => ({
   glowColor: "#9a9ab0",
 });
 
+const krakenSpawn = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,3,1,1,3,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,2,2,1,1,2,2,1,1,0,0,0],
+    [0,0,0,1,1,3,2,1,1,2,3,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0],
+    [1,0,0,0,1,0,1,0,0,1,0,1,0,0,0,1],
+    [1,0,0,1,0,0,0,1,1,0,0,0,1,0,0,1],
+    [0,1,1,0,0,0,1,0,0,1,0,0,0,1,1,0],
+    [0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0],
+    [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0],
+    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+  ],
+  colorMap: { 1: "#4a0a0a", 2: "#ff4422", 3: "#ff8844" },
+  glowColor: "#ff4422",
+});
+
+const blobfish = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,2,2,1,1,2,2,1,1,0,0,0],
+    [0,0,0,1,1,3,2,1,1,2,3,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,4,4,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,4,4,4,4,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,4,4,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#e8b4a0", 2: "#2a2a3e", 3: "#ffffff", 4: "#d4908a" },
+  glowColor: "#e8b4a0",
+});
+
 const getCreatureData = (type: string): GridData => {
   switch (type) {
     case 'sardine': return sardine();
@@ -274,6 +320,8 @@ const getCreatureData = (type: string): GridData => {
     case 'manta': return mantaRay();
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
+    case 'kraken_spawn': return krakenSpawn();
+    case 'blobfish': return blobfish();
     case 'jellyfish':
     default: return jellyfish();
   }
@@ -291,6 +339,8 @@ const getCreatureAnimation = (type: string): string => {
     case 'manta': return 'animate-creature-wingflap';
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';
+    case 'kraken_spawn': return 'animate-creature-writhe';
+    case 'blobfish': return 'animate-creature-jiggle';
     case 'jellyfish':
     default: return 'animate-creature-float';
   }
