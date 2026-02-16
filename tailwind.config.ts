@@ -131,6 +131,21 @@ export default {
           "25%": { transform: "translateY(-4px) rotate(2deg)" },
           "75%": { transform: "translateY(3px) rotate(-2deg)" },
         },
+        "creature-slither": {
+          "0%, 100%": { transform: "translateX(0) skewX(0deg)" },
+          "25%": { transform: "translateX(2px) skewX(3deg)" },
+          "50%": { transform: "translateX(0) skewX(0deg)" },
+          "75%": { transform: "translateX(-2px) skewX(-3deg)" },
+        },
+        "creature-glide": {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-3px) rotate(-1deg)" },
+        },
+        "creature-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "40%": { transform: "scale(1.06)", opacity: "0.9" },
+          "60%": { transform: "scale(0.96)", opacity: "0.8" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +156,9 @@ export default {
         "creature-bounce": "creature-bounce 0.8s ease-in-out infinite",
         "creature-breathe": "creature-breathe 3s ease-in-out infinite",
         "creature-float": "creature-float 4s ease-in-out infinite",
+        "creature-slither": "creature-slither 0.8s ease-in-out infinite",
+        "creature-glide": "creature-glide 5s ease-in-out infinite",
+        "creature-pulse": "creature-pulse 3s ease-in-out infinite",
       },
     },
   },
