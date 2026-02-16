@@ -173,7 +173,7 @@ export const CREATURES: Creature[] = [
     name: "Astral Leviathan",
     minDepth: 1500,
     rarity: "Legendary",
-    description: "UNIT.DRAGON // COSMOS_BOUND // STARS_WITHIN",
+    description: "UNIT.UNKNOWN // COSMOS_BOUND // STARS_WITHIN",
     icon: "Skull",
     pearls: 500,
     traits: ["Cosmic", "Ancient"],
