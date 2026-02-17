@@ -147,7 +147,7 @@ export const useAuth = () => {
       display_name: 'Guest Pilot',
       avatar_url: null,
       theme_color: 'ocean',
-      total_pearls: 4000,
+      total_pearls: 0,
       total_depth: 0,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
