@@ -33,7 +33,7 @@ import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
-import { TIMER_CONFIG } from "@/constants/gameConfig";
+import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
@@ -71,9 +71,20 @@ const Index = () => {
   const [isDiveTransition, setIsDiveTransition] = useState(false);
   const [collectionRefreshKey, setCollectionRefreshKey] = useState(0);
   
-  // Gamification hook - engine level starts at 1
-  const engineLevel = 1; // TODO: Load from user profile when persistence is added
-  const hullLevel = 1; // TODO: Load from user profile when persistence is added
+  // Persistent upgrade levels (localStorage for both guest & auth, synced on load)
+  const [engineLevel, setEngineLevel] = useState(() => {
+    const saved = localStorage.getItem('deepdive_engine_level');
+    return saved ? parseInt(saved, 10) : 1;
+  });
+  const [hullLevel, setHullLevel] = useState(() => {
+    const saved = localStorage.getItem('deepdive_hull_level');
+    return saved ? parseInt(saved, 10) : 1;
+  });
+
+  // Persist upgrade levels
+  useEffect(() => { localStorage.setItem('deepdive_engine_level', String(engineLevel)); }, [engineLevel]);
+  useEffect(() => { localStorage.setItem('deepdive_hull_level', String(hullLevel)); }, [hullLevel]);
+
   const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
     engineLevel,
@@ -1048,8 +1059,30 @@ const Index = () => {
         hullLevel={hullLevel}
         currentPearls={profile?.total_pearls || 0}
         onUpgrade={(moduleId) => {
-          // TODO: Implement upgrade logic with pearl deduction
-          toast.success(`Upgraded ${moduleId}!`);
+          const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
+          const cost = getUpgradeCost(currentTier);
+          const pearls = profile?.total_pearls || 0;
+
+          if (currentTier >= 5) {
+            toast.error('Already at maximum tier!');
+            return;
+          }
+          if (pearls < cost) {
+            toast.error('Not enough pearls!', { description: `Need ${cost.toLocaleString()} pearls.` });
+            return;
+          }
+
+          // Deduct pearls
+          updateProfile({ total_pearls: pearls - cost });
+
+          // Increment tier
+          if (moduleId === 'hull') {
+            setHullLevel(prev => prev + 1);
+          } else if (moduleId === 'engine') {
+            setEngineLevel(prev => prev + 1);
+          }
+
+          toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
         }}
       />
 
