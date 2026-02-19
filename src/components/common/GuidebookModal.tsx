@@ -1,4 +1,4 @@
-import { BookOpen, Wind, Scan, Palette, Wrench } from "lucide-react";
+import { BookOpen, Wind, Scan, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -107,23 +107,61 @@ const GuidebookModal = () => {
                 ENGINEERING BAY
               </span>
             </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground space-y-3 pb-4">
-              <p className="flex items-start gap-2">
-                <span className="text-primary shrink-0">▸</span>
-                <span><span className="text-primary font-semibold">Hull Reinforcement</span> — Increases your submarine's Maximum Dive Depth, unlocking access to greater ocean layers.</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary shrink-0">▸</span>
-                <span><span className="text-primary font-semibold">Ion Thruster</span> — Boosts your Dive Speed multiplier, accelerating how fast your depth increases per second of focus.</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary shrink-0">▸</span>
-                All upgrades are purchased using <span className="text-primary font-semibold mx-1">Pearls</span> earned from completed dive sessions.
-              </p>
-              <p className="flex items-start gap-2">
-                <span className="text-primary shrink-0">▸</span>
-                Reaching certain upgrade tiers automatically evolves your <span className="text-primary font-semibold mx-1">Vessel Class</span> — from VOYAGER-1 up to VOYAGER-5.
-              </p>
+            <AccordionContent className="pb-4">
+              {/* Upgrade Cards */}
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                {/* Hull Reinforcement Card */}
+                <div className="relative overflow-hidden rounded-lg border border-primary/30 bg-primary/5 p-3 flex flex-col gap-2">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+                  <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/15 border border-primary/30 shrink-0">
+                    <Shield className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-mono text-[10px] tracking-widest text-primary font-bold leading-tight">HULL</p>
+                    <p className="font-mono text-[10px] tracking-widest text-primary font-bold leading-tight">REINFORCEMENT</p>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-snug">
+                    Increases <span className="text-primary font-semibold">Max Dive Depth</span>, unlocking deeper ocean layers.
+                  </p>
+                </div>
+
+                {/* Ion Thruster Card */}
+                <div className="relative overflow-hidden rounded-lg border border-pearl/30 bg-pearl/5 p-3 flex flex-col gap-2">
+                  <div className="absolute inset-0 bg-gradient-to-br from-pearl/10 to-transparent pointer-events-none" />
+                  <div className="flex items-center justify-center w-9 h-9 rounded-md bg-pearl/15 border border-pearl/30 shrink-0">
+                    <Zap className="w-5 h-5 text-pearl" />
+                  </div>
+                  <div>
+                    <p className="font-mono text-[10px] tracking-widest text-pearl font-bold leading-tight">ION</p>
+                    <p className="font-mono text-[10px] tracking-widest text-pearl font-bold leading-tight">THRUSTER</p>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-snug">
+                    Boosts <span className="text-pearl font-semibold">Dive Speed</span> multiplier for faster descent.
+                  </p>
+                </div>
+              </div>
+
+              {/* Economy & Progression Info */}
+              <div className="rounded-lg border border-primary/15 bg-background/60 p-3 space-y-2.5">
+                <p className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase mb-2">— GENERAL INFO —</p>
+                <div className="flex items-start gap-2.5">
+                  <div className="flex items-center justify-center w-6 h-6 rounded bg-pearl/15 border border-pearl/25 shrink-0 mt-0.5">
+                    <Coins className="w-3.5 h-3.5 text-pearl" />
+                  </div>
+                  <p className="text-[12px] text-muted-foreground leading-snug">
+                    Upgrades cost <span className="text-pearl font-semibold">Pearls</span> earned from completed dive sessions.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <div className="flex items-center justify-center w-6 h-6 rounded bg-primary/15 border border-primary/25 shrink-0 mt-0.5">
+                    <Ship className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <p className="text-[12px] text-muted-foreground leading-snug">
+                    Upgrade tiers evolve your <span className="text-primary font-semibold">Vessel Class</span>{" "}
+                    <span className="font-mono text-[10px] tracking-wide text-primary/70">(VOYAGER-1 → VOYAGER-5)</span>.
+                  </p>
+                </div>
+              </div>
             </AccordionContent>
           </AccordionItem>
 
