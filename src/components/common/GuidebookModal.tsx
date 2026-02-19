@@ -1,4 +1,4 @@
-import { BookOpen, Wind, Scan, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
+import { BookOpen, Droplets, FolderOpen, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -49,7 +49,7 @@ const GuidebookModal = () => {
           >
             <AccordionTrigger className="text-primary hover:no-underline font-mono tracking-wide">
               <span className="flex items-center gap-2">
-                <Wind className="w-[18px] h-[18px] text-primary shrink-0" />
+                <Droplets className="w-5 h-5 text-primary shrink-0" />
                 OXYGEN SYSTEMS
               </span>
             </AccordionTrigger>
@@ -76,8 +76,8 @@ const GuidebookModal = () => {
           >
             <AccordionTrigger className="text-primary hover:no-underline font-mono tracking-wide">
               <span className="flex items-center gap-2">
-                <Scan className="w-[18px] h-[18px] text-primary shrink-0" />
-                BIO-SCANNING
+                <FolderOpen className="w-5 h-5 text-primary shrink-0" />
+                COLLECTION
               </span>
             </AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-3 pb-4">
@@ -103,7 +103,7 @@ const GuidebookModal = () => {
           >
             <AccordionTrigger className="text-primary hover:no-underline font-mono tracking-wide">
               <span className="flex items-center gap-2">
-                <Wrench className="w-[18px] h-[18px] text-primary shrink-0" />
+                <Wrench className="w-5 h-5 text-primary shrink-0" />
                 ENGINEERING BAY
               </span>
             </AccordionTrigger>
@@ -172,7 +172,7 @@ const GuidebookModal = () => {
           >
             <AccordionTrigger className="text-primary hover:no-underline font-mono tracking-wide">
               <span className="flex items-center gap-2">
-                <Palette className="w-[18px] h-[18px] text-primary shrink-0" />
+                <Palette className="w-5 h-5 text-primary shrink-0" />
                 SYSTEM CUSTOMIZATION
               </span>
             </AccordionTrigger>
