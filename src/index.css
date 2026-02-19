@@ -50,6 +50,10 @@ All colors MUST be HSL.
     --hud-cyan: 185 100% 50%;
     --hud-emergency: 0 90% 55%;
     --hud-glow: 185 100% 60%;
+
+    /* Pearl — gold accent used for currency/economy UI */
+    --pearl: 45 96% 58%;
+    --pearl-foreground: 30 30% 10%;
   }
 
   /* Sage Green Pastel Theme */
