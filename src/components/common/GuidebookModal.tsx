@@ -1,4 +1,4 @@
-import { BookOpen, Droplets, FolderOpen, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
+import { BookOpen, Droplets, Fish, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -76,7 +76,7 @@ const GuidebookModal = () => {
           >
             <AccordionTrigger className="text-primary hover:no-underline font-mono tracking-wide">
               <span className="flex items-center gap-2">
-                <FolderOpen className="w-5 h-5 text-primary shrink-0" />
+                <Fish className="w-5 h-5 text-primary shrink-0" />
                 COLLECTION
               </span>
             </AccordionTrigger>
