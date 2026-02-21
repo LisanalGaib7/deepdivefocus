@@ -91,14 +91,13 @@ export const EngineeringBayModal = ({
       currentValue: "100%",
       nextValue: "120%",
       description: "Enhanced life support for extended dive operations.",
-      cost: getUpgradeCost(1), // Locked at tier 1
+      cost: getUpgradeCost(1),
       unlocked: false,
     },
   ];
 
   const handleUpgrade = async (moduleId: string) => {
     setUpgrading(moduleId);
-    // Simulate upgrade animation
     await new Promise(resolve => setTimeout(resolve, 800));
     onUpgrade?.(moduleId);
     setUpgrading(null);
@@ -108,15 +107,15 @@ export const EngineeringBayModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-black/95 border-cyan-500/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea">
+      <DialogContent className="bg-black/95 border-primary/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500">
         {/* Blueprint grid background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg opacity-10">
           <div 
-            className="absolute inset-0" 
+            className="absolute inset-0 transition-all duration-500" 
             style={{
               backgroundImage: `
-                linear-gradient(to right, hsl(var(--hud-cyan)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--hud-cyan)) 1px, transparent 1px)
+                linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
+                linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
               `,
               backgroundSize: '20px 20px',
             }}
@@ -124,15 +123,15 @@ export const EngineeringBayModal = ({
         </div>
 
         {/* Header */}
-        <DialogHeader className="relative p-6 pb-4 border-b border-cyan-500/20">
+        <DialogHeader className="relative p-6 pb-4 border-b border-primary/20 transition-colors duration-500">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-            <div className="bg-cyan-500/10 border border-cyan-500/50 rounded-lg p-2">
-              <Anchor className="h-5 w-5 text-cyan-400" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent transition-colors duration-500" />
+            <div className="bg-primary/10 border border-primary/50 rounded-lg p-2 transition-colors duration-500">
+              <Anchor className="h-5 w-5 text-primary transition-colors duration-500" />
             </div>
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent transition-colors duration-500" />
           </div>
-          <DialogTitle className="text-center font-robotic text-xl tracking-[0.3em] text-cyan-400">
+          <DialogTitle className="text-center font-robotic text-xl tracking-[0.3em] text-primary transition-colors duration-500">
             ENGINEERING BAY
           </DialogTitle>
         </DialogHeader>
@@ -140,34 +139,34 @@ export const EngineeringBayModal = ({
         {/* Vessel Stats Panel */}
         <div className="p-6 pt-4 space-y-6">
           {/* Submarine wireframe representation */}
-          <div className="relative bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-4">
+          <div className="relative bg-primary/5 border border-primary/20 rounded-xl p-4 transition-colors duration-500">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-xs text-cyan-400/60 font-robotic tracking-wider">VESSEL CLASS</p>
-                <p className="text-lg font-robotic text-cyan-400 tracking-wide">VOYAGER-{hullLevel}</p>
+                <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
+                <p className="text-lg font-robotic text-primary tracking-wide transition-colors duration-500">VOYAGER-{hullLevel}</p>
               </div>
-              <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-1.5">
-                <Circle className="h-4 w-4 text-amber-400 fill-amber-400 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
-                <span className="text-amber-400 font-robotic text-sm">{currentPearls.toLocaleString()}</span>
+              <div className="flex items-center gap-2 bg-pearl/10 border border-pearl/30 rounded-lg px-3 py-1.5 transition-colors duration-500">
+                <Circle className="h-4 w-4 text-pearl fill-pearl drop-shadow-[0_0_5px_hsl(var(--pearl)/0.8)] transition-colors duration-500" />
+                <span className="text-pearl font-robotic text-sm transition-colors duration-500">{currentPearls.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Current Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-black/40 border border-cyan-500/20 rounded-lg p-3 text-center">
-                <p className="text-[10px] text-cyan-400/50 font-robotic tracking-wider mb-1">MAX DEPTH</p>
-                <p className="text-lg font-robotic text-amber-400">{currentMaxDepth.toLocaleString()}m</p>
+              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+                <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">MAX DEPTH</p>
+                <p className="text-lg font-robotic text-pearl transition-colors duration-500">{currentMaxDepth.toLocaleString()}m</p>
               </div>
-              <div className="bg-black/40 border border-cyan-500/20 rounded-lg p-3 text-center">
-                <p className="text-[10px] text-cyan-400/50 font-robotic tracking-wider mb-1">DIVE SPEED</p>
-                <p className="text-lg font-robotic text-cyan-400">{currentSpeed}%</p>
+              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+                <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">DIVE SPEED</p>
+                <p className="text-lg font-robotic text-primary transition-colors duration-500">{currentSpeed}%</p>
               </div>
             </div>
           </div>
 
           {/* Upgrade Modules List */}
           <div className="space-y-3">
-            <p className="text-xs text-cyan-400/60 font-robotic tracking-[0.2em] uppercase">
+            <p className="text-xs text-primary/60 font-robotic tracking-[0.2em] uppercase transition-colors duration-500">
               Available Upgrades
             </p>
             
@@ -181,38 +180,38 @@ export const EngineeringBayModal = ({
                 <div 
                   key={module.id}
                   className={`
-                    relative bg-black/60 border rounded-xl p-4 transition-all duration-300
+                    relative bg-black/60 border rounded-xl p-4 transition-all duration-500
                     ${!module.unlocked ? 'border-white/10 opacity-50' : 
                       isMaxed ? 'border-green-500/30' : 
-                      'border-cyan-500/20 hover:border-cyan-500/40'}
+                      'border-primary/20 hover:border-primary/40'}
                   `}
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
                     <div className={`
-                      p-2.5 rounded-lg shrink-0
+                      p-2.5 rounded-lg shrink-0 transition-colors duration-500
                       ${!module.unlocked ? 'bg-white/5' :
                         isMaxed ? 'bg-green-500/10 border border-green-500/30' :
-                        'bg-cyan-500/10 border border-cyan-500/30'}
+                        'bg-primary/10 border border-primary/30'}
                     `}>
                       {!module.unlocked ? (
                         <Lock className="h-5 w-5 text-white/30" />
                       ) : (
-                        <IconComponent className={`h-5 w-5 ${isMaxed ? 'text-green-400' : 'text-cyan-400'}`} />
+                        <IconComponent className={`h-5 w-5 transition-colors duration-500 ${isMaxed ? 'text-green-400' : 'text-primary'}`} />
                       )}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <h3 className={`font-robotic text-sm tracking-wider ${
+                        <h3 className={`font-robotic text-sm tracking-wider transition-colors duration-500 ${
                           !module.unlocked ? 'text-white/30' :
                           isMaxed ? 'text-green-400' : 'text-white'
                         }`}>
                           {module.name}
                         </h3>
-                        <span className={`text-xs font-robotic ${
-                          isMaxed ? 'text-green-400/60' : 'text-cyan-400/60'
+                        <span className={`text-xs font-robotic transition-colors duration-500 ${
+                          isMaxed ? 'text-green-400/60' : 'text-primary/60'
                         }`}>
                           TIER {module.currentTier}/{module.maxTier}
                         </span>
@@ -227,8 +226,8 @@ export const EngineeringBayModal = ({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-xs">
                             <span className="text-white/50">{module.currentValue}</span>
-                            <ChevronRight className="h-3 w-3 text-amber-400" />
-                            <span className="text-amber-400 font-medium">{module.nextValue}</span>
+                            <ChevronRight className="h-3 w-3 text-pearl" />
+                            <span className="text-pearl font-medium">{module.nextValue}</span>
                           </div>
                           
                           <Button
@@ -236,20 +235,20 @@ export const EngineeringBayModal = ({
                             disabled={!affordable || isUpgrading}
                             onClick={() => handleUpgrade(module.id)}
                             className={`
-                              h-8 px-4 font-robotic text-xs tracking-wider transition-all duration-300
+                              h-8 px-4 font-robotic text-xs tracking-wider transition-all duration-500
                               ${affordable 
-                                ? 'bg-amber-500/20 border border-amber-500/50 text-amber-400 hover:bg-amber-500/30 hover:shadow-[0_0_15px_rgba(251,191,36,0.3)]' 
+                                ? 'bg-pearl/20 border border-pearl/50 text-pearl hover:bg-pearl/30 hover:shadow-[0_0_15px_hsl(var(--pearl)/0.3)]' 
                                 : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed'}
                             `}
                           >
                             {isUpgrading ? (
                               <div className="flex items-center gap-2">
-                                <div className="h-3 w-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                                <div className="h-3 w-3 border-2 border-pearl border-t-transparent rounded-full animate-spin" />
                                 <span>UPGRADING</span>
                               </div>
                             ) : (
                               <div className="flex items-center gap-2">
-                                <Circle className="h-3 w-3 fill-current drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]" />
+                                <Circle className="h-3 w-3 fill-current drop-shadow-[0_0_4px_hsl(var(--pearl)/0.6)]" />
                                 <span>{module.cost}</span>
                               </div>
                             )}
@@ -279,7 +278,7 @@ export const EngineeringBayModal = ({
           <Button
             onClick={onClose}
             variant="outline"
-            className="w-full bg-transparent border border-cyan-500/30 text-cyan-400/80 font-robotic uppercase tracking-widest h-11 transition-all duration-300 hover:bg-cyan-500/10 hover:border-cyan-500/50"
+            className="w-full bg-transparent border border-primary/30 text-primary/80 font-robotic uppercase tracking-widest h-11 transition-all duration-500 hover:bg-primary/10 hover:border-primary/50"
           >
             CLOSE BAY
           </Button>
