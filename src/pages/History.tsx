@@ -350,8 +350,8 @@ const History = () => {
                     outerRadius={60}
                     dataKey="minutes"
                     paddingAngle={2}
-                    stroke="hsl(var(--background))"
-                    strokeWidth={2}
+                    stroke="hsl(var(--card))"
+                    strokeWidth={1}
                     onMouseEnter={(_, index) => setActiveIndex(index)}
                     onMouseLeave={() => setActiveIndex(null)}
                     activeIndex={activeIndex !== null ? activeIndex : undefined}
@@ -420,7 +420,7 @@ const History = () => {
                       style={{ backgroundColor: themePalette[index % themePalette.length] }}
                     />
                     <span className="text-muted-foreground truncate flex-1">{task.name}</span>
-                    <span className="font-mono font-medium" style={{ color: themePalette[index % themePalette.length] }}>
+                    <span className="font-mono font-medium text-foreground/80">
                       {task.minutes}m
                     </span>
                   </div>
