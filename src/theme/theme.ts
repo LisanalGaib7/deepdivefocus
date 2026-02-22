@@ -6,7 +6,7 @@ export const THEME_STORAGE_KEY = "deepDiveTheme";
 export const themes: { id: Theme; label: string; colors: [string, string] }[] = [
   { id: "ocean", label: "Ocean", colors: ["#0ea5e9", "#3b82f6"] },
   { id: "sage", label: "Sage", colors: ["#86efac", "#22c55e"] },
-  { id: "rose", label: "Rose", colors: ["#fda4af", "#f43f5e"] },
+  { id: "rose", label: "Rose", colors: ["#c9604a", "#993428"] },
   { id: "lavender", label: "Lavender", colors: ["#c4b5fd", "#8b5cf6"] },
   { id: "mono", label: "Mono", colors: ["#e5e5e5", "#737373"] },
 ];
