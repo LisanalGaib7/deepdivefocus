@@ -9,7 +9,7 @@ export const getThemePrimaryHsl = (theme: Theme): string => {
   const hslMap: Record<Theme, string> = {
     ocean: "hsl(199, 89%, 48%)",
     sage: "hsl(142, 69%, 58%)",
-    rose: "hsl(350, 89%, 72%)",
+    rose: "hsl(8, 60%, 58%)",
     lavender: "hsl(270, 67%, 77%)",
     mono: "hsl(0, 0%, 85%)",
   };
@@ -21,7 +21,7 @@ export const getThemePrimaryHex = (theme: Theme): string => {
   const hexMap: Record<Theme, string> = {
     ocean: "#0ea5e9",
     sage: "#4ade80",
-    rose: "#fda4af",
+    rose: "#c9604a",
     lavender: "#c4b5fd",
     mono: "#d9d9d9",
   };
@@ -33,7 +33,7 @@ export const getThemeSecondaryHex = (theme: Theme): string => {
   const hexMap: Record<Theme, string> = {
     ocean: "#3b82f6",
     sage: "#22c55e",
-    rose: "#f43f5e",
+    rose: "#993428",
     lavender: "#8b5cf6",
     mono: "#a3a3a3",
   };
@@ -45,7 +45,7 @@ export const getThemePalette = (theme: Theme): string[] => {
   const palettes: Record<Theme, string[]> = {
     ocean: ['#00F0FF', '#0EA5E9', '#2563EB', '#1E40AF', '#172554'],
     sage: ['#4ADE80', '#22C55E', '#16A34A', '#15803D', '#14532D'],
-    rose: ['#FDBA74', '#FB923C', '#F97316', '#EA580C', '#9A3412'],
+    rose: ['#E8826C', '#C9604A', '#B04A36', '#993428', '#6B2018'],
     lavender: ['#D8B4FE', '#C084FC', '#A855F7', '#7E22CE', '#581C87'],
     mono: ['#FFFFFF', '#D4D4D4', '#A3A3A3', '#737373', '#404040'],
   };

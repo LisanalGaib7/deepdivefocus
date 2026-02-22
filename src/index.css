@@ -88,36 +88,36 @@ All colors MUST be HSL.
     --gradient-end: 142 55% 45%;
   }
 
-  /* Rose Pastel Theme */
+  /* Rose / Deep Crimson Theme – warm, eye-friendly red */
   [data-theme="rose"] {
-    --background: 350 20% 4%;
-    --foreground: 350 10% 95%;
+    --background: 0 18% 5%;
+    --foreground: 10 12% 92%;
 
-    --card: 350 15% 8%;
-    --card-foreground: 350 10% 95%;
+    --card: 0 14% 9%;
+    --card-foreground: 10 12% 92%;
 
-    --popover: 350 15% 8%;
-    --popover-foreground: 350 10% 95%;
+    --popover: 0 14% 9%;
+    --popover-foreground: 10 12% 92%;
 
-    --primary: 350 89% 72%;
-    --primary-foreground: 350 20% 10%;
-    --primary-deep: 350 82% 60%;
+    --primary: 8 60% 58%;
+    --primary-foreground: 0 18% 8%;
+    --primary-deep: 4 55% 42%;
 
-    --secondary: 350 15% 15%;
-    --secondary-foreground: 350 10% 95%;
+    --secondary: 0 12% 15%;
+    --secondary-foreground: 10 12% 92%;
 
-    --muted: 350 10% 18%;
-    --muted-foreground: 350 10% 55%;
+    --muted: 0 10% 18%;
+    --muted-foreground: 10 10% 55%;
 
-    --accent: 350 89% 72%;
-    --accent-foreground: 350 20% 10%;
+    --accent: 12 55% 52%;
+    --accent-foreground: 0 18% 8%;
 
-    --border: 350 10% 18%;
-    --input: 350 15% 12%;
-    --ring: 350 89% 72%;
+    --border: 0 10% 18%;
+    --input: 0 12% 12%;
+    --ring: 8 60% 58%;
 
-    --gradient-start: 350 89% 72%;
-    --gradient-end: 350 82% 60%;
+    --gradient-start: 12 55% 52%;
+    --gradient-end: 4 55% 42%;
   }
 
   /* Lavender Pastel Theme */
