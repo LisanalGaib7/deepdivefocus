@@ -167,7 +167,7 @@ const History = () => {
         {/* Header */}
         <div className="text-center">
           <h1 
-            className="text-4xl font-bold text-primary font-mono uppercase"
+            className="text-4xl font-bold tracking-widest text-primary font-mono uppercase"
             style={{ textShadow: `0 0 7px hsl(var(--primary) / 0.6), 0 0 20px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2)` }}
           >
             ANALYTICS
