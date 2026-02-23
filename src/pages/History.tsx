@@ -165,14 +165,14 @@ const History = () => {
     <div className="h-screen bg-background text-foreground overflow-y-auto">
       <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6">
         {/* Header */}
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <h1 
-            className="text-4xl font-bold tracking-widest text-primary font-mono uppercase"
-            style={{ textShadow: `0 0 7px hsl(var(--primary) / 0.6), 0 0 20px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2)` }}
+            className="text-4xl font-bold tracking-widest text-primary font-orbitron uppercase"
+            style={{ textShadow: `0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.3)` }}
           >
             ANALYTICS
           </h1>
-          <p className="text-primary/60 text-sm font-semibold mt-3 tracking-wide uppercase">Your focus journey</p>
+          <p className="text-muted-foreground text-sm font-mono tracking-wider uppercase">YOUR FOCUS JOURNEY</p>
         </div>
 
         {/* FIXED: Yearly Depth Log - Always shows full year regardless of filter */}
