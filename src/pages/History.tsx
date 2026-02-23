@@ -172,7 +172,7 @@ const History = () => {
           >
             ANALYTICS
           </h1>
-          <p className="text-muted-foreground text-sm mt-2">Your focus journey</p>
+          <p className="text-primary/60 text-sm font-semibold mt-3 tracking-wide uppercase">Your focus journey</p>
         </div>
 
         {/* FIXED: Yearly Depth Log - Always shows full year regardless of filter */}
