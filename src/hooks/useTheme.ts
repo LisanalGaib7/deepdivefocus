@@ -43,11 +43,11 @@ export const getThemeSecondaryHex = (theme: Theme): string => {
 // Get 5-color palette for donut charts (gradient from bright to deep)
 export const getThemePalette = (theme: Theme): string[] => {
   const palettes: Record<Theme, string[]> = {
-    ocean: ['#0EA5E9', '#7DD3FC', '#0369A1', '#0284C7', '#BAE6FD'],
-    sage: ['#166534', '#4ADE80', '#15803D', '#22C55E', '#86EFAC'],
-    rose: ['#7F1D1D', '#EF4444', '#B91C1C', '#F87171', '#991B1B'],
-    lavender: ['#581C87', '#A855F7', '#7E22CE', '#D8B4FE', '#6B21A8'],
-    mono: ['#1E293B', '#64748B', '#334155', '#94A3B8', '#475569'],
+    ocean: ['#BAE6FD', '#7DD3FC', '#0EA5E9', '#0284C7', '#0369A1'],
+    sage: ['#86EFAC', '#4ADE80', '#22C55E', '#166534', '#15803D'],
+    rose: ['#F87171', '#EF4444', '#B91C1C', '#7F1D1D', '#991B1B'],
+    lavender: ['#D8B4FE', '#A855F7', '#7E22CE', '#581C87', '#6B21A8'],
+    mono: ['#94A3B8', '#64748B', '#475569', '#1E293B', '#334155'],
   };
   return palettes[theme];
 };

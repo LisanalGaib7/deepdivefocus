@@ -420,7 +420,7 @@ const History = () => {
                       style={{ backgroundColor: themePalette[index % themePalette.length] }}
                     />
                     <span className="text-muted-foreground truncate flex-1">{task.name}</span>
-                    <span className="font-mono font-medium text-foreground/80">
+                    <span className="font-mono font-semibold" style={{ color: 'hsl(var(--primary))' }}>
                       {task.minutes}m
                     </span>
                   </div>
