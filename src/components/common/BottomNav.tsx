@@ -1,5 +1,6 @@
 import { Timer, BarChart3, Fish } from "lucide-react";
 import { useTheme, getThemePrimaryHsl } from "@/hooks/useTheme";
+import { hapticsLight } from "@/lib/haptics";
 
 interface BottomNavProps {
   activeTab: "focus" | "history" | "collection";
@@ -15,7 +16,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
       <div className="max-w-md mx-auto px-4 pb-4">
         <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-1 shadow-lg">
           <button
-            onClick={() => onTabChange("focus")}
+            onClick={() => { hapticsLight(); onTabChange("focus"); }}
             className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "focus"
                 ? "bg-primary/10"
@@ -35,7 +36,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           </button>
 
           <button
-            onClick={() => onTabChange("history")}
+            onClick={() => { hapticsLight(); onTabChange("history"); }}
             className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "history"
                 ? "bg-primary/10"
@@ -55,7 +56,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
           </button>
 
           <button
-            onClick={() => onTabChange("collection")}
+            onClick={() => { hapticsLight(); onTabChange("collection"); }}
             className={`flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-300 ${
               activeTab === "collection"
                 ? "bg-primary/10"
