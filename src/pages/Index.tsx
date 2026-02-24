@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { hapticsMedium, hapticsSuccess, hapticsWarning } from "@/lib/haptics";
 
 // Common components
 import ThemeSwitcher from "@/components/common/ThemeSwitcher";
@@ -105,6 +106,7 @@ const Index = () => {
   useEffect(() => {
     if (isEmergency && isRunning) {
       setIsRunning(false);
+      hapticsWarning();
       setShowEmergencyModal(true);
     }
   }, [isEmergency, isRunning]);
@@ -289,6 +291,7 @@ const Index = () => {
       setTimeout(() => setIsDiveTransition(false), 2000);
     }
     
+    hapticsMedium();
     setIsRunning(!isRunning);
   };
   
@@ -319,6 +322,7 @@ const Index = () => {
     setRewardCreature(creature);
     
     // Show the mission complete modal INSTANTLY
+    hapticsSuccess();
     setShowMissionCompleteModal(true);
     
     // Fire all async saves in the background (non-blocking)
