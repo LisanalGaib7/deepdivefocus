@@ -15,7 +15,7 @@ const timeRangeOptions: { value: TimeRange; label: string }[] = [
 
 const TimeRangeSelector = ({ value, onChange }: TimeRangeSelectorProps) => {
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 justify-items-center">
+    <div className="flex flex-wrap justify-center gap-2">
       {timeRangeOptions.map((option) => (
         <button
           key={option.value}
