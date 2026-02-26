@@ -798,7 +798,7 @@ const Index = () => {
         {/* Focus Mode: Show only selected task when running */}
         {isRunning && selectedTask && !selectedTask.isCompleted && (
           <div className="text-center animate-fade-in mt-2">
-            <p className="text-3xl md:text-4xl font-extrabold text-foreground/90 drop-shadow-[0_0_12px_rgba(255,255,255,0.15)] tracking-wide">
+            <p className="text-4xl md:text-5xl font-extrabold text-foreground/90 drop-shadow-[0_0_12px_rgba(255,255,255,0.15)] tracking-wide">
               {selectedTask.text}
             </p>
           </div>
