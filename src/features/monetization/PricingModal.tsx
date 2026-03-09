@@ -175,12 +175,6 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 </div>
               ))}
             </div>
-            <div className="h-px bg-white/5" />
-            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px]">
-              <span className="text-white/20 font-mono text-left">Tier</span>
-              <span className="text-center text-white/20 font-mono">Standard</span>
-              <span className="text-right text-yellow-500/60 font-mono">Pro</span>
-            </div>
           </div>
 
           {/* Return to Surface - Secondary Exit */}
