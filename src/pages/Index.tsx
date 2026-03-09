@@ -71,6 +71,8 @@ const Index = () => {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
   const [showEngineeringBay, setShowEngineeringBay] = useState(false);
+  const [showUpgradeRequired, setShowUpgradeRequired] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
   const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
