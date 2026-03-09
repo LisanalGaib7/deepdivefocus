@@ -14,7 +14,7 @@ const FREE_FEATURES = [
   { icon: Layers, label: "2 Priority Mission Slots" },
   { icon: BarChart3, label: "Today & This Week Analytics" },
   { icon: Shield, label: "5 Standard Themes" },
-  { icon: Gauge, label: "VOYAGER-1 Vessel Class" },
+  { icon: Gauge, label: "Vessel Classes 1-2" },
 ];
 
 const PRO_FEATURES = [
@@ -22,7 +22,7 @@ const PRO_FEATURES = [
   { icon: BarChart3, label: "Full Analytics Journey", highlight: true },
   { icon: Crown, label: "Pro Prestige Badge", highlight: true },
   { icon: Shield, label: "5 Standard Themes" },
-  { icon: Atom, label: "Elite Vessel Classes (5+)", highlight: true },
+  { icon: Atom, label: "Vessel Classes 3-5+", highlight: true },
 ];
 
 export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
