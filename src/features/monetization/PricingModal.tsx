@@ -28,7 +28,7 @@ const PRO_FEATURES = [
 export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-black/98 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
+      <DialogContent className="bg-slate-950 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
         {/* Blueprint grid bg */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.05] rounded-3xl overflow-hidden"
