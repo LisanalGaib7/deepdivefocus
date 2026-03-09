@@ -185,7 +185,32 @@ const History = () => {
         {/* Time Range Filter */}
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
 
-        {/* ===== BENTO GRID STATS ===== */}
+        <div className="relative">
+          {/* Blur Overlay for Free Users */}
+          {!isPro && ["month", "year", "all"].includes(timeRange) && (
+            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-3xl backdrop-blur-md bg-background/40 border border-primary/20" style={{ margin: '-12px' }}>
+              <div className="text-center space-y-4 p-6">
+                <Lock className="w-10 h-10 mx-auto text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.6)]" />
+                <div className="space-y-1">
+                  <h3 className="font-orbitron text-xl font-bold text-primary uppercase tracking-widest">
+                    DEEP DATA LOCKED
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-mono max-w-xs mx-auto">
+                    Standard sonar only reaches 'Today' and 'This Week'. Upgrade to Nuclear Reactor for full historical analytics.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => setShowPricing(true)}
+                  className="font-orbitron uppercase tracking-widest mt-2 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all"
+                >
+                  Unlock Full Journey
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className={!isPro && ["month", "year", "all"].includes(timeRange) ? "opacity-30 pointer-events-none select-none blur-sm transition-all" : "transition-all"}>
+            {/* ===== BENTO GRID STATS ===== */}
         <div className="space-y-3">
           {/* Hero Card - Full Width with Tight Grouping */}
           <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10">
