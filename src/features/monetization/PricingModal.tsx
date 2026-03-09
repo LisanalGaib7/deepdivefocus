@@ -163,7 +163,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <div className="space-y-3">
               {[
                 { feature: "Mission Slots", free: "2", pro: "Unlimited" },
-                { feature: "Analytics", free: "Today / Week", pro: "Full Journey" },
+                { feature: "Analytics", free: "Today / Week", pro: "Monthly, Yearly, All-time" },
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
