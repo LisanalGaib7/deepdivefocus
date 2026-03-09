@@ -40,11 +40,12 @@ const History = () => {
   const { currentTheme } = useTheme();
   const primaryColor = getThemePrimaryHex(currentTheme);
   const themePalette = getThemePalette(currentTheme);
-  const { isGuestMode, isAuthenticated } = useAuthContext();
-  const { isPro } = useProStatus();
+  const { isGuestMode, isAuthenticated, profile } = useAuthContext();
+  const { isPro, activatePro } = useProStatus();
   
   // Time range filter state - default to "all" for charts/stats
   const [timeRange, setTimeRange] = useState<TimeRange>("all");
+  const [showPricing, setShowPricing] = useState(false);
   
   // Use unified session stats hook (single source of truth)
   const { 
