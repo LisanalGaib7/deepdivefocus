@@ -136,20 +136,20 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/70 text-yellow-400 hover:text-yellow-300 transition-all duration-300"
+                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(234,179,8,0.25), rgba(234,179,8,0.08))',
-                  boxShadow: '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)',
+                  background: 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
+                  boxShadow: '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 50px rgba(234,179,8,0.5), inset 0 1px 0 rgba(234,179,8,0.3)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 35px rgba(234,179,8,0.6), 0 0 70px rgba(234,179,8,0.4), 0 0 100px rgba(234,179,8,0.2), inset 0 1px 0 rgba(234,179,8,0.35)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)';
                 }}
               >
-                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
-                UPGRADE NOW
+                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
+                ACTIVATE PRO ACCESS
               </Button>
             )}
 
