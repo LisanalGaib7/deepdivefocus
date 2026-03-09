@@ -14,7 +14,7 @@ const FREE_FEATURES = [
   { icon: Layers, label: "2 Priority Mission Slots" },
   { icon: BarChart3, label: "Today & This Week Analytics" },
   { icon: Shield, label: "5 Standard Themes" },
-  { icon: Gauge, label: "VOYAGER-1 Vessel Class" },
+  { icon: Gauge, label: "Vessel Classes 1-2" },
 ];
 
 const PRO_FEATURES = [
@@ -22,13 +22,13 @@ const PRO_FEATURES = [
   { icon: BarChart3, label: "Full Analytics Journey", highlight: true },
   { icon: Crown, label: "Pro Prestige Badge", highlight: true },
   { icon: Shield, label: "5 Standard Themes" },
-  { icon: Atom, label: "Elite Vessel Classes (5+)", highlight: true },
+  { icon: Atom, label: "Vessel Classes 3-5+", highlight: true },
 ];
 
 export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-black/98 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
+      <DialogContent className="bg-slate-950 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
         {/* Blueprint grid bg */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.05] rounded-3xl overflow-hidden"
@@ -130,7 +130,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
                 <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase">
-                  Nuclear Reactor Active
+                  PRO ACCESS ACTIVE
                 </span>
               </div>
             ) : (
@@ -149,12 +149,12 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 }}
               >
                 <Atom className="h-4 w-4 mr-2" />
-                ACTIVATE NUCLEAR REACTOR
+                UPGRADE NOW
               </Button>
             )}
 
-            <p className="text-center text-[10px] text-white/20 font-mono">
-              {isPro ? 'DEEP DIVE PRO — FULL CLEARANCE ACTIVE' : 'Click to unlock all Pro features for testing'}
+            <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
+              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : "Enhance your vessel's capabilities"}
             </p>
 
             <Button
@@ -169,25 +169,25 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Comparison details */}
           <div className="bg-white/3 border border-white/8 rounded-2xl p-4 space-y-3">
             <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Capability Comparison</p>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {[
-                { feature: "Mission Slots", free: "2", pro: "∞" },
+                { feature: "Mission Slots", free: "2", pro: "Unlimited" },
                 { feature: "Analytics", free: "Today / Week", pro: "Full Journey" },
-                { feature: "Vessel Classes", free: "1–4", pro: "1–5+ Elite" },
+                { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-3 gap-2 text-[11px]">
-                  <span className="text-white/40 font-mono">{feature}</span>
+                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center">
+                  <span className="text-white/40 font-mono text-left">{feature}</span>
                   <span className="text-center text-white/30 font-mono">{free}</span>
-                  <span className="text-center text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
+                  <span className="text-right text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
                 </div>
               ))}
             </div>
             <div className="h-px bg-white/5" />
-            <div className="grid grid-cols-3 gap-2 text-[10px]">
-              <span className="text-white/20 font-mono">Tier</span>
+            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px]">
+              <span className="text-white/20 font-mono text-left">Tier</span>
               <span className="text-center text-white/20 font-mono">Standard</span>
-              <span className="text-center text-yellow-500/60 font-mono">Pro</span>
+              <span className="text-right text-yellow-500/60 font-mono">Pro</span>
             </div>
           </div>
         </div>
