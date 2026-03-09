@@ -63,7 +63,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
           {/* Pricing cards */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {/* Standard / Free */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
               <div>
@@ -81,13 +81,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </ul>
             </div>
 
-            {/* Deep Dive Pro */}
+            {/* Deep Dive Pro — golden cage */}
             <div
-              className="relative rounded-2xl p-4 space-y-3 overflow-hidden"
+              className="relative rounded-2xl p-5 space-y-3"
               style={{
-                background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(0,0,0,0.9) 100%)',
-                border: '3px solid rgba(234,179,8,0.85)',
-                boxShadow: '0 0 15px rgba(234,179,8,0.5), 0 0 30px rgba(234,179,8,0.35), 0 0 50px rgba(234,179,8,0.2), 0 0 80px rgba(234,179,8,0.1), inset 0 0 20px rgba(234,179,8,0.08), inset 0 1px 0 rgba(234,179,8,0.2)',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.14) 0%, rgba(15,10,0,0.95) 100%)',
+                border: '4px solid rgba(234,179,8,0.9)',
+                boxShadow: '0 0 10px rgba(234,179,8,0.6), 0 0 25px rgba(234,179,8,0.45), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 0 25px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.25)',
               }}
             >
               {/* Glow overlay */}
