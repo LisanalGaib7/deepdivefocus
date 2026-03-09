@@ -83,11 +83,12 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
             {/* Deep Dive Pro */}
             <div
-              className="relative border rounded-2xl p-4 space-y-3 overflow-hidden"
+              className="relative border rounded-2xl p-4 space-y-3 overflow-hidden animate-pulse"
               style={{
                 background: 'linear-gradient(135deg, rgba(234,179,8,0.08) 0%, rgba(0,0,0,0.8) 100%)',
                 borderColor: 'rgba(234,179,8,0.5)',
                 boxShadow: '0 0 30px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.1)',
+                animation: 'pulse 3s ease-in-out infinite',
               }}
             >
               {/* Glow overlay */}
