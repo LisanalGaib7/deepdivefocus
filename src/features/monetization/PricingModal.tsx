@@ -86,8 +86,8 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               className="relative rounded-2xl p-4 space-y-3 overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(0,0,0,0.9) 100%)',
-                border: '2px solid rgba(234,179,8,0.7)',
-                boxShadow: '0 0 20px rgba(234,179,8,0.4), 0 0 40px rgba(234,179,8,0.2), 0 0 60px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.15)',
+                border: '3px solid rgba(234,179,8,0.85)',
+                boxShadow: '0 0 15px rgba(234,179,8,0.5), 0 0 30px rgba(234,179,8,0.35), 0 0 50px rgba(234,179,8,0.2), 0 0 80px rgba(234,179,8,0.1), inset 0 0 20px rgba(234,179,8,0.08), inset 0 1px 0 rgba(234,179,8,0.2)',
               }}
             >
               {/* Glow overlay */}
