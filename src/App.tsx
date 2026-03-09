@@ -18,9 +18,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-pulse text-primary font-robotic tracking-widest">
-          INITIALIZING SYSTEMS...
-        </div>
+        <div className="animate-pulse text-primary font-robotic tracking-widest">INITIALIZING SYSTEMS...</div>
       </div>
     );
   }
@@ -39,9 +37,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-pulse text-primary font-robotic tracking-widest">
-          INITIALIZING SYSTEMS...
-        </div>
+        <div className="animate-pulse text-primary font-robotic tracking-widest">INITIALIZING SYSTEMS...</div>
       </div>
     );
   }
