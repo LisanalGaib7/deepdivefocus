@@ -2,12 +2,14 @@ import { useMemo, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import { Calendar, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useTheme, getThemePrimaryHex, getThemePalette } from "@/hooks/useTheme";
 import { useSessionStats, TimeRange } from "@/hooks/useSessionStats";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { YearlyDepthLog } from "@/features/history";
 import TimeRangeSelector from "@/components/common/TimeRangeSelector";
 import { useProStatus } from "@/hooks/useProStatus";
+import { PricingModal } from "@/features/monetization";
 
 // Helper to get date range text for badge
 const getDateRangeText = (range: TimeRange): string | null => {
