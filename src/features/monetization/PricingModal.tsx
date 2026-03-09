@@ -19,9 +19,8 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   { icon: Layers, label: "Unlimited Mission Slots", highlight: true },
-  { icon: BarChart3, label: "Full Analytics Journey", highlight: true },
+  { icon: BarChart3, label: "Monthly, Yearly & All-time Analytics", highlight: true },
   { icon: Crown, label: "Pro Prestige Badge", highlight: true },
-  { icon: Shield, label: "5 Standard Themes" },
   { icon: Atom, label: "Vessel Classes 3-5+", highlight: true },
 ];
 
