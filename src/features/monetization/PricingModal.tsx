@@ -81,16 +81,18 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </ul>
             </div>
 
-            {/* Deep Dive Pro — golden cage with solid neon border */}
+            {/* Deep Dive Pro — golden energy frame */}
             <div
-              className="relative rounded-2xl p-6 space-y-3"
+              className="relative rounded-2xl p-5 space-y-3"
               style={{
-                background: 'linear-gradient(180deg, rgba(20,16,0,0.95) 0%, rgba(8,6,0,0.98) 100%)',
-                border: '4px solid #FFD700',
-                borderRadius: '1rem',
-                boxShadow: '0 0 10px #FFD700, 0 0 20px rgba(255,215,0,0.7), 0 0 40px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.2)',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.1) 0%, rgba(10,8,0,0.95) 100%)',
+                border: '2px solid rgba(234,179,8,0.85)',
+                boxShadow: '0 0 8px rgba(234,179,8,0.7), 0 0 20px rgba(234,179,8,0.5), 0 0 40px rgba(234,179,8,0.25), inset 0 0 20px rgba(234,179,8,0.08)',
               }}
             >
+              {/* Glow overlay */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/15 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
 
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
