@@ -159,19 +159,27 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Comparison details */}
-          <div className="bg-white/3 border border-white/8 rounded-2xl p-4 space-y-3">
+          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 space-y-3">
             <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Capability Comparison</p>
-            <div className="space-y-4">
+            
+            {/* Table Header */}
+            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px] items-center pb-2 border-b border-white/10">
+              <span className="text-white/30 font-mono"></span>
+              <span className="text-center text-white/50 font-mono font-bold tracking-wider">STANDARD</span>
+              <span className="text-center text-yellow-400/80 font-mono font-bold tracking-wider drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]">PRO</span>
+            </div>
+            
+            <div className="space-y-0">
               {[
                 { feature: "Mission Slots", free: "2", pro: "Unlimited" },
-                { feature: "Analytics", free: "Today / Week", pro: "Monthly, Yearly, All-time" },
+                { feature: "Analytics", free: "Today / Week", pro: "Month / Year / All" },
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-2">
+                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-3 border-b border-white/5 last:border-0">
                   <span className="text-white/40 font-mono text-left">{feature}</span>
                   <span className="text-center text-white/30 font-mono">{free}</span>
-                  <span className="text-right text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
+                  <span className="text-center text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
                 </div>
               ))}
             </div>
