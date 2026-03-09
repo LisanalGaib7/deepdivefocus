@@ -459,7 +459,17 @@ const History = () => {
             </div>
           </div>
         )}
+          </div>
+        </div>
       </div>
+
+      <PricingModal
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        isPro={isPro}
+        onActivatePro={() => { activatePro(); setShowPricing(false); }}
+        currentPearls={profile?.total_pearls || 0}
+      />
     </div>
   );
 };
