@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import GuidebookModal from "@/components/common/GuidebookModal";
 
 // Feature components
 import { EngineeringBayModal } from "@/features/hangar";
+import { UpgradeRequiredModal, PricingModal } from "@/features/monetization";
 
 // Timer feature components
 import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
