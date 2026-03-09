@@ -83,27 +83,27 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
             {/* Deep Dive Pro */}
             <div
-              className="relative border rounded-2xl p-4 space-y-3 overflow-hidden animate-pulse"
+              className="relative rounded-2xl p-4 space-y-3 overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, rgba(234,179,8,0.08) 0%, rgba(0,0,0,0.8) 100%)',
-                borderColor: 'rgba(234,179,8,0.5)',
-                boxShadow: '0 0 30px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.1)',
-                animation: 'pulse 3s ease-in-out infinite',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(0,0,0,0.9) 100%)',
+                border: '2px solid rgba(234,179,8,0.7)',
+                boxShadow: '0 0 20px rgba(234,179,8,0.4), 0 0 40px rgba(234,179,8,0.2), 0 0 60px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.15)',
               }}
             >
               {/* Glow overlay */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
+              <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/15 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
 
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
+                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
                   <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase">Deep Dive Pro</p>
                 </div>
-                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">
+                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO
                 </p>
               </div>
-              <div className="h-px bg-yellow-500/20" />
+              <div className="h-px bg-yellow-500/30" />
               <ul className="space-y-2">
                 {PRO_FEATURES.map(({ icon: Icon, label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
