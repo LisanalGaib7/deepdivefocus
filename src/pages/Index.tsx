@@ -847,9 +847,22 @@ const Index = () => {
                 <span className="text-xs uppercase tracking-widest text-primary font-bold">
                   MISSION OBJECTIVE
                 </span>
-                <span className="text-xs uppercase tracking-widest text-foreground/50 font-mono font-semibold">
-                  SLOT [{tasks.length}/{TIMER_CONFIG.MAX_TASKS}]
-                </span>
+                <div className="flex items-center gap-2">
+                  {!isPro && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPricing(true)}
+                      className="text-[10px] font-mono text-yellow-400/70 hover:text-yellow-400 transition-colors tracking-wider"
+                    >
+                      ↑ UPGRADE
+                    </button>
+                  )}
+                  <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
+                    !isPro && tasks.length >= FREE_TASK_LIMIT ? 'text-yellow-400/80' : 'text-foreground/50'
+                  }`}>
+                    SLOT [{tasks.length}/{taskLimit}]
+                  </span>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Input
