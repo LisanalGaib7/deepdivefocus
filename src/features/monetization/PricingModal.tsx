@@ -86,8 +86,8 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               className="relative rounded-2xl p-4 space-y-3 overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(0,0,0,0.9) 100%)',
-                border: '2px solid rgba(234,179,8,0.7)',
-                boxShadow: '0 0 20px rgba(234,179,8,0.4), 0 0 40px rgba(234,179,8,0.2), 0 0 60px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.15)',
+                border: '3px solid rgba(234,179,8,0.85)',
+                boxShadow: '0 0 15px rgba(234,179,8,0.5), 0 0 30px rgba(234,179,8,0.35), 0 0 50px rgba(234,179,8,0.2), 0 0 80px rgba(234,179,8,0.1), inset 0 0 20px rgba(234,179,8,0.08), inset 0 1px 0 rgba(234,179,8,0.2)',
               }}
             >
               {/* Glow overlay */}
@@ -186,13 +186,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Return to Surface - Secondary Exit */}
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            className="w-full h-10 font-mono text-xs text-white/30 hover:text-white/50 hover:bg-white/5 tracking-wider border border-white/10 rounded-xl"
-          >
-            RETURN TO SURFACE
-          </Button>
+          <div className="pt-2 pb-1">
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              className="w-full h-12 font-mono text-sm text-white/40 hover:text-white/60 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
+            >
+              RETURN TO SURFACE
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
