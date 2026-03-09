@@ -83,27 +83,27 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
             {/* Deep Dive Pro */}
             <div
-              className="relative border rounded-2xl p-4 space-y-3 overflow-hidden animate-pulse"
+              className="relative rounded-2xl p-4 space-y-3 overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, rgba(234,179,8,0.08) 0%, rgba(0,0,0,0.8) 100%)',
-                borderColor: 'rgba(234,179,8,0.5)',
-                boxShadow: '0 0 30px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.1)',
-                animation: 'pulse 3s ease-in-out infinite',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(0,0,0,0.9) 100%)',
+                border: '2px solid rgba(234,179,8,0.7)',
+                boxShadow: '0 0 20px rgba(234,179,8,0.4), 0 0 40px rgba(234,179,8,0.2), 0 0 60px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.15)',
               }}
             >
               {/* Glow overlay */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
+              <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/15 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
 
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
+                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
                   <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase">Deep Dive Pro</p>
                 </div>
-                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">
+                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO
                 </p>
               </div>
-              <div className="h-px bg-yellow-500/20" />
+              <div className="h-px bg-yellow-500/30" />
               <ul className="space-y-2">
                 {PRO_FEATURES.map(({ icon: Icon, label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
@@ -136,20 +136,20 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/70 text-yellow-400 hover:text-yellow-300 transition-all duration-300"
+                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(234,179,8,0.25), rgba(234,179,8,0.08))',
-                  boxShadow: '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)',
+                  background: 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
+                  boxShadow: '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 50px rgba(234,179,8,0.5), inset 0 1px 0 rgba(234,179,8,0.3)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 35px rgba(234,179,8,0.6), 0 0 70px rgba(234,179,8,0.4), 0 0 100px rgba(234,179,8,0.2), inset 0 1px 0 rgba(234,179,8,0.35)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)';
                 }}
               >
-                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
-                UPGRADE NOW
+                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
+                ACTIVATE PRO ACCESS
               </Button>
             )}
 
@@ -159,19 +159,27 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Comparison details */}
-          <div className="bg-white/3 border border-white/8 rounded-2xl p-4 space-y-3">
+          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 space-y-3">
             <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Capability Comparison</p>
-            <div className="space-y-4">
+            
+            {/* Table Header */}
+            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px] items-center pb-2 border-b border-white/10">
+              <span className="text-white/30 font-mono"></span>
+              <span className="text-center text-white/50 font-mono font-bold tracking-wider">STANDARD</span>
+              <span className="text-center text-yellow-400/80 font-mono font-bold tracking-wider drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]">PRO</span>
+            </div>
+            
+            <div className="space-y-0">
               {[
                 { feature: "Mission Slots", free: "2", pro: "Unlimited" },
-                { feature: "Analytics", free: "Today / Week", pro: "Monthly, Yearly, All-time" },
+                { feature: "Analytics", free: "Today / Week", pro: "Month / Year / All" },
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-2">
+                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-3 border-b border-white/5 last:border-0">
                   <span className="text-white/40 font-mono text-left">{feature}</span>
                   <span className="text-center text-white/30 font-mono">{free}</span>
-                  <span className="text-right text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
+                  <span className="text-center text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
                 </div>
               ))}
             </div>
