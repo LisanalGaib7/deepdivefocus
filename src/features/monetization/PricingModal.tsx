@@ -186,13 +186,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Return to Surface - Secondary Exit */}
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            className="w-full h-10 font-mono text-xs text-white/30 hover:text-white/50 hover:bg-white/5 tracking-wider border border-white/10 rounded-xl"
-          >
-            RETURN TO SURFACE
-          </Button>
+          <div className="pt-2 pb-1">
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              className="w-full h-12 font-mono text-sm text-white/40 hover:text-white/60 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
+            >
+              RETURN TO SURFACE
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
