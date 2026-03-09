@@ -522,15 +522,15 @@ const Index = () => {
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
-          {/* Top Right Controls - Hangar, Guidebook & Logout */}
-          <div className="absolute top-4 right-4 flex items-center gap-1">
-            {/* PRO Badge */}
-            {isPro && (
+          
+          {/* Top Left - PRO Badge */}
+          {isPro && (
+            <div className="absolute top-4 left-4">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setShowPricing(true)}
-                    className="flex items-center gap-1 px-2 py-1 rounded-md border border-yellow-500/50 bg-yellow-500/10 transition-all duration-300 hover:bg-yellow-500/20"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-yellow-500/50 bg-yellow-500/10 transition-all duration-300 hover:bg-yellow-500/20"
                     style={{ boxShadow: '0 0 12px rgba(234,179,8,0.3)' }}
                   >
                     <Crown className="w-3.5 h-3.5 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
@@ -541,7 +541,11 @@ const Index = () => {
                   NUCLEAR REACTOR ACTIVE
                 </TooltipContent>
               </Tooltip>
-            )}
+            </div>
+          )}
+          
+          {/* Top Right Controls - Hangar, Guidebook & Logout */}
+          <div className="absolute top-4 right-4 flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button

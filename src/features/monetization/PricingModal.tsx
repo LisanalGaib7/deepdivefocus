@@ -81,13 +81,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </ul>
             </div>
 
-            {/* Deep Dive Pro — golden cage */}
+            {/* Deep Dive Pro — golden energy frame */}
             <div
               className="relative rounded-2xl p-5 space-y-3"
               style={{
-                background: 'linear-gradient(135deg, rgba(234,179,8,0.14) 0%, rgba(15,10,0,0.95) 100%)',
-                border: '4px solid rgba(234,179,8,0.9)',
-                boxShadow: '0 0 10px rgba(234,179,8,0.6), 0 0 25px rgba(234,179,8,0.45), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 0 25px rgba(234,179,8,0.1), inset 0 1px 0 rgba(234,179,8,0.25)',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.1) 0%, rgba(10,8,0,0.95) 100%)',
+                border: '2px solid rgba(234,179,8,0.85)',
+                boxShadow: '0 0 8px rgba(234,179,8,0.7), 0 0 20px rgba(234,179,8,0.5), 0 0 40px rgba(234,179,8,0.25), inset 0 0 20px rgba(234,179,8,0.08)',
               }}
             >
               {/* Glow overlay */}
@@ -186,11 +186,11 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Return to Surface - Secondary Exit */}
-          <div className="pt-2 pb-1">
+          <div className="pt-3 pb-1">
             <Button
               onClick={onClose}
               variant="ghost"
-              className="w-full h-12 font-mono text-sm text-white/40 hover:text-white/60 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
+              className="w-full h-12 font-mono text-sm font-medium text-white/50 hover:text-white/70 hover:bg-white/[0.08] tracking-widest border border-white/20 rounded-xl transition-all duration-200"
             >
               RETURN TO SURFACE
             </Button>
