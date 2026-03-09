@@ -38,8 +38,11 @@ import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 
+const FREE_TASK_LIMIT = 2;
+
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
+  const { isPro, activatePro } = useProStatus();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
