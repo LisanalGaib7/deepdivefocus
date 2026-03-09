@@ -161,14 +161,14 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Comparison details */}
           <div className="bg-white/3 border border-white/8 rounded-2xl p-4 space-y-3">
             <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Capability Comparison</p>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[
                 { feature: "Mission Slots", free: "2", pro: "Unlimited" },
                 { feature: "Analytics", free: "Today / Week", pro: "Monthly, Yearly, All-time" },
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center">
+                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-2">
                   <span className="text-white/40 font-mono text-left">{feature}</span>
                   <span className="text-center text-white/30 font-mono">{free}</span>
                   <span className="text-right text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
