@@ -416,9 +416,19 @@ const Index = () => {
   }, [rewardCreature, addCreature, setDuration, resetDive]);
 
   // Task management functions
+  const taskLimit = isPro ? TIMER_CONFIG.MAX_TASKS : FREE_TASK_LIMIT;
+
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTaskText.trim() && tasks.length < TIMER_CONFIG.MAX_TASKS) {
+    if (!newTaskText.trim()) return;
+
+    // Free-tier limit enforcement
+    if (!isPro && tasks.length >= FREE_TASK_LIMIT) {
+      setShowUpgradeRequired(true);
+      return;
+    }
+
+    if (tasks.length < TIMER_CONFIG.MAX_TASKS) {
       const newTask = await addTask(newTaskText.trim());
       setNewTaskText("");
       // Auto-select if no task selected
