@@ -1135,6 +1135,22 @@ const Index = () => {
         }}
       />
 
+      {/* Upgrade Required Modal */}
+      <UpgradeRequiredModal
+        open={showUpgradeRequired}
+        onClose={() => setShowUpgradeRequired(false)}
+        onOpenPricing={() => setShowPricing(true)}
+      />
+
+      {/* Pricing / Pro Modal */}
+      <PricingModal
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        isPro={isPro}
+        onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
+        currentPearls={profile?.total_pearls || 0}
+      />
+
     </>
   );
 };
