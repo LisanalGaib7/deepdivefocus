@@ -19,9 +19,8 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   { icon: Layers, label: "Unlimited Mission Slots", highlight: true },
-  { icon: BarChart3, label: "Full Analytics Journey", highlight: true },
+  { icon: BarChart3, label: "Monthly, Yearly & All-time Analytics", highlight: true },
   { icon: Crown, label: "Pro Prestige Badge", highlight: true },
-  { icon: Shield, label: "5 Standard Themes" },
   { icon: Atom, label: "Vessel Classes 3-5+", highlight: true },
 ];
 
@@ -125,30 +124,30 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 style={{
                   background: 'linear-gradient(135deg, rgba(234,179,8,0.15), rgba(0,0,0,0.5))',
                   borderColor: 'rgba(234,179,8,0.5)',
-                  boxShadow: '0 0 20px rgba(234,179,8,0.2)',
+                  boxShadow: '0 0 30px rgba(234,179,8,0.3)',
                 }}
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
-                <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase">
+                <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO ACCESS ACTIVE
                 </span>
               </div>
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border border-yellow-500/60 text-yellow-400 hover:text-yellow-300 transition-all duration-300"
+                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/70 text-yellow-400 hover:text-yellow-300 transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(234,179,8,0.2), rgba(234,179,8,0.05))',
-                  boxShadow: '0 0 20px rgba(234,179,8,0.2)',
+                  background: 'linear-gradient(135deg, rgba(234,179,8,0.25), rgba(234,179,8,0.08))',
+                  boxShadow: '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)',
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 40px rgba(234,179,8,0.4)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 50px rgba(234,179,8,0.5), inset 0 1px 0 rgba(234,179,8,0.3)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(234,179,8,0.2)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 30px rgba(234,179,8,0.35), inset 0 1px 0 rgba(234,179,8,0.2)';
                 }}
               >
-                <Atom className="h-4 w-4 mr-2" />
+                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
                 UPGRADE NOW
               </Button>
             )}
@@ -156,14 +155,6 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
               {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : "Enhance your vessel's capabilities"}
             </p>
-
-            <Button
-              onClick={onClose}
-              variant="ghost"
-              className="w-full h-10 font-mono text-xs text-white/30 hover:text-white/50 tracking-wider"
-            >
-              RETURN TO SURFACE
-            </Button>
           </div>
 
           {/* Comparison details */}
@@ -172,7 +163,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <div className="space-y-3">
               {[
                 { feature: "Mission Slots", free: "2", pro: "Unlimited" },
-                { feature: "Analytics", free: "Today / Week", pro: "Full Journey" },
+                { feature: "Analytics", free: "Today / Week", pro: "Monthly, Yearly, All-time" },
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
@@ -190,6 +181,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               <span className="text-right text-yellow-500/60 font-mono">Pro</span>
             </div>
           </div>
+
+          {/* Return to Surface - Secondary Exit */}
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            className="w-full h-10 font-mono text-xs text-white/30 hover:text-white/50 hover:bg-white/5 tracking-wider border border-white/10 rounded-xl"
+          >
+            RETURN TO SURFACE
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
