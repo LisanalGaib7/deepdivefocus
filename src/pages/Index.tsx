@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import GuidebookModal from "@/components/common/GuidebookModal";
 
 // Feature components
 import { EngineeringBayModal } from "@/features/hangar";
+import { UpgradeRequiredModal, PricingModal } from "@/features/monetization";
 
 // Timer feature components
 import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
@@ -35,9 +36,13 @@ import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { useProStatus } from "@/hooks/useProStatus";
+
+const FREE_TASK_LIMIT = 2;
 
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
+  const { isPro, activatePro } = useProStatus();
   const { addSession } = useFocusSessions();
   const { addCreature } = useUserCreatures();
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
@@ -66,6 +71,8 @@ const Index = () => {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
   const [showEngineeringBay, setShowEngineeringBay] = useState(false);
+  const [showUpgradeRequired, setShowUpgradeRequired] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
   const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
@@ -409,9 +416,19 @@ const Index = () => {
   }, [rewardCreature, addCreature, setDuration, resetDive]);
 
   // Task management functions
+  const taskLimit = isPro ? TIMER_CONFIG.MAX_TASKS : FREE_TASK_LIMIT;
+
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTaskText.trim() && tasks.length < TIMER_CONFIG.MAX_TASKS) {
+    if (!newTaskText.trim()) return;
+
+    // Free-tier limit enforcement
+    if (!isPro && tasks.length >= FREE_TASK_LIMIT) {
+      setShowUpgradeRequired(true);
+      return;
+    }
+
+    if (tasks.length < TIMER_CONFIG.MAX_TASKS) {
       const newTask = await addTask(newTaskText.trim());
       setNewTaskText("");
       // Auto-select if no task selected
@@ -507,6 +524,24 @@ const Index = () => {
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
           {/* Top Right Controls - Hangar, Guidebook & Logout */}
           <div className="absolute top-4 right-4 flex items-center gap-1">
+            {/* PRO Badge */}
+            {isPro && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowPricing(true)}
+                    className="flex items-center gap-1 px-2 py-1 rounded-md border border-yellow-500/50 bg-yellow-500/10 transition-all duration-300 hover:bg-yellow-500/20"
+                    style={{ boxShadow: '0 0 12px rgba(234,179,8,0.3)' }}
+                  >
+                    <Crown className="w-3.5 h-3.5 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
+                    <span className="text-[10px] font-bold font-mono tracking-widest text-yellow-400">PRO</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
+                  NUCLEAR REACTOR ACTIVE
+                </TooltipContent>
+              </Tooltip>
+            )}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -812,9 +847,22 @@ const Index = () => {
                 <span className="text-xs uppercase tracking-widest text-primary font-bold">
                   MISSION OBJECTIVE
                 </span>
-                <span className="text-xs uppercase tracking-widest text-foreground/50 font-mono font-semibold">
-                  SLOT [{tasks.length}/{TIMER_CONFIG.MAX_TASKS}]
-                </span>
+                <div className="flex items-center gap-2">
+                  {!isPro && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPricing(true)}
+                      className="text-[10px] font-mono text-yellow-400/70 hover:text-yellow-400 transition-colors tracking-wider"
+                    >
+                      ↑ UPGRADE
+                    </button>
+                  )}
+                  <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
+                    !isPro && tasks.length >= FREE_TASK_LIMIT ? 'text-yellow-400/80' : 'text-foreground/50'
+                  }`}>
+                    SLOT [{tasks.length}/{taskLimit}]
+                  </span>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Input
@@ -1085,6 +1133,22 @@ const Index = () => {
 
           toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
         }}
+      />
+
+      {/* Upgrade Required Modal */}
+      <UpgradeRequiredModal
+        open={showUpgradeRequired}
+        onClose={() => setShowUpgradeRequired(false)}
+        onOpenPricing={() => setShowPricing(true)}
+      />
+
+      {/* Pricing / Pro Modal */}
+      <PricingModal
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        isPro={isPro}
+        onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
+        currentPearls={profile?.total_pearls || 0}
       />
 
     </>
