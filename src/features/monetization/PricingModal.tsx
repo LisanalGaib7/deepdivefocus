@@ -130,7 +130,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
                 <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase">
-                  Nuclear Reactor Active
+                  PRO ACCESS ACTIVE
                 </span>
               </div>
             ) : (
@@ -149,12 +149,12 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 }}
               >
                 <Atom className="h-4 w-4 mr-2" />
-                ACTIVATE NUCLEAR REACTOR
+                UPGRADE NOW
               </Button>
             )}
 
-            <p className="text-center text-[10px] text-white/20 font-mono">
-              {isPro ? 'DEEP DIVE PRO — FULL CLEARANCE ACTIVE' : 'Click to unlock all Pro features for testing'}
+            <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
+              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : "Enhance your vessel's capabilities"}
             </p>
 
             <Button
