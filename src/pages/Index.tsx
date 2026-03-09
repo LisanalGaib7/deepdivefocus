@@ -36,6 +36,7 @@ import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { useProStatus } from "@/hooks/useProStatus";
 
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
