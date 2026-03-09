@@ -130,7 +130,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
                 <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
-                  PRO ACCESS ACTIVE
+                  ACTIVATE PRO ACCESS
                 </span>
               </div>
             ) : (
