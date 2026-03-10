@@ -179,9 +179,9 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 {/* Badge */}
                 <span
                   className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-yellow-500/25 text-yellow-400 border border-yellow-500/50 font-mono uppercase whitespace-nowrap"
-                  style={{ boxShadow: '0 0 10px rgba(234,179,8,0.4)' }}
+                  style={{ boxShadow: '0 0 12px rgba(234,179,8,0.5)' }}
                 >
-                  SAVE 20%
+                  BEST VALUE · 60% OFF
                 </span>
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'yearly' ? 'border-yellow-400/70' : 'border-yellow-500/25'}`}>
