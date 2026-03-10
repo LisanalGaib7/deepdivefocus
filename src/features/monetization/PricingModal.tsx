@@ -172,8 +172,8 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     : 'linear-gradient(135deg, rgba(234,179,8,0.04), rgba(10,8,0,0.95))',
                   border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.7)' : 'rgba(234,179,8,0.2)'}`,
                   boxShadow: selectedPlan === 'yearly'
-                    ? '0 0 10px rgba(234,179,8,0.4), 0 0 25px rgba(234,179,8,0.2), inset 0 0 10px rgba(234,179,8,0.05)'
-                    : 'none',
+                    ? '0 0 12px rgba(234,179,8,0.6), 0 0 30px rgba(234,179,8,0.35), 0 0 50px rgba(234,179,8,0.15), inset 0 0 15px rgba(234,179,8,0.08)'
+                    : '0 0 6px rgba(234,179,8,0.15)',
                 }}
               >
                 {/* Badge */}
