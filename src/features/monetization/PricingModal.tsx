@@ -136,7 +136,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
+                className="w-full h-14 font-orbitron tracking-widest text-base uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
                   boxShadow: '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
