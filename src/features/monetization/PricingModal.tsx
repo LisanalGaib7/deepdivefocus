@@ -130,96 +130,108 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
           {/* Plan Selection - 3 Cards */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold text-center">
               Choose Your Reactor
             </p>
 
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="flex flex-col gap-3 mt-4">
               {/* Monthly */}
               <button
                 onClick={() => setSelectedPlan('monthly')}
-                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 ${
-                  selectedPlan === 'monthly' ? 'ring-2 ring-white/40' : ''
+                className={`relative rounded-xl px-5 py-4 flex items-center justify-between transition-all duration-300 ${
+                  selectedPlan === 'monthly' ? 'ring-2 ring-white/30' : ''
                 }`}
                 style={{
                   background: selectedPlan === 'monthly' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${selectedPlan === 'monthly' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
-                  boxShadow: selectedPlan === 'monthly' ? '0 0 15px rgba(255,255,255,0.08)' : 'none',
+                  border: `1px solid ${selectedPlan === 'monthly' ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)'}`,
+                  boxShadow: selectedPlan === 'monthly' ? '0 0 15px rgba(255,255,255,0.06)' : 'none',
                 }}
               >
-                <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase font-semibold">Monthly</p>
-                <p className="text-lg font-extrabold font-orbitron text-white/70">$4.99</p>
-                <p className="text-[9px] text-white/35 font-mono">/month</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'monthly' ? 'border-white/60' : 'border-white/20'}`}>
+                    {selectedPlan === 'monthly' && <div className="w-2 h-2 rounded-full bg-white/80" />}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs text-white/70 font-mono tracking-wider uppercase font-semibold">Monthly</p>
+                    <p className="text-[10px] text-white/35 font-mono mt-0.5">Cancel anytime</p>
+                  </div>
+                </div>
+                <p className="text-xl font-extrabold font-orbitron text-white/70">$4.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
               </button>
 
               {/* Yearly — Most Popular */}
               <button
                 onClick={() => setSelectedPlan('yearly')}
-                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 ${
-                  selectedPlan === 'yearly' ? 'ring-2 ring-yellow-500/60' : ''
+                className={`relative rounded-xl px-5 py-4 flex items-center justify-between transition-all duration-300 ${
+                  selectedPlan === 'yearly' ? 'ring-2 ring-yellow-500/50' : ''
                 }`}
                 style={{
                   background: selectedPlan === 'yearly'
-                    ? 'linear-gradient(135deg, rgba(234,179,8,0.15), rgba(10,8,0,0.95))'
-                    : 'linear-gradient(135deg, rgba(234,179,8,0.06), rgba(10,8,0,0.95))',
-                  border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.8)' : 'rgba(234,179,8,0.25)'}`,
+                    ? 'linear-gradient(135deg, rgba(234,179,8,0.12), rgba(10,8,0,0.95))'
+                    : 'linear-gradient(135deg, rgba(234,179,8,0.04), rgba(10,8,0,0.95))',
+                  border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.7)' : 'rgba(234,179,8,0.2)'}`,
                   boxShadow: selectedPlan === 'yearly'
-                    ? '0 0 10px rgba(234,179,8,0.5), 0 0 25px rgba(234,179,8,0.25), inset 0 0 12px rgba(234,179,8,0.06)'
+                    ? '0 0 10px rgba(234,179,8,0.4), 0 0 25px rgba(234,179,8,0.2), inset 0 0 10px rgba(234,179,8,0.05)'
                     : 'none',
                 }}
               >
                 {/* Badge */}
                 <span
-                  className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-widest px-2 py-0.5 rounded-full bg-yellow-500/25 text-yellow-400 border border-yellow-500/50 font-mono uppercase whitespace-nowrap"
+                  className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-yellow-500/25 text-yellow-400 border border-yellow-500/50 font-mono uppercase whitespace-nowrap"
                   style={{ boxShadow: '0 0 10px rgba(234,179,8,0.4)' }}
                 >
                   SAVE 20%
                 </span>
-                <p className="text-[9px] text-yellow-400/70 font-mono tracking-widest uppercase font-semibold pt-1">Yearly</p>
-                <p className="text-lg font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.5)]">$39.99</p>
-                <p className="text-[9px] text-yellow-400/50 font-mono">$3.33/mo</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'yearly' ? 'border-yellow-400/70' : 'border-yellow-500/25'}`}>
+                    {selectedPlan === 'yearly' && <div className="w-2 h-2 rounded-full bg-yellow-400/90" />}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs text-yellow-400/90 font-mono tracking-wider uppercase font-semibold">Yearly</p>
+                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$3.33/mo · billed annually</p>
+                  </div>
+                </div>
+                <p className="text-xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.4)]">$39.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
               </button>
 
               {/* Lifetime — The Eternal Core */}
               <button
                 onClick={() => setSelectedPlan('lifetime')}
-                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 overflow-hidden ${
-                  selectedPlan === 'lifetime' ? 'ring-2 ring-amber-400/70' : ''
+                className={`relative rounded-xl px-5 py-4 flex items-center justify-between transition-all duration-300 ${
+                  selectedPlan === 'lifetime' ? 'ring-2 ring-amber-400/60' : ''
                 }`}
                 style={{
                   background: selectedPlan === 'lifetime'
-                    ? 'linear-gradient(135deg, rgba(251,191,36,0.18), rgba(234,179,8,0.08), rgba(10,8,0,0.95))'
-                    : 'linear-gradient(135deg, rgba(251,191,36,0.06), rgba(10,8,0,0.95))',
-                  border: `1.5px solid ${selectedPlan === 'lifetime' ? 'rgba(251,191,36,0.85)' : 'rgba(251,191,36,0.2)'}`,
+                    ? 'linear-gradient(135deg, rgba(251,191,36,0.14), rgba(234,179,8,0.06), rgba(10,8,0,0.95))'
+                    : 'linear-gradient(135deg, rgba(251,191,36,0.04), rgba(10,8,0,0.95))',
+                  border: `1.5px solid ${selectedPlan === 'lifetime' ? 'rgba(251,191,36,0.75)' : 'rgba(251,191,36,0.15)'}`,
                   boxShadow: selectedPlan === 'lifetime'
-                    ? '0 0 12px rgba(251,191,36,0.6), 0 0 30px rgba(251,191,36,0.3), 0 0 50px rgba(234,179,8,0.15), inset 0 0 15px rgba(251,191,36,0.08)'
+                    ? '0 0 10px rgba(251,191,36,0.5), 0 0 25px rgba(251,191,36,0.25), inset 0 0 12px rgba(251,191,36,0.06)'
                     : 'none',
                 }}
               >
-                {/* Diamond shimmer overlay */}
-                {selectedPlan === 'lifetime' && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-transparent to-yellow-600/5 pointer-events-none" />
-                )}
                 {/* Badge */}
                 <span
-                  className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-widest px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-400/50 font-mono uppercase whitespace-nowrap"
+                  className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-400/50 font-mono uppercase whitespace-nowrap"
                   style={{ boxShadow: '0 0 10px rgba(251,191,36,0.5)' }}
                 >
                   FOREVER
                 </span>
-                <Diamond className="h-3.5 w-3.5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] mt-1" />
-                <p className="text-lg font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">$79.99</p>
-                <p className="text-[9px] text-amber-400/50 font-mono">one-time</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'lifetime' ? 'border-amber-400/70' : 'border-amber-500/20'}`}>
+                    {selectedPlan === 'lifetime' && <div className="w-2 h-2 rounded-full bg-amber-400/90" />}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs text-amber-300/90 font-mono tracking-wider uppercase font-semibold flex items-center gap-1.5">
+                      Lifetime <Diamond className="h-3 w-3 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
+                    </p>
+                    <p className="text-[10px] text-amber-400/40 font-mono mt-0.5">No recurring fees. Ever.</p>
+                  </div>
+                </div>
+                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$79.99</p>
               </button>
             </div>
-
-            {/* Lifetime sub-text */}
-            {selectedPlan === 'lifetime' && (
-              <p className="text-center text-[10px] text-amber-400/60 font-mono tracking-wide leading-relaxed">
-                Unlock your vessel's full potential forever. No recurring fees.
-              </p>
-            )}
           </div>
 
           {/* CTA */}
