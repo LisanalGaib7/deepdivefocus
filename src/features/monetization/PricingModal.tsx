@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Atom, Check, Circle, Crown, Gauge, BarChart3, Layers, Shield } from "lucide-react";
+import { Atom, Check, Crown, Gauge, BarChart3, Layers, Shield, Sparkles } from "lucide-react";
 
 interface PricingModalProps {
   open: boolean;
@@ -25,6 +26,12 @@ const PRO_FEATURES = [
 ];
 
 export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
+  const [isYearly, setIsYearly] = useState(true);
+
+  const monthlyPrice = "$4.99";
+  const yearlyPrice = "$39.99";
+  const yearlyMonthly = "$3.33";
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-slate-950 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
@@ -62,7 +69,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Divider */}
           <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-          {/* Pricing cards */}
+          {/* Benefits cards */}
           <div className="grid grid-cols-2 gap-4">
             {/* Standard / Free */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
@@ -72,7 +79,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </div>
               <div className="h-px bg-white/10" />
               <ul className="space-y-2.5">
-                {FREE_FEATURES.map(({ icon: Icon, label }) => (
+                {FREE_FEATURES.map(({ label }) => (
                   <li key={label} className="flex items-start gap-2">
                     <Check className="h-3 w-3 text-white/35 mt-0.5 shrink-0" />
                     <span className="text-[11px] text-white/50 font-mono leading-tight">{label}</span>
@@ -90,7 +97,6 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 boxShadow: '0 0 8px rgba(234,179,8,0.7), 0 0 20px rgba(234,179,8,0.5), 0 0 40px rgba(234,179,8,0.25), inset 0 0 20px rgba(234,179,8,0.08)',
               }}
             >
-              {/* Glow overlay */}
               <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/15 rounded-full blur-3xl" />
               <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
 
@@ -105,7 +111,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </div>
               <div className="h-px bg-yellow-500/30" />
               <ul className="space-y-2.5">
-                {PRO_FEATURES.map(({ icon: Icon, label, highlight }) => (
+                {PRO_FEATURES.map(({ label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
                     <Check className={`h-3 w-3 mt-0.5 shrink-0 ${highlight ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.6)]' : 'text-white/40'}`} />
                     <span className={`text-[11px] font-mono leading-tight ${highlight ? 'text-yellow-300 font-bold' : 'text-white/50'}`}>
@@ -114,6 +120,94 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </li>
                 ))}
               </ul>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+          {/* Plan Selection Toggle */}
+          <div className="space-y-4">
+            <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold text-center">
+              Select Your Plan
+            </p>
+
+            {/* Toggle */}
+            <div className="flex items-center justify-center">
+              <div
+                className="relative flex rounded-xl p-1 gap-1"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <button
+                  onClick={() => setIsYearly(false)}
+                  className={`relative z-10 px-5 py-2.5 rounded-lg font-mono text-xs tracking-wider uppercase transition-all duration-300 ${
+                    !isYearly
+                      ? 'text-white/90 font-bold'
+                      : 'text-white/40 hover:text-white/60'
+                  }`}
+                  style={!isYearly ? {
+                    background: 'rgba(255,255,255,0.1)',
+                    boxShadow: '0 0 12px rgba(255,255,255,0.08)',
+                  } : {}}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setIsYearly(true)}
+                  className={`relative z-10 px-5 py-2.5 rounded-lg font-mono text-xs tracking-wider uppercase transition-all duration-300 flex items-center gap-2 ${
+                    isYearly
+                      ? 'text-yellow-300 font-bold'
+                      : 'text-white/40 hover:text-white/60'
+                  }`}
+                  style={isYearly ? {
+                    background: 'rgba(234,179,8,0.15)',
+                    boxShadow: '0 0 15px rgba(234,179,8,0.3), inset 0 0 10px rgba(234,179,8,0.05)',
+                    border: '1px solid rgba(234,179,8,0.4)',
+                  } : {}}
+                >
+                  Yearly
+                  <span
+                    className="text-[9px] font-bold tracking-widest px-1.5 py-0.5 rounded-md bg-yellow-500/20 text-yellow-400 border border-yellow-500/40"
+                    style={{ boxShadow: '0 0 8px rgba(234,179,8,0.4)' }}
+                  >
+                    -20%
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Pricing Cards */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Standard - Free */}
+              <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center space-y-1">
+                <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Standard</p>
+                <p className="text-2xl font-extrabold font-orbitron text-white/50">$0</p>
+                <p className="text-[10px] text-white/30 font-mono">Current Plan</p>
+              </div>
+
+              {/* Pro - Priced */}
+              <div
+                className="relative rounded-xl p-4 flex flex-col items-center justify-center space-y-1"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(10,8,0,0.95) 100%)',
+                  border: '2px solid rgba(234,179,8,0.7)',
+                  boxShadow: '0 0 8px rgba(234,179,8,0.5), 0 0 20px rgba(234,179,8,0.3), inset 0 0 15px rgba(234,179,8,0.06)',
+                }}
+              >
+                <div className="flex items-center gap-1">
+                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
+                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase font-semibold">Pro</p>
+                </div>
+                <p className="text-2xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">
+                  {isYearly ? yearlyPrice : monthlyPrice}
+                </p>
+                <p className="text-[10px] text-yellow-400/60 font-mono">
+                  {isYearly ? `${yearlyMonthly}/mo billed yearly` : 'per month'}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -130,7 +224,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
                 <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
-                  ACTIVATE PRO ACCESS
+                  PRO ACTIVE
                 </span>
               </div>
             ) : (
@@ -148,44 +242,17 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)';
                 }}
               >
-                <Atom className="h-4 w-4 mr-2 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
-                ACTIVATE PRO ACCESS
+                <Sparkles className="h-4 w-4 mr-2 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
+                {isYearly ? 'START YEARLY PLAN' : 'START MONTHLY PLAN'}
               </Button>
             )}
 
             <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
-              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : "Enhance your vessel's capabilities"}
+              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : isYearly ? 'Save 20% with annual billing' : 'Cancel anytime'}
             </p>
           </div>
 
-          {/* Comparison details */}
-          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 space-y-3">
-            <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold">Capability Comparison</p>
-            
-            {/* Table Header */}
-            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px] items-center pb-2 border-b border-white/10">
-              <span className="text-white/30 font-mono"></span>
-              <span className="text-center text-white/60 font-mono font-bold tracking-wider">STANDARD</span>
-              <span className="text-center text-yellow-400/90 font-mono font-bold tracking-wider drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]">PRO</span>
-            </div>
-            
-            <div className="space-y-0">
-              {[
-                { feature: "Mission Slots", free: "2", pro: "Unlimited" },
-                { feature: "Analytics", free: "Today / Week", pro: "Month / Year / All" },
-                { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
-                { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
-              ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-4 border-b border-white/5 last:border-0">
-                  <span className="text-white/60 font-mono font-semibold text-left">{feature}</span>
-                  <span className="text-center text-white/45 font-mono">{free}</span>
-                  <span className="text-center text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Return to Surface - Secondary Exit */}
+          {/* Return to Surface */}
           <div className="pt-4 pb-2">
             <Button
               onClick={onClose}
