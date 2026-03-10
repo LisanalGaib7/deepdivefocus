@@ -104,7 +104,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 </p>
               </div>
               <div className="h-px bg-yellow-500/30" />
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {PRO_FEATURES.map(({ icon: Icon, label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
                     <Check className={`h-3 w-3 mt-0.5 shrink-0 ${highlight ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.6)]' : 'text-white/40'}`} />
