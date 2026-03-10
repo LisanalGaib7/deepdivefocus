@@ -49,7 +49,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </div>
             </div>
             <h2
-              className="text-2xl font-bold tracking-[0.25em] font-orbitron text-primary uppercase"
+              className="text-2xl font-extrabold tracking-[0.3em] font-orbitron text-primary uppercase"
               style={{ textShadow: `0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary)/0.3)` }}
             >
               ENGINEERING BAY
@@ -67,15 +67,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             {/* Standard / Free */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
               <div>
-                <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase mb-1">Standard</p>
-                <p className="text-xl font-bold font-orbitron text-white/70">FREE</p>
+                <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
+                <p className="text-xl font-extrabold font-orbitron text-white/70 tracking-wider">FREE</p>
               </div>
               <div className="h-px bg-white/10" />
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {FREE_FEATURES.map(({ icon: Icon, label }) => (
                   <li key={label} className="flex items-start gap-2">
-                    <Check className="h-3 w-3 text-white/30 mt-0.5 shrink-0" />
-                    <span className="text-[11px] text-white/40 font-mono leading-tight">{label}</span>
+                    <Check className="h-3 w-3 text-white/35 mt-0.5 shrink-0" />
+                    <span className="text-[11px] text-white/50 font-mono leading-tight">{label}</span>
                   </li>
                 ))}
               </ul>
@@ -97,14 +97,14 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
                   <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
-                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase">Deep Dive Pro</p>
+                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase font-semibold">Deep Dive Pro</p>
                 </div>
-                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
+                <p className="text-xl font-extrabold font-orbitron text-yellow-400 tracking-wider drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO
                 </p>
               </div>
               <div className="h-px bg-yellow-500/30" />
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {PRO_FEATURES.map(({ icon: Icon, label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
                     <Check className={`h-3 w-3 mt-0.5 shrink-0 ${highlight ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.6)]' : 'text-white/40'}`} />
@@ -136,7 +136,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-sm uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
+                className="w-full h-14 font-orbitron tracking-widest text-base uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
                   boxShadow: '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
@@ -160,13 +160,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
           {/* Comparison details */}
           <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-4 space-y-3">
-            <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Capability Comparison</p>
+            <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold">Capability Comparison</p>
             
             {/* Table Header */}
             <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[10px] items-center pb-2 border-b border-white/10">
               <span className="text-white/30 font-mono"></span>
-              <span className="text-center text-white/50 font-mono font-bold tracking-wider">STANDARD</span>
-              <span className="text-center text-yellow-400/80 font-mono font-bold tracking-wider drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]">PRO</span>
+              <span className="text-center text-white/60 font-mono font-bold tracking-wider">STANDARD</span>
+              <span className="text-center text-yellow-400/90 font-mono font-bold tracking-wider drop-shadow-[0_0_4px_rgba(234,179,8,0.4)]">PRO</span>
             </div>
             
             <div className="space-y-0">
@@ -176,9 +176,9 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 { feature: "Vessel Classes", free: "1–2", pro: "3–5+ Elite" },
                 { feature: "Prestige Badge", free: "—", pro: "◆ PRO" },
               ].map(({ feature, free, pro }) => (
-                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-3 border-b border-white/5 last:border-0">
-                  <span className="text-white/40 font-mono text-left">{feature}</span>
-                  <span className="text-center text-white/30 font-mono">{free}</span>
+                <div key={feature} className="grid grid-cols-[1.5fr_1fr_1fr] gap-2 text-[11px] items-center py-4 border-b border-white/5 last:border-0">
+                  <span className="text-white/60 font-mono font-semibold text-left">{feature}</span>
+                  <span className="text-center text-white/45 font-mono">{free}</span>
                   <span className="text-center text-yellow-400 font-mono font-bold drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">{pro}</span>
                 </div>
               ))}
@@ -186,11 +186,11 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Return to Surface - Secondary Exit */}
-          <div className="pt-3 pb-1">
+          <div className="pt-4 pb-2">
             <Button
               onClick={onClose}
               variant="ghost"
-              className="w-full h-12 font-mono text-sm font-medium text-white/50 hover:text-white/70 hover:bg-white/[0.08] tracking-widest border border-white/20 rounded-xl transition-all duration-200"
+              className="w-full h-12 font-mono text-sm font-semibold text-white/50 hover:text-white/70 hover:bg-white/[0.08] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
             >
               RETURN TO SURFACE
             </Button>
