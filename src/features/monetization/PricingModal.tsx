@@ -28,8 +28,8 @@ const PRO_FEATURES = [
 type PlanType = 'monthly' | 'yearly' | 'lifetime';
 
 const PLAN_CONFIG: Record<PlanType, { label: string; cta: string; subtext: string }> = {
-  monthly: { label: 'Monthly', cta: 'START MONTHLY PLAN', subtext: 'Cancel anytime' },
-  yearly: { label: 'Yearly', cta: 'START YEARLY PLAN', subtext: 'Save 20% with annual billing' },
+  monthly: { label: 'Monthly', cta: 'START MONTHLY PLAN', subtext: 'Cancel anytime · No commitment' },
+  yearly: { label: 'Yearly', cta: 'START YEARLY PLAN', subtext: 'Best value · Save 60% vs monthly' },
   lifetime: { label: 'Lifetime', cta: 'START ETERNAL DIVE', subtext: 'One payment. Unlimited access. Forever.' },
 };
 
@@ -157,7 +157,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <p className="text-[10px] text-white/35 font-mono mt-0.5">Cancel anytime</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-white/70">$4.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
+                <p className="text-xl font-extrabold font-orbitron text-white/70">$2.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
               </button>
 
               {/* Yearly — Most Popular */}
@@ -172,16 +172,16 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     : 'linear-gradient(135deg, rgba(234,179,8,0.04), rgba(10,8,0,0.95))',
                   border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.7)' : 'rgba(234,179,8,0.2)'}`,
                   boxShadow: selectedPlan === 'yearly'
-                    ? '0 0 10px rgba(234,179,8,0.4), 0 0 25px rgba(234,179,8,0.2), inset 0 0 10px rgba(234,179,8,0.05)'
-                    : 'none',
+                    ? '0 0 12px rgba(234,179,8,0.6), 0 0 30px rgba(234,179,8,0.35), 0 0 50px rgba(234,179,8,0.15), inset 0 0 15px rgba(234,179,8,0.08)'
+                    : '0 0 6px rgba(234,179,8,0.15)',
                 }}
               >
                 {/* Badge */}
                 <span
                   className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-yellow-500/25 text-yellow-400 border border-yellow-500/50 font-mono uppercase whitespace-nowrap"
-                  style={{ boxShadow: '0 0 10px rgba(234,179,8,0.4)' }}
+                  style={{ boxShadow: '0 0 12px rgba(234,179,8,0.5)' }}
                 >
-                  SAVE 20%
+                  BEST VALUE · 60% OFF
                 </span>
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'yearly' ? 'border-yellow-400/70' : 'border-yellow-500/25'}`}>
@@ -189,10 +189,10 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-yellow-400/90 font-mono tracking-wider uppercase font-semibold">Yearly</p>
-                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$3.33/mo · billed annually</p>
+                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$1.67/mo · billed annually</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.4)]">$39.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
+                <p className="text-xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.4)]">$19.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
               </button>
 
               {/* Lifetime — The Eternal Core */}
@@ -216,7 +216,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-400/50 font-mono uppercase whitespace-nowrap"
                   style={{ boxShadow: '0 0 10px rgba(251,191,36,0.5)' }}
                 >
-                  FOREVER
+                  LIMITED OFFER
                 </span>
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'lifetime' ? 'border-amber-400/70' : 'border-amber-500/20'}`}>
@@ -224,12 +224,12 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-amber-300/90 font-mono tracking-wider uppercase font-semibold flex items-center gap-1.5">
-                      Lifetime <Diamond className="h-3 w-3 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
+                      The Eternal Core <Diamond className="h-3 w-3 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
                     </p>
                     <p className="text-[10px] text-amber-400/40 font-mono mt-0.5">No recurring fees. Ever.</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$79.99</p>
+                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$39.99</p>
               </button>
             </div>
           </div>
@@ -280,6 +280,11 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
               {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : PLAN_CONFIG[selectedPlan].subtext}
             </p>
+            {!isPro && (
+              <p className="text-center text-[9px] text-white/25 font-mono tracking-wide mt-1">
+                Join 10,000+ divers in the deep sea at a fraction of the cost
+              </p>
+            )}
           </div>
 
           {/* Return to Surface */}
