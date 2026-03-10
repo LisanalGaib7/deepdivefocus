@@ -280,6 +280,11 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
               {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : PLAN_CONFIG[selectedPlan].subtext}
             </p>
+            {!isPro && (
+              <p className="text-center text-[9px] text-white/25 font-mono tracking-wide mt-1">
+                Join 10,000+ divers in the deep sea at a fraction of the cost
+              </p>
+            )}
           </div>
 
           {/* Return to Surface */}
