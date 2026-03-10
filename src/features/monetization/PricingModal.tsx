@@ -157,7 +157,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <p className="text-[10px] text-white/35 font-mono mt-0.5">Cancel anytime</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-white/70">$4.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
+                <p className="text-xl font-extrabold font-orbitron text-white/70">$2.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
               </button>
 
               {/* Yearly — Most Popular */}
