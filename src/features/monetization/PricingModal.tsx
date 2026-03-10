@@ -216,7 +216,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   className="absolute -top-2.5 right-4 text-[8px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-400/50 font-mono uppercase whitespace-nowrap"
                   style={{ boxShadow: '0 0 10px rgba(251,191,36,0.5)' }}
                 >
-                  FOREVER
+                  LIMITED OFFER
                 </span>
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === 'lifetime' ? 'border-amber-400/70' : 'border-amber-500/20'}`}>
