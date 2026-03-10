@@ -224,12 +224,12 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-amber-300/90 font-mono tracking-wider uppercase font-semibold flex items-center gap-1.5">
-                      Lifetime <Diamond className="h-3 w-3 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
+                      The Eternal Core <Diamond className="h-3 w-3 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
                     </p>
                     <p className="text-[10px] text-amber-400/40 font-mono mt-0.5">No recurring fees. Ever.</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$79.99</p>
+                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$39.99</p>
               </button>
             </div>
           </div>
