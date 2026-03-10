@@ -49,7 +49,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </div>
             </div>
             <h2
-              className="text-2xl font-bold tracking-[0.25em] font-orbitron text-primary uppercase"
+              className="text-2xl font-extrabold tracking-[0.3em] font-orbitron text-primary uppercase"
               style={{ textShadow: `0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary)/0.3)` }}
             >
               ENGINEERING BAY
