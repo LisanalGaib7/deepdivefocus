@@ -189,10 +189,10 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-yellow-400/90 font-mono tracking-wider uppercase font-semibold">Yearly</p>
-                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$3.33/mo · billed annually</p>
+                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$1.67/mo · billed annually</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.4)]">$39.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
+                <p className="text-xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.4)]">$19.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
               </button>
 
               {/* Lifetime — The Eternal Core */}
