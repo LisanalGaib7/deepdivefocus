@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Atom, Check, Crown, Gauge, BarChart3, Layers, Shield, Sparkles } from "lucide-react";
+import { Atom, Check, Crown, Gauge, BarChart3, Layers, Shield, Sparkles, Diamond, Infinity } from "lucide-react";
 
 interface PricingModalProps {
   open: boolean;
@@ -20,17 +20,21 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   { icon: Layers, label: "Unlimited Mission Slots", highlight: true },
-  { icon: BarChart3, label: "Monthly, Yearly & All-time Analytics", highlight: true },
+  { icon: BarChart3, label: "Full Analytics Suite", highlight: true },
   { icon: Crown, label: "Pro Prestige Badge", highlight: true },
   { icon: Atom, label: "Vessel Classes 3-5+", highlight: true },
 ];
 
-export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
-  const [isYearly, setIsYearly] = useState(true);
+type PlanType = 'monthly' | 'yearly' | 'lifetime';
 
-  const monthlyPrice = "$4.99";
-  const yearlyPrice = "$39.99";
-  const yearlyMonthly = "$3.33";
+const PLAN_CONFIG: Record<PlanType, { label: string; cta: string; subtext: string }> = {
+  monthly: { label: 'Monthly', cta: 'START MONTHLY PLAN', subtext: 'Cancel anytime' },
+  yearly: { label: 'Yearly', cta: 'START YEARLY PLAN', subtext: 'Save 20% with annual billing' },
+  lifetime: { label: 'Lifetime', cta: 'START ETERNAL DIVE', subtext: 'One payment. Unlimited access. Forever.' },
+};
+
+export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingModalProps) => {
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>('yearly');
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -99,7 +103,6 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             >
               <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/15 rounded-full blur-3xl" />
               <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-500/10 rounded-full blur-2xl" />
-
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
                   <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
@@ -126,89 +129,97 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Divider */}
           <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-          {/* Plan Selection Toggle */}
+          {/* Plan Selection - 3 Cards */}
           <div className="space-y-4">
             <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold text-center">
-              Select Your Plan
+              Choose Your Reactor
             </p>
 
-            {/* Toggle */}
-            <div className="flex items-center justify-center">
-              <div
-                className="relative flex rounded-xl p-1 gap-1"
+            <div className="grid grid-cols-3 gap-2.5">
+              {/* Monthly */}
+              <button
+                onClick={() => setSelectedPlan('monthly')}
+                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 ${
+                  selectedPlan === 'monthly' ? 'ring-2 ring-white/40' : ''
+                }`}
                 style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: selectedPlan === 'monthly' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${selectedPlan === 'monthly' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
+                  boxShadow: selectedPlan === 'monthly' ? '0 0 15px rgba(255,255,255,0.08)' : 'none',
                 }}
               >
-                <button
-                  onClick={() => setIsYearly(false)}
-                  className={`relative z-10 px-5 py-2.5 rounded-lg font-mono text-xs tracking-wider uppercase transition-all duration-300 ${
-                    !isYearly
-                      ? 'text-white/90 font-bold'
-                      : 'text-white/40 hover:text-white/60'
-                  }`}
-                  style={!isYearly ? {
-                    background: 'rgba(255,255,255,0.1)',
-                    boxShadow: '0 0 12px rgba(255,255,255,0.08)',
-                  } : {}}
-                >
-                  Monthly
-                </button>
-                <button
-                  onClick={() => setIsYearly(true)}
-                  className={`relative z-10 px-5 py-2.5 rounded-lg font-mono text-xs tracking-wider uppercase transition-all duration-300 flex items-center gap-2 ${
-                    isYearly
-                      ? 'text-yellow-300 font-bold'
-                      : 'text-white/40 hover:text-white/60'
-                  }`}
-                  style={isYearly ? {
-                    background: 'rgba(234,179,8,0.15)',
-                    boxShadow: '0 0 15px rgba(234,179,8,0.3), inset 0 0 10px rgba(234,179,8,0.05)',
-                    border: '1px solid rgba(234,179,8,0.4)',
-                  } : {}}
-                >
-                  Yearly
-                  <span
-                    className="text-[9px] font-bold tracking-widest px-1.5 py-0.5 rounded-md bg-yellow-500/20 text-yellow-400 border border-yellow-500/40"
-                    style={{ boxShadow: '0 0 8px rgba(234,179,8,0.4)' }}
-                  >
-                    -20%
-                  </span>
-                </button>
-              </div>
-            </div>
+                <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase font-semibold">Monthly</p>
+                <p className="text-lg font-extrabold font-orbitron text-white/70">$4.99</p>
+                <p className="text-[9px] text-white/35 font-mono">/month</p>
+              </button>
 
-            {/* Pricing Cards */}
-            <div className="grid grid-cols-2 gap-3">
-              {/* Standard - Free */}
-              <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 flex flex-col items-center justify-center space-y-1">
-                <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase">Standard</p>
-                <p className="text-2xl font-extrabold font-orbitron text-white/50">$0</p>
-                <p className="text-[10px] text-white/30 font-mono">Current Plan</p>
-              </div>
-
-              {/* Pro - Priced */}
-              <div
-                className="relative rounded-xl p-4 flex flex-col items-center justify-center space-y-1"
+              {/* Yearly — Most Popular */}
+              <button
+                onClick={() => setSelectedPlan('yearly')}
+                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 ${
+                  selectedPlan === 'yearly' ? 'ring-2 ring-yellow-500/60' : ''
+                }`}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(10,8,0,0.95) 100%)',
-                  border: '2px solid rgba(234,179,8,0.7)',
-                  boxShadow: '0 0 8px rgba(234,179,8,0.5), 0 0 20px rgba(234,179,8,0.3), inset 0 0 15px rgba(234,179,8,0.06)',
+                  background: selectedPlan === 'yearly'
+                    ? 'linear-gradient(135deg, rgba(234,179,8,0.15), rgba(10,8,0,0.95))'
+                    : 'linear-gradient(135deg, rgba(234,179,8,0.06), rgba(10,8,0,0.95))',
+                  border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.8)' : 'rgba(234,179,8,0.25)'}`,
+                  boxShadow: selectedPlan === 'yearly'
+                    ? '0 0 10px rgba(234,179,8,0.5), 0 0 25px rgba(234,179,8,0.25), inset 0 0 12px rgba(234,179,8,0.06)'
+                    : 'none',
                 }}
               >
-                <div className="flex items-center gap-1">
-                  <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.8)]" />
-                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase font-semibold">Pro</p>
-                </div>
-                <p className="text-2xl font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">
-                  {isYearly ? yearlyPrice : monthlyPrice}
-                </p>
-                <p className="text-[10px] text-yellow-400/60 font-mono">
-                  {isYearly ? `${yearlyMonthly}/mo billed yearly` : 'per month'}
-                </p>
-              </div>
+                {/* Badge */}
+                <span
+                  className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-widest px-2 py-0.5 rounded-full bg-yellow-500/25 text-yellow-400 border border-yellow-500/50 font-mono uppercase whitespace-nowrap"
+                  style={{ boxShadow: '0 0 10px rgba(234,179,8,0.4)' }}
+                >
+                  SAVE 20%
+                </span>
+                <p className="text-[9px] text-yellow-400/70 font-mono tracking-widest uppercase font-semibold pt-1">Yearly</p>
+                <p className="text-lg font-extrabold font-orbitron text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.5)]">$39.99</p>
+                <p className="text-[9px] text-yellow-400/50 font-mono">$3.33/mo</p>
+              </button>
+
+              {/* Lifetime — The Eternal Core */}
+              <button
+                onClick={() => setSelectedPlan('lifetime')}
+                className={`relative rounded-xl p-3.5 flex flex-col items-center text-center space-y-1.5 transition-all duration-300 overflow-hidden ${
+                  selectedPlan === 'lifetime' ? 'ring-2 ring-amber-400/70' : ''
+                }`}
+                style={{
+                  background: selectedPlan === 'lifetime'
+                    ? 'linear-gradient(135deg, rgba(251,191,36,0.18), rgba(234,179,8,0.08), rgba(10,8,0,0.95))'
+                    : 'linear-gradient(135deg, rgba(251,191,36,0.06), rgba(10,8,0,0.95))',
+                  border: `1.5px solid ${selectedPlan === 'lifetime' ? 'rgba(251,191,36,0.85)' : 'rgba(251,191,36,0.2)'}`,
+                  boxShadow: selectedPlan === 'lifetime'
+                    ? '0 0 12px rgba(251,191,36,0.6), 0 0 30px rgba(251,191,36,0.3), 0 0 50px rgba(234,179,8,0.15), inset 0 0 15px rgba(251,191,36,0.08)'
+                    : 'none',
+                }}
+              >
+                {/* Diamond shimmer overlay */}
+                {selectedPlan === 'lifetime' && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-transparent to-yellow-600/5 pointer-events-none" />
+                )}
+                {/* Badge */}
+                <span
+                  className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-widest px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-400/50 font-mono uppercase whitespace-nowrap"
+                  style={{ boxShadow: '0 0 10px rgba(251,191,36,0.5)' }}
+                >
+                  FOREVER
+                </span>
+                <Diamond className="h-3.5 w-3.5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] mt-1" />
+                <p className="text-lg font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">$79.99</p>
+                <p className="text-[9px] text-amber-400/50 font-mono">one-time</p>
+              </button>
             </div>
+
+            {/* Lifetime sub-text */}
+            {selectedPlan === 'lifetime' && (
+              <p className="text-center text-[10px] text-amber-400/60 font-mono tracking-wide leading-relaxed">
+                Unlock your vessel's full potential forever. No recurring fees.
+              </p>
+            )}
           </div>
 
           {/* CTA */}
@@ -232,23 +243,30 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 onClick={onActivatePro}
                 className="w-full h-14 font-orbitron tracking-widest text-base uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
-                  boxShadow: '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
+                  background: selectedPlan === 'lifetime'
+                    ? 'linear-gradient(135deg, rgba(251,191,36,0.35), rgba(234,179,8,0.15))'
+                    : 'linear-gradient(135deg, rgba(234,179,8,0.3), rgba(234,179,8,0.12))',
+                  boxShadow: selectedPlan === 'lifetime'
+                    ? '0 0 25px rgba(251,191,36,0.6), 0 0 50px rgba(251,191,36,0.35), 0 0 80px rgba(234,179,8,0.2), inset 0 1px 0 rgba(251,191,36,0.3)'
+                    : '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)',
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 35px rgba(234,179,8,0.6), 0 0 70px rgba(234,179,8,0.4), 0 0 100px rgba(234,179,8,0.2), inset 0 1px 0 rgba(234,179,8,0.35)';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)';
+                  const base = selectedPlan === 'lifetime'
+                    ? '0 0 25px rgba(251,191,36,0.6), 0 0 50px rgba(251,191,36,0.35), 0 0 80px rgba(234,179,8,0.2), inset 0 1px 0 rgba(251,191,36,0.3)'
+                    : '0 0 25px rgba(234,179,8,0.5), 0 0 50px rgba(234,179,8,0.3), 0 0 80px rgba(234,179,8,0.15), inset 0 1px 0 rgba(234,179,8,0.25)';
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = base;
                 }}
               >
                 <Sparkles className="h-4 w-4 mr-2 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
-                {isYearly ? 'START YEARLY PLAN' : 'START MONTHLY PLAN'}
+                {PLAN_CONFIG[selectedPlan].cta}
               </Button>
             )}
 
             <p className="text-center text-[11px] text-white/40 font-mono tracking-wide">
-              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : isYearly ? 'Save 20% with annual billing' : 'Cancel anytime'}
+              {isPro ? 'ALL VESSEL CAPABILITIES UNLOCKED' : PLAN_CONFIG[selectedPlan].subtext}
             </p>
           </div>
 
