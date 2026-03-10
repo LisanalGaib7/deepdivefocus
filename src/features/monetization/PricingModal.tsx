@@ -67,15 +67,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             {/* Standard / Free */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
               <div>
-                <p className="text-[10px] text-white/40 font-mono tracking-widest uppercase mb-1">Standard</p>
-                <p className="text-xl font-bold font-orbitron text-white/70">FREE</p>
+                <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
+                <p className="text-xl font-extrabold font-orbitron text-white/70 tracking-wider">FREE</p>
               </div>
               <div className="h-px bg-white/10" />
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {FREE_FEATURES.map(({ icon: Icon, label }) => (
                   <li key={label} className="flex items-start gap-2">
-                    <Check className="h-3 w-3 text-white/30 mt-0.5 shrink-0" />
-                    <span className="text-[11px] text-white/40 font-mono leading-tight">{label}</span>
+                    <Check className="h-3 w-3 text-white/35 mt-0.5 shrink-0" />
+                    <span className="text-[11px] text-white/50 font-mono leading-tight">{label}</span>
                   </li>
                 ))}
               </ul>
