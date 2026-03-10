@@ -97,9 +97,9 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
                   <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
-                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase">Deep Dive Pro</p>
+                  <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase font-semibold">Deep Dive Pro</p>
                 </div>
-                <p className="text-xl font-bold font-orbitron text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
+                <p className="text-xl font-extrabold font-orbitron text-yellow-400 tracking-wider drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO
                 </p>
               </div>
