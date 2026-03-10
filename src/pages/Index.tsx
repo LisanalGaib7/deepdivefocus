@@ -154,7 +154,7 @@ const Index = () => {
 
   // Timer logic with per-task time accumulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     
     if (isRunning && timeLeft > 0) {
       completionHandledRef.current = false; // Reset on new session start
