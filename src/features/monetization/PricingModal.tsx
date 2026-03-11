@@ -29,7 +29,7 @@ type PlanType = 'monthly' | 'yearly' | 'lifetime';
 
 const PLAN_CONFIG: Record<PlanType, { label: string; cta: string; subtext: string }> = {
   monthly: { label: 'Monthly', cta: 'START MONTHLY PLAN', subtext: 'Cancel anytime · No commitment' },
-  yearly: { label: 'Yearly', cta: 'START YEARLY PLAN', subtext: 'Best value · Save 60% vs monthly' },
+  yearly: { label: 'Yearly', cta: 'START YEARLY PLAN', subtext: 'Save 60% vs monthly billing' },
   lifetime: { label: 'Lifetime', cta: 'START ETERNAL DIVE', subtext: 'One payment. Unlimited access. Forever.' },
 };
 
