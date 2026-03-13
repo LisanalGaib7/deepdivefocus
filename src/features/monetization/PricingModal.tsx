@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Atom, Check, Crown, Gauge, BarChart3, Layers, Shield, Sparkles, Diamond, Infinity } from "lucide-react";
+import { Atom, Check, Crown, Gauge, BarChart3, Layers, Shield, Sparkles, Infinity } from "lucide-react";
 
 interface PricingModalProps {
   open: boolean;
@@ -38,17 +38,39 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-slate-950 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
+      <DialogContent className="bg-slate-950/95 border-primary/30 max-w-md max-h-[90vh] overflow-y-auto p-0 rounded-3xl">
         {/* Blueprint grid bg */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.05] rounded-3xl overflow-hidden"
+          className="absolute inset-0 pointer-events-none opacity-[0.04] rounded-3xl overflow-hidden"
           style={{
             backgroundImage: `linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
         />
 
-        <div className="relative p-6 space-y-6">
+        {/* CRT Scanlines overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 2px,
+              rgba(0,0,0,0.08) 2px,
+              rgba(0,0,0,0.08) 4px
+            )`,
+          }}
+        />
+
+        {/* Vignette overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden z-[2]"
+          style={{
+            background: `radial-gradient(ellipse 70% 60% at 50% 50%, transparent 30%, rgba(0,0,0,0.55) 100%)`,
+          }}
+        />
+
+        <div className="relative p-6 space-y-6 z-[3]">
           {/* Header */}
           <div className="text-center space-y-2">
             <div className="flex justify-center mb-3">
@@ -76,7 +98,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Benefits cards */}
           <div className="grid grid-cols-2 gap-4">
             {/* Standard / Free */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+            <div
+              className="rounded-2xl p-4 space-y-3"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
               <div>
                 <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
                 <p className="text-xl font-extrabold font-orbitron text-white/70 tracking-wider">FREE</p>
@@ -92,11 +122,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </ul>
             </div>
 
-            {/* Deep Dive Pro — golden energy frame */}
+            {/* Deep Dive Pro — golden energy frame with glassmorphism */}
             <div
               className="relative rounded-2xl p-5 space-y-3"
               style={{
-                background: 'linear-gradient(135deg, rgba(234,179,8,0.1) 0%, rgba(10,8,0,0.95) 100%)',
+                background: 'linear-gradient(135deg, rgba(234,179,8,0.1) 0%, rgba(10,8,0,0.9) 100%)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 border: '2px solid rgba(234,179,8,0.85)',
                 boxShadow: '0 0 8px rgba(234,179,8,0.7), 0 0 20px rgba(234,179,8,0.5), 0 0 40px rgba(234,179,8,0.25), inset 0 0 20px rgba(234,179,8,0.08)',
               }}
@@ -129,9 +161,9 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           {/* Divider */}
           <div className="h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-          {/* Plan Selection - 3 Cards */}
+          {/* Plan Selection */}
           <div className="space-y-5">
-            <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase font-semibold text-center">
+            <p className="text-[10px] text-white/50 font-mono tracking-[0.4em] uppercase font-semibold text-center">
               Choose Your Reactor
             </p>
 
@@ -143,9 +175,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   selectedPlan === 'monthly' ? 'ring-2 ring-white/30' : ''
                 }`}
                 style={{
-                  background: selectedPlan === 'monthly' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${selectedPlan === 'monthly' ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)'}`,
-                  boxShadow: selectedPlan === 'monthly' ? '0 0 15px rgba(255,255,255,0.06)' : 'none',
+                  background: selectedPlan === 'monthly' ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.02)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: `1px solid ${selectedPlan === 'monthly' ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.06)'}`,
+                  boxShadow: selectedPlan === 'monthly'
+                    ? '0 4px 20px rgba(255,255,255,0.04), 0 0 1px rgba(255,255,255,0.1)'
+                    : 'none',
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -157,7 +193,13 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <p className="text-[10px] text-white/35 font-mono mt-0.5">Cancel anytime</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-white/70">$2.99<span className="text-[10px] font-mono font-normal text-white/40 ml-1">/mo</span></p>
+                <div className="text-right">
+                  <p className="font-orbitron font-black text-white/80 leading-none">
+                    <span className="text-sm opacity-60">$</span>
+                    <span className="text-2xl">2.99</span>
+                  </p>
+                  <p className="text-[9px] font-mono text-white/35 mt-0.5">/month</p>
+                </div>
               </button>
 
               {/* Yearly */}
@@ -168,12 +210,14 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 }`}
                 style={{
                   background: selectedPlan === 'yearly'
-                    ? 'linear-gradient(135deg, rgba(234,179,8,0.12), rgba(10,8,0,0.95))'
+                    ? 'linear-gradient(135deg, rgba(234,179,8,0.12), rgba(10,8,0,0.92))'
                     : 'linear-gradient(135deg, rgba(234,179,8,0.04), rgba(10,8,0,0.95))',
-                  border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.7)' : 'rgba(234,179,8,0.2)'}`,
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: `1.5px solid ${selectedPlan === 'yearly' ? 'rgba(234,179,8,0.7)' : 'rgba(234,179,8,0.15)'}`,
                   boxShadow: selectedPlan === 'yearly'
-                    ? '0 0 10px rgba(234,179,8,0.4), 0 0 25px rgba(234,179,8,0.2), inset 0 0 10px rgba(234,179,8,0.05)'
-                    : '0 0 4px rgba(234,179,8,0.1)',
+                    ? '0 8px 30px rgba(234,179,8,0.25), 0 0 10px rgba(234,179,8,0.35), inset 0 0 10px rgba(234,179,8,0.05)'
+                    : '0 0 4px rgba(234,179,8,0.08)',
                 }}
               >
                 {/* Badge */}
@@ -196,10 +240,16 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$1.67/mo · billed annually</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-yellow-400">$19.99<span className="text-[10px] font-mono font-normal text-yellow-400/45 ml-1">/yr</span></p>
+                <div className="text-right">
+                  <p className="font-orbitron font-black text-yellow-400 leading-none">
+                    <span className="text-sm opacity-60">$</span>
+                    <span className="text-2xl">19.99</span>
+                  </p>
+                  <p className="text-[9px] font-mono text-yellow-400/40 mt-0.5">/year</p>
+                </div>
               </button>
 
-              {/* Lifetime — The Eternal Core */}
+              {/* Lifetime — The Eternal Core with breathing glow */}
               <button
                 onClick={() => setSelectedPlan('lifetime')}
                 className={`relative rounded-xl px-5 py-5 flex items-center justify-between transition-all duration-300 ${
@@ -207,12 +257,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 }`}
                 style={{
                   background: selectedPlan === 'lifetime'
-                    ? 'linear-gradient(135deg, rgba(251,191,36,0.14), rgba(234,179,8,0.06), rgba(10,8,0,0.95))'
+                    ? 'linear-gradient(135deg, rgba(251,191,36,0.14), rgba(234,179,8,0.06), rgba(10,8,0,0.92))'
                     : 'linear-gradient(135deg, rgba(251,191,36,0.04), rgba(10,8,0,0.95))',
-                  border: `1.5px solid ${selectedPlan === 'lifetime' ? 'rgba(251,191,36,0.75)' : 'rgba(251,191,36,0.15)'}`,
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: `1.5px solid ${selectedPlan === 'lifetime' ? 'rgba(251,191,36,0.75)' : 'rgba(251,191,36,0.12)'}`,
                   boxShadow: selectedPlan === 'lifetime'
-                    ? '0 0 12px rgba(251,191,36,0.5), 0 0 30px rgba(251,191,36,0.25), inset 0 0 12px rgba(251,191,36,0.06)'
+                    ? '0 8px 35px rgba(251,191,36,0.3), 0 0 12px rgba(251,191,36,0.45), 0 0 50px rgba(251,191,36,0.12), inset 0 0 12px rgba(251,191,36,0.06)'
                     : 'none',
+                  animation: selectedPlan === 'lifetime' ? 'lifetime-breathe 3s ease-in-out infinite' : 'none',
                 }}
               >
                 {/* Badge */}
@@ -232,12 +285,24 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-amber-300/90 font-mono tracking-wider uppercase font-bold flex items-center gap-1.5">
-                      Lifetime <Infinity className="h-3.5 w-3.5 text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]" />
+                      Lifetime
+                      <Infinity
+                        className="h-4 w-4 text-amber-300"
+                        style={{
+                          filter: 'drop-shadow(0 0 6px rgba(251,191,36,0.8)) drop-shadow(0 0 12px rgba(251,191,36,0.4))',
+                        }}
+                      />
                     </p>
                     <p className="text-[10px] text-amber-400/45 font-mono mt-0.5">The Eternal Core · No recurring fees</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-amber-300 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]">$39.99</p>
+                <div className="text-right">
+                  <p className="font-orbitron font-black text-amber-300 leading-none" style={{ filter: 'drop-shadow(0 0 8px rgba(251,191,36,0.5))' }}>
+                    <span className="text-sm opacity-60">$</span>
+                    <span className="text-[28px]">39.99</span>
+                  </p>
+                  <p className="text-[9px] font-mono text-amber-400/45 mt-0.5">one-time</p>
+                </div>
               </button>
             </div>
           </div>
@@ -296,16 +361,28 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
           </div>
 
           {/* Return to Surface */}
-          <div className="pt-4 pb-2">
+          <div className="pt-4 pb-2 flex justify-center">
             <Button
               onClick={onClose}
               variant="ghost"
-              className="w-full h-12 font-mono text-sm font-semibold text-white/50 hover:text-white/70 hover:bg-white/[0.08] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
+              className="w-full h-12 font-mono text-sm font-semibold text-white/50 hover:text-white/70 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
             >
               RETURN TO SURFACE
             </Button>
           </div>
         </div>
+
+        {/* Breathing glow keyframes */}
+        <style>{`
+          @keyframes lifetime-breathe {
+            0%, 100% {
+              box-shadow: 0 8px 35px rgba(251,191,36,0.3), 0 0 12px rgba(251,191,36,0.45), 0 0 50px rgba(251,191,36,0.12), inset 0 0 12px rgba(251,191,36,0.06);
+            }
+            50% {
+              box-shadow: 0 8px 45px rgba(251,191,36,0.45), 0 0 18px rgba(251,191,36,0.6), 0 0 70px rgba(251,191,36,0.2), inset 0 0 18px rgba(251,191,36,0.1);
+            }
+          }
+        `}</style>
       </DialogContent>
     </Dialog>
   );
