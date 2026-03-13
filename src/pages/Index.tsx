@@ -992,7 +992,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
-                  TODAY'S ACCUMULATED TIME
+                  TODAY'S DIVE TIME
                 </span>
               </div>
               
