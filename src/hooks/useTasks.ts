@@ -125,10 +125,11 @@ export interface LocalTask {
  
      const { data, error } = await supabase
        .from('tasks')
-       .insert({
-         user_id: user.id,
-         title: title.trim(),
-       })
+        .insert({
+          user_id: user.id,
+          title: title.trim(),
+          sort_order: tasks.length,
+        } as any)
        .select()
        .single();
  
