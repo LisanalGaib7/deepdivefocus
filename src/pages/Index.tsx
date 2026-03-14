@@ -54,6 +54,7 @@ const Index = () => {
     deleteTask, 
     incrementTimeSpent,
     saveTimeSpent,
+    reorderTasks,
   } = useTasks();
   
   const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
