@@ -21,6 +21,7 @@ export interface LocalTask {
   isCompleted: boolean;
   timeSpentInSeconds: number;
   lastActiveDate: string;
+  sortOrder: number;
 }
  
  const GUEST_TASKS_KEY = 'deepDiveTasks';
