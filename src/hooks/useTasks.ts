@@ -107,13 +107,14 @@ export interface LocalTask {
  
      if (!user || isGuestMode) {
        // Guest mode: local storage
-        const newTask: LocalTask = {
-          id: Date.now().toString(),
-          text: title.trim(),
-          isCompleted: false,
-          timeSpentInSeconds: 0,
-          lastActiveDate: getTodayLocal(),
-        };
+         const newTask: LocalTask = {
+           id: Date.now().toString(),
+           text: title.trim(),
+           isCompleted: false,
+           timeSpentInSeconds: 0,
+           lastActiveDate: getTodayLocal(),
+           sortOrder: tasks.length,
+         };
        setTasks(prev => {
          const updated = [...prev, newTask];
          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
