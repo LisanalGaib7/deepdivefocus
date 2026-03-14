@@ -892,89 +892,29 @@ const Index = () => {
             
             {/* Task List */}
             {tasks.length > 0 && (
-              <div className="space-y-2">
-                {tasks.map(task => (
-                  <div 
-                    key={task.id}
-                    onClick={() => handleSelectTask(task.id)}
-                    className={`flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${
-                      selectedTaskId === task.id 
-                        ? "border-primary bg-primary/10 ring-2 ring-primary/30" 
-                        : "border-border bg-card hover:border-primary/50"
-                    } ${task.isCompleted ? "opacity-60" : ""}`}
-                  >
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleComplete(task.id);
-                      }}
-                      variant="ghost"
-                      size="icon"
-                      className={`h-7 w-7 rounded-full border-2 shrink-0 ${
-                        selectedTaskId === task.id ? "border-primary" : "border-muted-foreground"
-                      }`}
-                    >
-                      {task.isCompleted && <Check className="h-4 w-4 text-primary" />}
-                    </Button>
-                    {editingTaskId === task.id ? (
-                      <Input
-                        type="text"
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                        onBlur={handleSaveEdit}
-                        onKeyDown={handleEditKeyDown}
-                        autoFocus
-                        className="flex-1 h-8 text-base font-medium bg-background/50"
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    ) : (
-                      <p className={`flex-1 text-base font-bold ${
-                        task.isCompleted ? "line-through text-muted-foreground" : "text-foreground"
-                      }`}>
-                        {task.text}
-                      </p>
-                    )}
-                    {/* Show TODAY's accumulated time from database + current session time */}
-                    {(() => {
-                      const dbTodayMins = getTaskTodayMinutes(task.text);
-                      const sessionSeconds = task.timeSpentInSeconds;
-                      const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
-                      
-                      return totalTodaySeconds > 0 ? (
-                        <span className="text-xs font-semibold text-foreground/70 px-2 py-1 bg-muted rounded-full">
-                          {formatTimeSpent(totalTodaySeconds)}
-                        </span>
-                      ) : (
-                        <span className="text-xs font-semibold text-foreground/30 px-2 py-1 bg-muted/50 rounded-full">
-                          0m
-                        </span>
-                      );
-                    })()}
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleStartEdit(task);
-                      }}
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-primary shrink-0"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteTask(task.id);
-                      }}
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-destructive shrink-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+              <SortableTaskList
+                tasks={tasks}
+                selectedTaskId={selectedTaskId}
+                editingTaskId={editingTaskId}
+                editingText={editingText}
+                onSelect={handleSelectTask}
+                onToggleComplete={handleToggleComplete}
+                onStartEdit={handleStartEdit}
+                onSaveEdit={handleSaveEdit}
+                onEditKeyDown={handleEditKeyDown}
+                onEditTextChange={setEditingText}
+                onDelete={handleDeleteTask}
+                onReorder={reorderTasks}
+                getTimeDisplay={(task) => {
+                  const dbTodayMins = getTaskTodayMinutes(task.text);
+                  const sessionSeconds = task.timeSpentInSeconds;
+                  const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
+                  return {
+                    total: totalTodaySeconds,
+                    formatted: formatTimeSpent(totalTodaySeconds),
+                  };
+                }}
+              />
             )}
           </div>
         )}
