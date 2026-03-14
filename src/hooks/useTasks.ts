@@ -38,7 +38,7 @@ export interface LocalTask {
   };
 
   // Convert DB task to local format, resetting time if date changed
-  const dbToLocal = (dbTask: Task): LocalTask => {
+  const dbToLocal = (dbTask: any): LocalTask => {
     const today = getTodayLocal();
     const needsReset = dbTask.last_active_date !== today;
     return {
@@ -47,6 +47,7 @@ export interface LocalTask {
       isCompleted: dbTask.is_completed,
       timeSpentInSeconds: needsReset ? 0 : dbTask.time_spent_seconds,
       lastActiveDate: needsReset ? today : (dbTask.last_active_date || today),
+      sortOrder: dbTask.sort_order ?? 0,
     };
   };
  
