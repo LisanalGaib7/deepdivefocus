@@ -290,14 +290,36 @@ export interface LocalTask {
      };
    }, [user, isGuestMode]);
  
-   return {
-     tasks,
-     loading,
-     addTask,
-     updateTask,
-     deleteTask,
-     incrementTimeSpent,
-     saveTimeSpent,
-     refetch: fetchTasks,
-   };
- };
+    // Reorder tasks (drag and drop)
+    const reorderTasks = useCallback(async (reordered: LocalTask[]) => {
+      const updated = reordered.map((t, i) => ({ ...t, sortOrder: i }));
+      setTasks(updated);
+
+      if (!user || isGuestMode) {
+        localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+        return;
+      }
+
+      // Batch update sort_order in DB
+      for (let i = 0; i < updated.length; i++) {
+        supabase
+          .from('tasks')
+          .update({ sort_order: i } as any)
+          .eq('id', updated[i].id)
+          .eq('user_id', user.id)
+          .then();
+      }
+    }, [user, isGuestMode]);
+
+    return {
+      tasks,
+      loading,
+      addTask,
+      updateTask,
+      deleteTask,
+      incrementTimeSpent,
+      saveTimeSpent,
+      reorderTasks,
+      refetch: fetchTasks,
+    };
+  };
