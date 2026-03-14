@@ -21,6 +21,7 @@ export interface LocalTask {
   isCompleted: boolean;
   timeSpentInSeconds: number;
   lastActiveDate: string;
+  sortOrder: number;
 }
  
  const GUEST_TASKS_KEY = 'deepDiveTasks';
@@ -37,7 +38,7 @@ export interface LocalTask {
   };
 
   // Convert DB task to local format, resetting time if date changed
-  const dbToLocal = (dbTask: Task): LocalTask => {
+  const dbToLocal = (dbTask: any): LocalTask => {
     const today = getTodayLocal();
     const needsReset = dbTask.last_active_date !== today;
     return {
@@ -46,6 +47,7 @@ export interface LocalTask {
       isCompleted: dbTask.is_completed,
       timeSpentInSeconds: needsReset ? 0 : dbTask.time_spent_seconds,
       lastActiveDate: needsReset ? today : (dbTask.last_active_date || today),
+      sortOrder: dbTask.sort_order ?? 0,
     };
   };
  
@@ -73,7 +75,8 @@ export interface LocalTask {
        .from('tasks')
        .select('*')
        .eq('user_id', user.id)
-       .order('created_at', { ascending: true });
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: true });
  
       if (error) {
         console.error('Error fetching tasks:', error);
@@ -104,13 +107,14 @@ export interface LocalTask {
  
      if (!user || isGuestMode) {
        // Guest mode: local storage
-        const newTask: LocalTask = {
-          id: Date.now().toString(),
-          text: title.trim(),
-          isCompleted: false,
-          timeSpentInSeconds: 0,
-          lastActiveDate: getTodayLocal(),
-        };
+         const newTask: LocalTask = {
+           id: Date.now().toString(),
+           text: title.trim(),
+           isCompleted: false,
+           timeSpentInSeconds: 0,
+           lastActiveDate: getTodayLocal(),
+           sortOrder: tasks.length,
+         };
        setTasks(prev => {
          const updated = [...prev, newTask];
          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
@@ -121,10 +125,11 @@ export interface LocalTask {
  
      const { data, error } = await supabase
        .from('tasks')
-       .insert({
-         user_id: user.id,
-         title: title.trim(),
-       })
+        .insert({
+          user_id: user.id,
+          title: title.trim(),
+          sort_order: tasks.length,
+        } as any)
        .select()
        .single();
  
@@ -286,14 +291,36 @@ export interface LocalTask {
      };
    }, [user, isGuestMode]);
  
-   return {
-     tasks,
-     loading,
-     addTask,
-     updateTask,
-     deleteTask,
-     incrementTimeSpent,
-     saveTimeSpent,
-     refetch: fetchTasks,
-   };
- };
+    // Reorder tasks (drag and drop)
+    const reorderTasks = useCallback(async (reordered: LocalTask[]) => {
+      const updated = reordered.map((t, i) => ({ ...t, sortOrder: i }));
+      setTasks(updated);
+
+      if (!user || isGuestMode) {
+        localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+        return;
+      }
+
+      // Batch update sort_order in DB
+      for (let i = 0; i < updated.length; i++) {
+        supabase
+          .from('tasks')
+          .update({ sort_order: i } as any)
+          .eq('id', updated[i].id)
+          .eq('user_id', user.id)
+          .then();
+      }
+    }, [user, isGuestMode]);
+
+    return {
+      tasks,
+      loading,
+      addTask,
+      updateTask,
+      deleteTask,
+      incrementTimeSpent,
+      saveTimeSpent,
+      reorderTasks,
+      refetch: fetchTasks,
+    };
+  };
