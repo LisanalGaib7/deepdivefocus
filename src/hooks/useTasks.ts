@@ -75,7 +75,8 @@ export interface LocalTask {
        .from('tasks')
        .select('*')
        .eq('user_id', user.id)
-       .order('created_at', { ascending: true });
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: true });
  
       if (error) {
         console.error('Error fetching tasks:', error);
