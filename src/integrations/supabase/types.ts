@@ -95,6 +95,7 @@ export type Database = {
           id: string
           is_completed: boolean
           last_active_date: string | null
+          sort_order: number
           time_spent_seconds: number
           title: string
           updated_at: string
@@ -105,6 +106,7 @@ export type Database = {
           id?: string
           is_completed?: boolean
           last_active_date?: string | null
+          sort_order?: number
           time_spent_seconds?: number
           title: string
           updated_at?: string
@@ -115,6 +117,7 @@ export type Database = {
           id?: string
           is_completed?: boolean
           last_active_date?: string | null
+          sort_order?: number
           time_spent_seconds?: number
           title?: string
           updated_at?: string
