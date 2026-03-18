@@ -204,7 +204,7 @@ export const EngineeringBayModal = ({
                         </span>
                       </div>
                       
-                      <p className="text-xs text-white/40 mb-3 leading-relaxed">
+                      <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
                         {module.description}
                       </p>
 
