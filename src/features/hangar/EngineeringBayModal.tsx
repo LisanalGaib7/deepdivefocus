@@ -126,7 +126,7 @@ export const EngineeringBayModal = ({
         {/* Vessel Stats Panel */}
         <div className="p-6 pt-4 space-y-6">
           {/* Submarine wireframe representation */}
-          <div className="relative bg-primary/5 border border-primary/20 rounded-xl p-4 transition-colors duration-500">
+          <div className="relative bg-background border-2 border-primary/50 rounded-xl p-4 transition-colors duration-500 shadow-[0_0_15px_hsl(var(--primary)/0.25),0_0_30px_hsl(var(--primary)/0.1),inset_0_0_10px_hsl(var(--primary)/0.05)]">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
@@ -140,11 +140,11 @@ export const EngineeringBayModal = ({
 
             {/* Current Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-background border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">MAX DEPTH</p>
                 <p className="text-lg font-robotic text-pearl transition-colors duration-500">{currentMaxDepth.toLocaleString()}m</p>
               </div>
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-background border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">DIVE SPEED</p>
                 <p className="text-lg font-robotic text-primary transition-colors duration-500">{currentSpeed}%</p>
               </div>
