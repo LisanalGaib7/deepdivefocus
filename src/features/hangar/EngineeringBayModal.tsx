@@ -192,13 +192,13 @@ export const EngineeringBayModal = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <h3 className={`font-robotic text-sm tracking-wider transition-colors duration-500 ${
-                          !module.unlocked ? 'text-white/30' :
-                          isMaxed ? 'text-green-400' : 'text-white'
+                          !module.unlocked ? 'text-muted-foreground' :
+                          isMaxed ? 'text-primary' : 'text-foreground'
                         }`}>
                           {module.name}
                         </h3>
                         <span className={`text-xs font-robotic transition-colors duration-500 ${
-                          isMaxed ? 'text-green-400/60' : 'text-primary/60'
+                          isMaxed ? 'text-primary/60' : 'text-primary/60'
                         }`}>
                           TIER {module.currentTier}/{module.maxTier}
                         </span>
