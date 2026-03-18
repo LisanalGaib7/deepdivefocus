@@ -167,10 +167,10 @@ export const EngineeringBayModal = ({
                 <div 
                   key={module.id}
                   className={`
-                    relative bg-black/60 border rounded-xl p-4 transition-all duration-500
-                    ${!module.unlocked ? 'border-white/10 opacity-50' : 
-                      isMaxed ? 'border-green-500/30' : 
-                      'border-primary/20 hover:border-primary/40'}
+                    relative bg-background border-2 rounded-xl p-4 transition-all duration-500
+                    ${!module.unlocked ? 'border-muted-foreground/20 opacity-50' : 
+                      isMaxed ? 'border-primary/40 shadow-[0_0_12px_hsl(var(--primary)/0.2)]' : 
+                      'border-primary/40 hover:border-primary/70 shadow-[0_0_15px_hsl(var(--primary)/0.2),0_0_30px_hsl(var(--primary)/0.08)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.35),0_0_40px_hsl(var(--primary)/0.15)]'}
                   `}
                 >
                   <div className="flex items-start gap-4">
