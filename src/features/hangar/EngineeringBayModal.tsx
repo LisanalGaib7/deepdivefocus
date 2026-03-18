@@ -182,9 +182,9 @@ export const EngineeringBayModal = ({
                         'bg-primary/10 border border-primary/30'}
                     `}>
                       {!module.unlocked ? (
-                        <Lock className="h-5 w-5 text-white/30" />
+                        <Lock className="h-5 w-5 text-muted-foreground" />
                       ) : (
-                        <IconComponent className={`h-5 w-5 transition-colors duration-500 ${isMaxed ? 'text-green-400' : 'text-primary'}`} />
+                        <IconComponent className={`h-5 w-5 transition-colors duration-500 ${isMaxed ? 'text-primary' : 'text-primary'}`} />
                       )}
                     </div>
 
