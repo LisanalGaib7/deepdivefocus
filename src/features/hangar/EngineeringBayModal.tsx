@@ -107,20 +107,16 @@ export const EngineeringBayModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-black/95 border-primary/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500">
-        {/* Blueprint grid background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg opacity-10">
-          <div 
-            className="absolute inset-0 transition-all duration-500" 
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
-              `,
-              backgroundSize: '20px 20px',
-            }}
-          />
-        </div>
+      <DialogContent className="bg-[#020617] border-0 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500 shadow-[0_0_20px_hsl(var(--primary)/0.3),0_0_60px_hsl(var(--primary)/0.1)] ring-1 ring-primary/60 ring-inset"
+        style={{
+          boxShadow: `
+            inset 0 0 1px 1px hsl(var(--primary) / 0.5),
+            0 0 15px hsl(var(--primary) / 0.3),
+            0 0 45px hsl(var(--primary) / 0.12),
+            0 0 80px hsl(var(--primary) / 0.06)
+          `
+        }}
+      >
 
         {/* Header */}
         <DialogHeader className="relative p-6 pb-4 border-b border-primary/20 transition-colors duration-500">
