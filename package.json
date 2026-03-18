@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bunx vite",
-    "build": "bunx vite build",
-    "build:dev": "bunx vite build --mode development",
+    "dev": "npx --yes vite@5.4.19",
+    "build": "npx --yes vite@5.4.19 build",
+    "build:dev": "npx --yes vite@5.4.19 build --mode development",
     "lint": "eslint .",
-    "preview": "bunx vite preview"
+    "preview": "npx --yes vite@5.4.19 preview"
   },
   "dependencies": {
     "@capacitor/cli": "^8.1.0",
