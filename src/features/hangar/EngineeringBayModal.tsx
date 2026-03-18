@@ -184,11 +184,16 @@ export const EngineeringBayModal = ({
                 <div 
                   key={module.id}
                   className={`
-                    relative bg-black/60 border rounded-xl p-4 transition-all duration-500
-                    ${!module.unlocked ? 'border-white/10 opacity-50' : 
-                      isMaxed ? 'border-green-500/30' : 
-                      'border-primary/20 hover:border-primary/40'}
+                    relative bg-[#0a101f] rounded-xl p-4 transition-all duration-500
+                    ${!module.unlocked ? 'opacity-50' : ''}
                   `}
+                  style={{
+                    boxShadow: !module.unlocked
+                      ? 'inset 0 0 1px 1px rgba(255,255,255,0.1)'
+                      : isMaxed
+                      ? 'inset 0 0 1px 1px rgba(34,197,94,0.4), 0 0 10px rgba(34,197,94,0.15)'
+                      : `inset 0 0 1px 1px hsl(var(--primary) / 0.45), 0 0 10px hsl(var(--primary) / 0.2), 0 0 30px hsl(var(--primary) / 0.08)`
+                  }}
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
