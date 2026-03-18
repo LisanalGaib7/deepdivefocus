@@ -244,13 +244,13 @@ export const EngineeringBayModal = ({
                       )}
 
                       {isMaxed && module.unlocked && (
-                        <p className="text-xs text-green-400/60 font-robotic tracking-wider">
+                        <p className="text-xs text-primary/60 font-robotic tracking-wider">
                           ✓ MAXIMUM TIER REACHED
                         </p>
                       )}
 
                       {!module.unlocked && (
-                        <p className="text-xs text-white/30 font-robotic tracking-wider">
+                        <p className="text-xs text-muted-foreground font-robotic tracking-wider">
                           🔒 LOCKED — COMING SOON
                         </p>
                       )}
