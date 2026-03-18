@@ -107,20 +107,16 @@ export const EngineeringBayModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-black/95 border-primary/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500">
-        {/* Blueprint grid background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg opacity-10">
-          <div 
-            className="absolute inset-0 transition-all duration-500" 
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
-              `,
-              backgroundSize: '20px 20px',
-            }}
-          />
-        </div>
+      <DialogContent className="bg-[#020617] border-0 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500 shadow-[0_0_20px_hsl(var(--primary)/0.3),0_0_60px_hsl(var(--primary)/0.1)] ring-1 ring-primary/60 ring-inset"
+        style={{
+          boxShadow: `
+            inset 0 0 1px 1px hsl(var(--primary) / 0.5),
+            0 0 15px hsl(var(--primary) / 0.3),
+            0 0 45px hsl(var(--primary) / 0.12),
+            0 0 80px hsl(var(--primary) / 0.06)
+          `
+        }}
+      >
 
         {/* Header */}
         <DialogHeader className="relative p-6 pb-4 border-b border-primary/20 transition-colors duration-500">
@@ -139,7 +135,15 @@ export const EngineeringBayModal = ({
         {/* Vessel Stats Panel */}
         <div className="p-6 pt-4 space-y-6">
           {/* Submarine wireframe representation */}
-          <div className="relative bg-primary/5 border border-primary/20 rounded-xl p-4 transition-colors duration-500">
+          <div className="relative bg-[#0a101f] rounded-xl p-4 transition-colors duration-500"
+            style={{
+              boxShadow: `
+                inset 0 0 1px 1px hsl(var(--primary) / 0.45),
+                0 0 10px hsl(var(--primary) / 0.25),
+                0 0 30px hsl(var(--primary) / 0.1)
+              `
+            }}
+          >
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
@@ -153,11 +157,11 @@ export const EngineeringBayModal = ({
 
             {/* Current Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-[#060c1a] border border-primary/30 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">MAX DEPTH</p>
                 <p className="text-lg font-robotic text-pearl transition-colors duration-500">{currentMaxDepth.toLocaleString()}m</p>
               </div>
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-[#060c1a] border border-primary/30 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">DIVE SPEED</p>
                 <p className="text-lg font-robotic text-primary transition-colors duration-500">{currentSpeed}%</p>
               </div>
@@ -180,11 +184,16 @@ export const EngineeringBayModal = ({
                 <div 
                   key={module.id}
                   className={`
-                    relative bg-black/60 border rounded-xl p-4 transition-all duration-500
-                    ${!module.unlocked ? 'border-white/10 opacity-50' : 
-                      isMaxed ? 'border-green-500/30' : 
-                      'border-primary/20 hover:border-primary/40'}
+                    relative bg-[#0a101f] rounded-xl p-4 transition-all duration-500
+                    ${!module.unlocked ? 'opacity-50' : ''}
                   `}
+                  style={{
+                    boxShadow: !module.unlocked
+                      ? 'inset 0 0 1px 1px rgba(255,255,255,0.1)'
+                      : isMaxed
+                      ? 'inset 0 0 1px 1px rgba(34,197,94,0.4), 0 0 10px rgba(34,197,94,0.15)'
+                      : `inset 0 0 1px 1px hsl(var(--primary) / 0.45), 0 0 10px hsl(var(--primary) / 0.2), 0 0 30px hsl(var(--primary) / 0.08)`
+                  }}
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
