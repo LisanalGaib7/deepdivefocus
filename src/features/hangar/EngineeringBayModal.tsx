@@ -225,7 +225,7 @@ export const EngineeringBayModal = ({
                               h-8 px-4 font-robotic text-xs tracking-wider transition-all duration-500
                               ${affordable 
                                 ? 'bg-pearl/20 border border-pearl/50 text-pearl hover:bg-pearl/30 hover:shadow-[0_0_15px_hsl(var(--pearl)/0.3)]' 
-                                : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed'}
+                                : 'bg-muted border border-muted-foreground/20 text-muted-foreground cursor-not-allowed'}
                             `}
                           >
                             {isUpgrading ? (
