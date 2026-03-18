@@ -135,7 +135,15 @@ export const EngineeringBayModal = ({
         {/* Vessel Stats Panel */}
         <div className="p-6 pt-4 space-y-6">
           {/* Submarine wireframe representation */}
-          <div className="relative bg-primary/5 border border-primary/20 rounded-xl p-4 transition-colors duration-500">
+          <div className="relative bg-[#0a101f] rounded-xl p-4 transition-colors duration-500"
+            style={{
+              boxShadow: `
+                inset 0 0 1px 1px hsl(var(--primary) / 0.45),
+                0 0 10px hsl(var(--primary) / 0.25),
+                0 0 30px hsl(var(--primary) / 0.1)
+              `
+            }}
+          >
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
