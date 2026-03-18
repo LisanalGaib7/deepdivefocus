@@ -212,7 +212,7 @@ export const EngineeringBayModal = ({
                       {!isMaxed && module.unlocked && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-xs">
-                            <span className="text-white/50">{module.currentValue}</span>
+                            <span className="text-muted-foreground">{module.currentValue}</span>
                             <ChevronRight className="h-3 w-3 text-pearl" />
                             <span className="text-pearl font-medium">{module.nextValue}</span>
                           </div>
