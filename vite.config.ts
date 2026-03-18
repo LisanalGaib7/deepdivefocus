@@ -1,15 +1,13 @@
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+import { fileURLToPath, URL } from "node:url";
 
-export default ({ mode }: { mode: string }) => ({
+export default {
   server: {
     host: "::",
     port: 8080,
   },
-  plugins: [mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-});
+};
