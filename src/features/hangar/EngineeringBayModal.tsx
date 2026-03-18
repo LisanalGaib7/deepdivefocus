@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { 
@@ -121,6 +122,9 @@ export const EngineeringBayModal = ({
           <DialogTitle className="text-center font-robotic text-xl tracking-[0.3em] text-primary transition-colors duration-500">
             ENGINEERING BAY
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Upgrade submarine modules and monitor vessel stats in the engineering bay.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Vessel Stats Panel */}

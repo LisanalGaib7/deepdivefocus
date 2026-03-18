@@ -61,7 +61,11 @@ function SortableTaskItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id, disabled: isDragOverlay });
+  } = useSortable({
+    id: task.id,
+    disabled: isDragOverlay,
+    resizeObserverConfig: { disabled: isDragOverlay },
+  });
 
   const style = isDragOverlay
     ? {}

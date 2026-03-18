@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
+import * as Recharts from "recharts";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import { Calendar, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { YearlyDepthLog } from "@/features/history";
 import TimeRangeSelector from "@/components/common/TimeRangeSelector";
 import { useProStatus } from "@/hooks/useProStatus";
 import { PricingModal } from "@/features/monetization";
+
+const { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } = Recharts as any;
 
 // Helper to get date range text for badge
 const getDateRangeText = (range: TimeRange): string | null => {
