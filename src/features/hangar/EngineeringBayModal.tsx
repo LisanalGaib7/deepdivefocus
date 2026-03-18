@@ -107,20 +107,7 @@ export const EngineeringBayModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="bg-black/95 border-primary/30 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500">
-        {/* Blueprint grid background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg opacity-10">
-          <div 
-            className="absolute inset-0 transition-all duration-500" 
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
-              `,
-              backgroundSize: '20px 20px',
-            }}
-          />
-        </div>
+      <DialogContent className="bg-background border-2 border-primary/60 max-w-lg max-h-[90vh] overflow-y-auto p-0 scrollbar-deep-sea transition-colors duration-500 shadow-[0_0_25px_hsl(var(--primary)/0.3),0_0_50px_hsl(var(--primary)/0.15),inset_0_0_15px_hsl(var(--primary)/0.05)]">
 
         {/* Header */}
         <DialogHeader className="relative p-6 pb-4 border-b border-primary/20 transition-colors duration-500">
@@ -139,7 +126,7 @@ export const EngineeringBayModal = ({
         {/* Vessel Stats Panel */}
         <div className="p-6 pt-4 space-y-6">
           {/* Submarine wireframe representation */}
-          <div className="relative bg-primary/5 border border-primary/20 rounded-xl p-4 transition-colors duration-500">
+          <div className="relative bg-background border-2 border-primary/50 rounded-xl p-4 transition-colors duration-500 shadow-[0_0_15px_hsl(var(--primary)/0.25),0_0_30px_hsl(var(--primary)/0.1),inset_0_0_10px_hsl(var(--primary)/0.05)]">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
@@ -153,11 +140,11 @@ export const EngineeringBayModal = ({
 
             {/* Current Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-background border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">MAX DEPTH</p>
                 <p className="text-lg font-robotic text-pearl transition-colors duration-500">{currentMaxDepth.toLocaleString()}m</p>
               </div>
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-background border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">DIVE SPEED</p>
                 <p className="text-lg font-robotic text-primary transition-colors duration-500">{currentSpeed}%</p>
               </div>
@@ -180,24 +167,24 @@ export const EngineeringBayModal = ({
                 <div 
                   key={module.id}
                   className={`
-                    relative bg-black/60 border rounded-xl p-4 transition-all duration-500
-                    ${!module.unlocked ? 'border-white/10 opacity-50' : 
-                      isMaxed ? 'border-green-500/30' : 
-                      'border-primary/20 hover:border-primary/40'}
+                    relative bg-background border-2 rounded-xl p-4 transition-all duration-500
+                    ${!module.unlocked ? 'border-muted-foreground/20 opacity-50' : 
+                      isMaxed ? 'border-primary/40 shadow-[0_0_12px_hsl(var(--primary)/0.2)]' : 
+                      'border-primary/40 hover:border-primary/70 shadow-[0_0_15px_hsl(var(--primary)/0.2),0_0_30px_hsl(var(--primary)/0.08)] hover:shadow-[0_0_20px_hsl(var(--primary)/0.35),0_0_40px_hsl(var(--primary)/0.15)]'}
                   `}
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon */}
                     <div className={`
                       p-2.5 rounded-lg shrink-0 transition-colors duration-500
-                      ${!module.unlocked ? 'bg-white/5' :
-                        isMaxed ? 'bg-green-500/10 border border-green-500/30' :
+                      ${!module.unlocked ? 'bg-muted' :
+                        isMaxed ? 'bg-primary/10 border border-primary/30' :
                         'bg-primary/10 border border-primary/30'}
                     `}>
                       {!module.unlocked ? (
-                        <Lock className="h-5 w-5 text-white/30" />
+                        <Lock className="h-5 w-5 text-muted-foreground" />
                       ) : (
-                        <IconComponent className={`h-5 w-5 transition-colors duration-500 ${isMaxed ? 'text-green-400' : 'text-primary'}`} />
+                        <IconComponent className={`h-5 w-5 transition-colors duration-500 ${isMaxed ? 'text-primary' : 'text-primary'}`} />
                       )}
                     </div>
 
@@ -205,19 +192,19 @@ export const EngineeringBayModal = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <h3 className={`font-robotic text-sm tracking-wider transition-colors duration-500 ${
-                          !module.unlocked ? 'text-white/30' :
-                          isMaxed ? 'text-green-400' : 'text-white'
+                          !module.unlocked ? 'text-muted-foreground' :
+                          isMaxed ? 'text-primary' : 'text-foreground'
                         }`}>
                           {module.name}
                         </h3>
                         <span className={`text-xs font-robotic transition-colors duration-500 ${
-                          isMaxed ? 'text-green-400/60' : 'text-primary/60'
+                          isMaxed ? 'text-primary/60' : 'text-primary/60'
                         }`}>
                           TIER {module.currentTier}/{module.maxTier}
                         </span>
                       </div>
                       
-                      <p className="text-xs text-white/40 mb-3 leading-relaxed">
+                      <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
                         {module.description}
                       </p>
 
@@ -225,7 +212,7 @@ export const EngineeringBayModal = ({
                       {!isMaxed && module.unlocked && (
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-xs">
-                            <span className="text-white/50">{module.currentValue}</span>
+                            <span className="text-muted-foreground">{module.currentValue}</span>
                             <ChevronRight className="h-3 w-3 text-pearl" />
                             <span className="text-pearl font-medium">{module.nextValue}</span>
                           </div>
@@ -238,7 +225,7 @@ export const EngineeringBayModal = ({
                               h-8 px-4 font-robotic text-xs tracking-wider transition-all duration-500
                               ${affordable 
                                 ? 'bg-pearl/20 border border-pearl/50 text-pearl hover:bg-pearl/30 hover:shadow-[0_0_15px_hsl(var(--pearl)/0.3)]' 
-                                : 'bg-white/5 border border-white/10 text-white/30 cursor-not-allowed'}
+                                : 'bg-muted border border-muted-foreground/20 text-muted-foreground cursor-not-allowed'}
                             `}
                           >
                             {isUpgrading ? (
@@ -257,13 +244,13 @@ export const EngineeringBayModal = ({
                       )}
 
                       {isMaxed && module.unlocked && (
-                        <p className="text-xs text-green-400/60 font-robotic tracking-wider">
+                        <p className="text-xs text-primary/60 font-robotic tracking-wider">
                           ✓ MAXIMUM TIER REACHED
                         </p>
                       )}
 
                       {!module.unlocked && (
-                        <p className="text-xs text-white/30 font-robotic tracking-wider">
+                        <p className="text-xs text-muted-foreground font-robotic tracking-wider">
                           🔒 LOCKED — COMING SOON
                         </p>
                       )}
