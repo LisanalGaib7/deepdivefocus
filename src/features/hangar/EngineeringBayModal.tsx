@@ -161,7 +161,7 @@ export const EngineeringBayModal = ({
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">MAX DEPTH</p>
                 <p className="text-lg font-robotic text-pearl transition-colors duration-500">{currentMaxDepth.toLocaleString()}m</p>
               </div>
-              <div className="bg-black/40 border border-primary/20 rounded-lg p-3 text-center transition-colors duration-500">
+              <div className="bg-[#060c1a] border border-primary/30 rounded-lg p-3 text-center transition-colors duration-500">
                 <p className="text-[10px] text-primary/50 font-robotic tracking-wider mb-1 transition-colors duration-500">DIVE SPEED</p>
                 <p className="text-lg font-robotic text-primary transition-colors duration-500">{currentSpeed}%</p>
               </div>
