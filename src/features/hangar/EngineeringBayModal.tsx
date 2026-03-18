@@ -177,8 +177,8 @@ export const EngineeringBayModal = ({
                     {/* Icon */}
                     <div className={`
                       p-2.5 rounded-lg shrink-0 transition-colors duration-500
-                      ${!module.unlocked ? 'bg-white/5' :
-                        isMaxed ? 'bg-green-500/10 border border-green-500/30' :
+                      ${!module.unlocked ? 'bg-muted' :
+                        isMaxed ? 'bg-primary/10 border border-primary/30' :
                         'bg-primary/10 border border-primary/30'}
                     `}>
                       {!module.unlocked ? (
