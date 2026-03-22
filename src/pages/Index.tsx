@@ -546,8 +546,40 @@ const Index = () => {
             </div>
           )}
           
-          {/* Top Right Controls - Hangar, Guidebook & Logout */}
+          {/* Top Right Controls - Sound Toggle, Hangar, Guidebook & Logout */}
           <div className="absolute top-4 right-4 flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    toggleSoundEnabled();
+                    toast(
+                      isSoundEnabled ? "SILENT RUNNING ACTIVATED" : "SONAR SYSTEMS ONLINE",
+                      {
+                        duration: 2000,
+                        position: "bottom-center",
+                        className: "!bg-black/90 !border !border-primary/40 !shadow-[0_0_20px_hsl(var(--primary)/0.3)] !text-primary font-mono !text-xs !tracking-widest",
+                      }
+                    );
+                  }}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    isSoundEnabled
+                      ? "text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.6)] hover:bg-primary/10"
+                      : "text-muted-foreground/50 hover:bg-muted/10"
+                  }`}
+                  aria-label={isSoundEnabled ? "Mute notifications" : "Unmute notifications"}
+                >
+                  {isSoundEnabled ? (
+                    <Volume2 className="w-5 h-5 transition-transform duration-300" />
+                  ) : (
+                    <VolumeX className="w-5 h-5 transition-transform duration-300" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
+                {isSoundEnabled ? "SONAR ACTIVE" : "SILENT RUNNING"}
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
