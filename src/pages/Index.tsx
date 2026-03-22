@@ -68,7 +68,7 @@ const Index = () => {
   const [editingText, setEditingText] = useState("");
   
   // Audio hook - manages all sound playback
-  const { sounds, toggleSound, playCompletionSound, activeSoundsCount } = useDeepDiveAudio();
+  const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
