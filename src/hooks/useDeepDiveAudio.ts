@@ -15,9 +15,12 @@ export interface UseDeepDiveAudioReturn {
   stopAllSounds: () => void;
   playCompletionSound: () => void;
   activeSoundsCount: number;
+  isSoundEnabled: boolean;
+  toggleSoundEnabled: () => void;
 }
 
 const SOUND_TYPES: SoundType[] = ["rain", "ocean", "whiteNoise"];
+const SOUND_ENABLED_KEY = "deepdive_sound_enabled";
 
 export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   const [sounds, setSounds] = useState<SoundState>({
@@ -26,8 +29,18 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
     whiteNoise: false,
   });
 
+  const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem(SOUND_ENABLED_KEY);
+    return saved !== null ? saved === "true" : true;
+  });
+
   const audioRefs = useRef<{ [K in SoundType]?: HTMLAudioElement }>({});
   const alarmRef = useRef<HTMLAudioElement | null>(null);
+
+  // Persist sound preference
+  useEffect(() => {
+    localStorage.setItem(SOUND_ENABLED_KEY, String(isSoundEnabled));
+  }, [isSoundEnabled]);
 
   // Initialize audio elements + preload alarm
   useEffect(() => {
@@ -87,14 +100,19 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   }, []);
 
   const playCompletionSound = useCallback(() => {
+    if (!isSoundEnabled) return;
     const alarm = alarmRef.current;
     if (alarm) {
       alarm.currentTime = 0;
       alarm.play().catch((err) => console.error('[Audio] Alarm play failed:', err));
     }
+  }, [isSoundEnabled]);
+
+  const toggleSoundEnabled = useCallback(() => {
+    setIsSoundEnabled((prev) => !prev);
   }, []);
 
   const activeSoundsCount = Object.values(sounds).filter(Boolean).length;
 
-  return { sounds, toggleSound, stopAllSounds, playCompletionSound, activeSoundsCount };
+  return { sounds, toggleSound, stopAllSounds, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled };
 };
