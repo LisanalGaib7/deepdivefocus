@@ -11,6 +11,7 @@
     "preview": "npx --yes vite@5.4.19 preview"
   },
   "dependencies": {
+    "@alloc/quick-lru": "^5.2.0",
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.1.0",
     "@capacitor/haptics": "^8.0.1",
