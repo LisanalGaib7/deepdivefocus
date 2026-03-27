@@ -367,3 +367,15 @@ All colors MUST be HSL.
 #lovable-badge {
   display: none !important;
 }
+
+/* Fullscreen immersion flash — GPU-accelerated */
+@keyframes immersion-flash {
+  0% { opacity: 1; transform: scale(1); }
+  60% { opacity: 0.8; transform: scale(1.02); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+@keyframes immersion-text {
+  0% { opacity: 0; transform: scale(0.92) translateZ(0); }
+  30% { opacity: 1; transform: scale(1) translateZ(0); }
+  100% { opacity: 0; transform: scale(1.05) translateZ(0); }
+}
