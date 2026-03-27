@@ -58,10 +58,12 @@ const AdminSubscriptions = () => {
     }
 
     // Fetch all active subscriptions
-    const { data: subs } = await (supabase
-      .from("pro_subscriptions" as any)
+    const { data: subs, error: sErr } = await supabase
+      .from("pro_subscriptions")
       .select("*")
-      .eq("status", "active") as any);
+      .eq("status", "active");
+
+    console.log("[Admin] Subs result:", { count: subs?.length, error: sErr });
 
     const subMap = new Map<string, any>();
     if (subs) {
@@ -145,21 +147,21 @@ const AdminSubscriptions = () => {
     }
 
     // Deactivate existing
-    await (supabase
-      .from("pro_subscriptions" as any)
-      .update({ status: "expired" } as any)
+    await supabase
+      .from("pro_subscriptions")
+      .update({ status: "expired" })
       .eq("user_id", targetUser.user_id)
-      .eq("status", "active") as any);
+      .eq("status", "active");
 
-    const { error } = await (supabase
-      .from("pro_subscriptions" as any)
+    const { error } = await supabase
+      .from("pro_subscriptions")
       .insert({
         user_id: targetUser.user_id,
-        plan_type: planType,
+        plan_type: planType as "monthly" | "yearly" | "lifetime",
         status: "active",
         starts_at: now,
         ends_at: endsAt,
-      } as any) as any);
+      });
 
     if (error) {
       toast.error("Failed to grant Pro", { description: error.message });
@@ -176,10 +178,10 @@ const AdminSubscriptions = () => {
   const revokePro = async (targetUser: UserWithSub) => {
     if (!targetUser.sub_id) return;
 
-    await (supabase
-      .from("pro_subscriptions" as any)
-      .update({ status: "revoked" } as any)
-      .eq("id", targetUser.sub_id) as any);
+    await supabase
+      .from("pro_subscriptions")
+      .update({ status: "revoked" })
+      .eq("id", targetUser.sub_id);
 
     toast.info("Pro access revoked");
     await fetchAllUsers();
@@ -249,6 +251,19 @@ const AdminSubscriptions = () => {
         {loadingUsers ? (
           <div className="text-center py-12 text-primary animate-pulse font-robotic tracking-widest">
             LOADING CREW MANIFEST...
+          </div>
+        ) : filteredUsers.length === 0 && allUsers.length === 0 ? (
+          <div className="border border-primary/20 rounded-lg p-12 text-center space-y-4">
+            <div className="text-primary/60 text-4xl">⚓</div>
+            <h2 className="text-lg font-bold font-robotic tracking-widest text-primary uppercase">
+              No Divers Found in the System
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              The database returned 0 profiles. This could mean RLS policies are blocking access, or no users have signed up yet.
+            </p>
+            <p className="text-xs text-muted-foreground/60 font-mono">
+              Tip: Make sure you're logged in as aaaehgus@gmail.com and the is_admin() function is returning true.
+            </p>
           </div>
         ) : (
           <div className="border border-primary/20 rounded-lg overflow-hidden">
