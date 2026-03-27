@@ -1,9 +1,10 @@
 /**
  * useProStatus — single source of truth for Pro subscription state.
- * Currently uses localStorage for demo purposes; swap for Supabase
- * subscription check when payment is wired up.
+ * Checks Supabase pro_subscriptions table for authenticated users,
+ * falls back to localStorage for guest mode.
  */
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 const PRO_KEY = 'deepdive_pro_status';
 
@@ -11,7 +12,45 @@ export const useProStatus = () => {
   const [isPro, setIsPro] = useState<boolean>(() => {
     return localStorage.getItem(PRO_KEY) === 'true';
   });
+  const [loading, setLoading] = useState(true);
 
+  // Check pro status from database
+  const checkProStatus = useCallback(async () => {
+    const { data: { session } } = await (supabase.auth as any).getSession();
+    
+    if (!session?.user) {
+      // Guest mode: use localStorage
+      setIsPro(localStorage.getItem(PRO_KEY) === 'true');
+      setLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase.rpc('is_user_pro', {
+      _user_id: session.user.id,
+    });
+
+    if (error) {
+      console.error('Error checking pro status:', error);
+      // Fallback to localStorage
+      setIsPro(localStorage.getItem(PRO_KEY) === 'true');
+    } else {
+      const proStatus = !!data;
+      setIsPro(proStatus);
+      // Sync to localStorage for offline/fast reads
+      if (proStatus) {
+        localStorage.setItem(PRO_KEY, 'true');
+      } else {
+        localStorage.removeItem(PRO_KEY);
+      }
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    checkProStatus();
+  }, [checkProStatus]);
+
+  // Legacy activatePro for guest/demo mode
   const activatePro = useCallback(() => {
     localStorage.setItem(PRO_KEY, 'true');
     setIsPro(true);
@@ -22,5 +61,5 @@ export const useProStatus = () => {
     setIsPro(false);
   }, []);
 
-  return { isPro, activatePro, deactivatePro };
+  return { isPro, activatePro, deactivatePro, refreshProStatus: checkProStatus, proLoading: loading };
 };
