@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, VolumeX, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, VolumeX, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown, Maximize, Minimize } from "lucide-react";
 import SortableTaskList from "@/components/common/SortableTaskList";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useFullscreen } from "@/hooks/useFullscreen";
 
 const FREE_TASK_LIMIT = 2;
 
