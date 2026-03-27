@@ -217,7 +217,7 @@ const AdminSubscriptions = () => {
         {selectedUser && (
           <div className="border border-primary/30 rounded-lg p-4 space-y-4 bg-card">
             <div className="flex items-center gap-2">
-              <Crown className="w-5 h-5 text-amber-400" />
+              <Crown className="w-5 h-5 text-primary" />
               <span className="font-bold">{selectedUser.display_name}</span>
               {userSub ? (
                 <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full uppercase tracking-wider">
