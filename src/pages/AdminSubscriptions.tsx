@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -6,37 +6,90 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Crown, ArrowLeft, Shield } from "lucide-react";
+import { Search, Crown, ArrowLeft, Shield, Users, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ADMIN_EMAIL = "aaaehgus@gmail.com";
 
-interface UserResult {
+interface UserWithSub {
   user_id: string;
   display_name: string | null;
-  email?: string;
-}
-
-interface Subscription {
-  id: string;
-  user_id: string;
-  plan_type: string;
-  status: string;
-  starts_at: string;
-  ends_at: string;
+  total_pearls: number | null;
+  total_depth: number | null;
+  created_at: string;
+  // Subscription info (joined)
+  sub_id?: string;
+  plan_type?: string;
+  sub_status?: string;
+  starts_at?: string;
+  ends_at?: string;
 }
 
 const AdminSubscriptions = () => {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchResults, setSearchResults] = useState<UserResult[]>([]);
-  const [selectedUser, setSelectedUser] = useState<UserResult | null>(null);
-  const [userSub, setUserSub] = useState<Subscription | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allUsers, setAllUsers] = useState<UserWithSub[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [selectedUser, setSelectedUser] = useState<UserWithSub | null>(null);
   const [planType, setPlanType] = useState<string>("lifetime");
-  const [searching, setSearching] = useState(false);
   const [granting, setGranting] = useState(false);
+
+  const fetchAllUsers = useCallback(async () => {
+    setLoadingUsers(true);
+
+    // Fetch all profiles
+    const { data: profiles, error: pErr } = await supabase
+      .from("profiles")
+      .select("user_id, display_name, total_pearls, total_depth, created_at")
+      .order("created_at", { ascending: false });
+
+    if (pErr) {
+      toast.error("Failed to load users", { description: pErr.message });
+      setLoadingUsers(false);
+      return;
+    }
+
+    // Fetch all active subscriptions
+    const { data: subs } = await (supabase
+      .from("pro_subscriptions" as any)
+      .select("*")
+      .eq("status", "active") as any);
+
+    const subMap = new Map<string, any>();
+    if (subs) {
+      for (const s of subs) {
+        // Keep latest sub per user
+        const existing = subMap.get(s.user_id);
+        if (!existing || new Date(s.ends_at) > new Date(existing.ends_at)) {
+          subMap.set(s.user_id, s);
+        }
+      }
+    }
+
+    const merged: UserWithSub[] = (profiles || []).map((p) => {
+      const sub = subMap.get(p.user_id);
+      return {
+        ...p,
+        sub_id: sub?.id,
+        plan_type: sub?.plan_type,
+        sub_status: sub?.status,
+        starts_at: sub?.starts_at,
+        ends_at: sub?.ends_at,
+      };
+    });
+
+    setAllUsers(merged);
+    setLoadingUsers(false);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && user?.email === ADMIN_EMAIL) {
+      fetchAllUsers();
+    }
+  }, [loading, user, fetchAllUsers]);
 
   if (loading) {
     return (
@@ -46,54 +99,28 @@ const AdminSubscriptions = () => {
     );
   }
 
-  // Gate: only admin email can access
   if (!user?.email || user.email !== ADMIN_EMAIL) {
     return <Navigate to="/" replace />;
   }
 
-  const searchUser = async () => {
-    if (!searchEmail.trim()) return;
-    setSearching(true);
-    setSelectedUser(null);
-    setUserSub(null);
+  const isProActive = (u: UserWithSub) =>
+    u.sub_status === "active" && u.ends_at && new Date(u.ends_at) > new Date();
 
-    // Search profiles by display_name (email part) — we can't query auth.users directly
-    // We'll use an edge function approach, but for simplicity search profiles
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("user_id, display_name")
-      .ilike("display_name", `%${searchEmail.trim()}%`)
-      .limit(10);
+  const filteredUsers = allUsers.filter((u) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (u.display_name || "").toLowerCase().includes(q) ||
+      u.user_id.toLowerCase().includes(q)
+    );
+  });
 
-    if (error) {
-      toast.error("Search failed", { description: error.message });
-      setSearchResults([]);
-    } else {
-      setSearchResults((data || []).map(d => ({ ...d, email: d.display_name || "" })));
-    }
-    setSearching(false);
-  };
+  const totalUsers = allUsers.length;
+  const proUsers = allUsers.filter(isProActive).length;
+  const freeUsers = totalUsers - proUsers;
 
-  const selectUser = async (u: UserResult) => {
-    setSelectedUser(u);
-
-    // Fetch existing subscription
-    const { data } = await supabase
-      .from("pro_subscriptions" as any)
-      .select("*")
-      .eq("user_id", u.user_id)
-      .eq("status", "active")
-      .order("ends_at", { ascending: false })
-      .limit(1)
-      .maybeSingle() as any;
-
-    setUserSub(data as Subscription | null);
-  };
-
-  const grantPro = async () => {
-    if (!selectedUser) return;
+  const grantPro = async (targetUser: UserWithSub) => {
     setGranting(true);
-
     const now = new Date().toISOString();
     let endsAt: string;
 
@@ -109,18 +136,17 @@ const AdminSubscriptions = () => {
       endsAt = d.toISOString();
     }
 
-    // Deactivate existing active subs
+    // Deactivate existing
     await (supabase
       .from("pro_subscriptions" as any)
       .update({ status: "expired" } as any)
-      .eq("user_id", selectedUser.user_id)
+      .eq("user_id", targetUser.user_id)
       .eq("status", "active") as any);
 
-    // Insert new subscription
     const { error } = await (supabase
       .from("pro_subscriptions" as any)
       .insert({
-        user_id: selectedUser.user_id,
+        user_id: targetUser.user_id,
         plan_type: planType,
         status: "active",
         starts_at: now,
@@ -131,135 +157,211 @@ const AdminSubscriptions = () => {
       toast.error("Failed to grant Pro", { description: error.message });
     } else {
       toast.success("NUCLEAR REACTOR ACTIVATED", {
-        description: `${planType.toUpperCase()} Pro granted to ${selectedUser.display_name}`,
+        description: `${planType.toUpperCase()} Pro → ${targetUser.display_name}`,
       });
-      // Refresh
-      await selectUser(selectedUser);
+      await fetchAllUsers();
     }
     setGranting(false);
+    setSelectedUser(null);
   };
 
-  const revokePro = async () => {
-    if (!selectedUser || !userSub) return;
+  const revokePro = async (targetUser: UserWithSub) => {
+    if (!targetUser.sub_id) return;
 
     await (supabase
       .from("pro_subscriptions" as any)
       .update({ status: "revoked" } as any)
-      .eq("id", userSub.id) as any);
+      .eq("id", targetUser.sub_id) as any);
 
     toast.info("Pro access revoked");
-    setUserSub(null);
+    await fetchAllUsers();
+    setSelectedUser(null);
+  };
+
+  const formatDate = (d?: string) => {
+    if (!d) return "—";
+    const date = new Date(d);
+    if (date.getFullYear() >= 2099) return "∞ Lifetime";
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-            <ArrowLeft className="w-5 h-5" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <Shield className="w-6 h-6 text-primary" />
+            <h1 className="text-xl font-bold font-robotic tracking-widest uppercase text-primary">
+              Admin — Subscriptions
+            </h1>
+          </div>
+          <Button variant="outline" size="sm" onClick={fetchAllUsers} className="gap-2 border-primary/30">
+            <RefreshCw className="w-4 h-4" />
+            Refresh
           </Button>
-          <Shield className="w-6 h-6 text-primary" />
-          <h1 className="text-xl font-bold font-robotic tracking-widest uppercase text-primary">
-            Admin — Subscriptions
-          </h1>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="border border-primary/20 rounded-lg p-4 bg-card text-center">
+            <Users className="w-5 h-5 text-primary mx-auto mb-1" />
+            <div className="text-2xl font-bold text-primary">{totalUsers}</div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wider">Total Users</div>
+          </div>
+          <div className="border border-primary/20 rounded-lg p-4 bg-card text-center">
+            <Crown className="w-5 h-5 text-primary mx-auto mb-1" />
+            <div className="text-2xl font-bold text-primary">{proUsers}</div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wider">Pro Users</div>
+          </div>
+          <div className="border border-primary/20 rounded-lg p-4 bg-card text-center">
+            <div className="w-5 h-5 mx-auto mb-1 text-muted-foreground text-lg leading-5">○</div>
+            <div className="text-2xl font-bold text-muted-foreground">{freeUsers}</div>
+            <div className="text-xs text-muted-foreground uppercase tracking-wider">Free Users</div>
+          </div>
         </div>
 
         {/* Search */}
         <div className="flex gap-2">
-          <Input
-            placeholder="Search by display name or email..."
-            value={searchEmail}
-            onChange={(e) => setSearchEmail(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && searchUser()}
-            className="flex-1 border-primary/30 bg-background"
-          />
-          <Button onClick={searchUser} disabled={searching} className="gap-2">
-            <Search className="w-4 h-4" />
-            {searching ? "..." : "Search"}
-          </Button>
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Filter by name or user ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 border-primary/30 bg-background"
+            />
+          </div>
         </div>
 
-        {/* Results */}
-        {searchResults.length > 0 && (
+        {/* User Table */}
+        {loadingUsers ? (
+          <div className="text-center py-12 text-primary animate-pulse font-robotic tracking-widest">
+            LOADING CREW MANIFEST...
+          </div>
+        ) : (
           <div className="border border-primary/20 rounded-lg overflow-hidden">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>ID</TableHead>
-                  <TableHead></TableHead>
+                <TableRow className="border-primary/20">
+                  <TableHead className="text-primary/80">User</TableHead>
+                  <TableHead className="text-primary/80">Status</TableHead>
+                  <TableHead className="text-primary/80">Plan</TableHead>
+                  <TableHead className="text-primary/80">Starts</TableHead>
+                  <TableHead className="text-primary/80">Ends</TableHead>
+                  <TableHead className="text-primary/80">Depth</TableHead>
+                  <TableHead className="text-primary/80">Pearls</TableHead>
+                  <TableHead className="text-primary/80 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {searchResults.map((u) => (
-                  <TableRow
-                    key={u.user_id}
-                    className={selectedUser?.user_id === u.user_id ? "bg-primary/10" : ""}
-                  >
-                    <TableCell className="font-medium">{u.display_name || "—"}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground font-mono">
-                      {u.user_id.slice(0, 8)}...
-                    </TableCell>
-                    <TableCell>
-                      <Button size="sm" variant="outline" onClick={() => selectUser(u)}>
-                        Select
-                      </Button>
+                {filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                      No users found
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filteredUsers.map((u) => {
+                    const isPro = isProActive(u);
+                    const isSelected = selectedUser?.user_id === u.user_id;
+
+                    return (
+                      <TableRow
+                        key={u.user_id}
+                        className={`border-primary/10 cursor-pointer transition-colors ${
+                          isSelected ? "bg-primary/10" : "hover:bg-primary/5"
+                        }`}
+                        onClick={() => setSelectedUser(isSelected ? null : u)}
+                      >
+                        <TableCell>
+                          <div>
+                            <div className="font-medium text-sm">{u.display_name || "—"}</div>
+                            <div className="text-xs text-muted-foreground font-mono">
+                              {u.user_id.slice(0, 12)}...
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {isPro ? (
+                            <Badge className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
+                              PRO
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-muted-foreground">
+                              FREE
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {u.plan_type ? (
+                            <span className="uppercase tracking-wider text-xs">{u.plan_type}</span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {formatDate(u.starts_at)}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {formatDate(u.ends_at)}
+                        </TableCell>
+                        <TableCell className="text-sm font-mono">
+                          {u.total_depth?.toLocaleString() || "0"}m
+                        </TableCell>
+                        <TableCell className="text-sm font-mono">
+                          {u.total_pearls?.toLocaleString() || "0"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {isSelected && (
+                            <div className="flex items-center gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                              <Select value={planType} onValueChange={setPlanType}>
+                                <SelectTrigger className="w-28 h-8 text-xs border-primary/30">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="lifetime">Lifetime</SelectItem>
+                                  <SelectItem value="yearly">Yearly</SelectItem>
+                                  <SelectItem value="monthly">Monthly</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                size="sm"
+                                onClick={() => grantPro(u)}
+                                disabled={granting}
+                                className="h-8 gap-1 text-xs"
+                              >
+                                <Crown className="w-3 h-3" />
+                                Grant
+                              </Button>
+                              {isPro && (
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => revokePro(u)}
+                                  className="h-8 text-xs"
+                                >
+                                  Revoke
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
               </TableBody>
             </Table>
           </div>
         )}
 
-        {/* Selected user panel */}
-        {selectedUser && (
-          <div className="border border-primary/30 rounded-lg p-4 space-y-4 bg-card">
-            <div className="flex items-center gap-2">
-              <Crown className="w-5 h-5 text-primary" />
-              <span className="font-bold">{selectedUser.display_name}</span>
-              {userSub ? (
-                <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  {userSub.plan_type} — Active
-                </span>
-              ) : (
-                <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  Free
-                </span>
-              )}
-            </div>
-
-            {userSub && (
-              <div className="text-sm text-muted-foreground space-y-1">
-                <p>Expires: {new Date(userSub.ends_at).toLocaleDateString()}</p>
-                <Button size="sm" variant="destructive" onClick={revokePro}>
-                  Revoke Access
-                </Button>
-              </div>
-            )}
-
-            <div className="flex gap-2 items-end">
-              <div className="flex-1">
-                <label className="text-xs text-muted-foreground mb-1 block">Plan Type</label>
-                <Select value={planType} onValueChange={setPlanType}>
-                  <SelectTrigger className="border-primary/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="lifetime">Lifetime</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button onClick={grantPro} disabled={granting} className="gap-2">
-                <Crown className="w-4 h-4" />
-                {granting ? "Granting..." : "Grant Pro"}
-              </Button>
-            </div>
-          </div>
-        )}
+        <div className="text-xs text-muted-foreground text-center">
+          Showing {filteredUsers.length} of {totalUsers} users
+        </div>
       </div>
     </div>
   );
