@@ -408,6 +408,7 @@ const Index = () => {
     setRewardCreature(null);
     setTimeLeft(setDuration);
     resetDive();
+    exitFullscreen();
     
     // Trigger Collection & Engineering Bay to refresh with latest data
     setCollectionRefreshKey(prev => prev + 1);
