@@ -184,6 +184,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_admin: { Args: never; Returns: boolean }
       is_user_pro: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
