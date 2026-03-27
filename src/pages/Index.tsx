@@ -1098,25 +1098,15 @@ const Index = () => {
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Fullscreen Immersion Flash Overlay */}
+      {/* Fullscreen Immersion Flash */}
       {showOverlay && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none will-change-transform"
+          className="fixed inset-0 z-[9999] pointer-events-none will-change-[opacity]"
           style={{
-            animation: "immersion-flash 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-            backgroundColor: "hsl(var(--background))",
+            animation: "immersion-snap 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            backgroundColor: "hsl(var(--primary) / 0.15)",
           }}
-        >
-          <p
-            className="font-mono text-lg md:text-2xl tracking-[0.3em] uppercase text-primary"
-            style={{
-              textShadow: "0 0 30px hsl(var(--primary) / 0.9), 0 0 60px hsl(var(--primary) / 0.4)",
-              animation: "immersion-text 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-            }}
-          >
-            Full Immersion
-          </p>
-        </div>
+        />
       )}
       
       {/* Emergency Ascent Modal */}
