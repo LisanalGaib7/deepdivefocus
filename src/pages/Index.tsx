@@ -419,7 +419,7 @@ const Index = () => {
         description: `${rewardCreature.name} saved!`,
       });
     }
-  }, [rewardCreature, addCreature, setDuration, resetDive]);
+  }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
 
   // Task management functions
   const taskLimit = isPro ? TIMER_CONFIG.MAX_TASKS : FREE_TASK_LIMIT;
