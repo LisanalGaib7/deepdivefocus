@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Search, Crown, ArrowLeft, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ADMIN_EMAIL = "gkswjdals0821@gmail.com";
+const ADMIN_EMAIL = "aaaehgus@gmail.com";
 
 interface UserResult {
   user_id: string;
