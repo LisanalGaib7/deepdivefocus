@@ -70,6 +70,7 @@ const Index = () => {
   
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
+  const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
