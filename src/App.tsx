@@ -6,6 +6,7 @@ import { AuthProvider, useAuthContext } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import AdminSubscriptions from "./pages/AdminSubscriptions";
 import NotFound from "./pages/NotFound";
 
 // Protected route wrapper
@@ -62,6 +63,14 @@ const AppRoutes = () => (
         <PublicRoute>
           <Auth />
         </PublicRoute>
+      }
+    />
+    <Route
+      path="/admin/subscriptions"
+      element={
+        <ProtectedRoute>
+          <AdminSubscriptions />
+        </ProtectedRoute>
       }
     />
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
