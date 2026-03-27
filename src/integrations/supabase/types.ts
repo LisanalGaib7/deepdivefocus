@@ -53,6 +53,39 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_subscriptions: {
+        Row: {
+          created_at: string
+          ends_at: string
+          id: string
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          starts_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string
+          id?: string
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          starts_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string
+          id?: string
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          starts_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -151,10 +184,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_user_pro: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      plan_type: "monthly" | "yearly" | "lifetime"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -281,6 +314,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      plan_type: ["monthly", "yearly", "lifetime"],
+    },
   },
 } as const
