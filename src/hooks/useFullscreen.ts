@@ -4,7 +4,6 @@ export function useFullscreen() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  // Sync state with actual fullscreen changes (e.g. user presses Escape)
   useEffect(() => {
     const handleChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -14,20 +13,16 @@ export function useFullscreen() {
   }, []);
 
   const enterFullscreen = useCallback(async () => {
-    try {
-      // Show cinematic overlay
-      setShowOverlay(true);
-      setTimeout(() => setShowOverlay(false), 2500);
+    // Fire fullscreen API immediately — don't wait for animations
+    const fsPromise = document.documentElement.requestFullscreen
+      ? document.documentElement.requestFullscreen()
+      : (document.documentElement as any).webkitRequestFullscreen?.();
 
-      if (document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen();
-      } else if ((document.documentElement as any).webkitRequestFullscreen) {
-        (document.documentElement as any).webkitRequestFullscreen();
-      }
-    } catch (err) {
-      // Fullscreen not supported or blocked — still show overlay effect
-      console.warn("Fullscreen request failed:", err);
-    }
+    // Show flash overlay concurrently (not blocking)
+    setShowOverlay(true);
+    setTimeout(() => setShowOverlay(false), 350);
+
+    try { await fsPromise; } catch { /* silent */ }
   }, []);
 
   const exitFullscreen = useCallback(async () => {
@@ -37,9 +32,7 @@ export function useFullscreen() {
       } else if ((document as any).webkitExitFullscreen) {
         (document as any).webkitExitFullscreen();
       }
-    } catch (err) {
-      console.warn("Exit fullscreen failed:", err);
-    }
+    } catch { /* silent */ }
   }, []);
 
   const toggleFullscreen = useCallback(() => {
