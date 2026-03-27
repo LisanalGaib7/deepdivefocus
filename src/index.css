@@ -368,14 +368,8 @@ All colors MUST be HSL.
   display: none !important;
 }
 
-/* Fullscreen immersion flash — GPU-accelerated */
-@keyframes immersion-flash {
-  0% { opacity: 1; transform: scale(1); }
-  60% { opacity: 0.8; transform: scale(1.02); }
-  100% { opacity: 0; transform: scale(1.04); }
-}
-@keyframes immersion-text {
-  0% { opacity: 0; transform: scale(0.92) translateZ(0); }
-  30% { opacity: 1; transform: scale(1) translateZ(0); }
-  100% { opacity: 0; transform: scale(1.05) translateZ(0); }
+/* Fullscreen snap flash — GPU-accelerated, no layout shift */
+@keyframes immersion-snap {
+  0% { opacity: 0.6; }
+  100% { opacity: 0; }
 }

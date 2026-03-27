@@ -20,7 +20,7 @@ export function useFullscreen() {
 
     // Show flash overlay concurrently (not blocking)
     setShowOverlay(true);
-    setTimeout(() => setShowOverlay(false), 350);
+    setTimeout(() => setShowOverlay(false), 150);
 
     try { await fsPromise; } catch { /* silent */ }
   }, []);
