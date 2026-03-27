@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, VolumeX, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown } from "lucide-react";
+import { Play, Pause, RotateCcw, Check, Volume2, VolumeX, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown, Maximize, Minimize } from "lucide-react";
 import SortableTaskList from "@/components/common/SortableTaskList";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,7 @@ import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
+import { useFullscreen } from "@/hooks/useFullscreen";
 
 const FREE_TASK_LIMIT = 2;
 
@@ -69,6 +70,7 @@ const Index = () => {
   
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
+  const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
@@ -314,6 +316,7 @@ const Index = () => {
     setShowEmergencyModal(false);
     setTimeLeft(setDuration);
     resetDive();
+    exitFullscreen();
   };
 
   const handleMissionComplete = useCallback(() => {
@@ -405,6 +408,7 @@ const Index = () => {
     setRewardCreature(null);
     setTimeLeft(setDuration);
     resetDive();
+    exitFullscreen();
     
     // Trigger Collection & Engineering Bay to refresh with latest data
     setCollectionRefreshKey(prev => prev + 1);
@@ -415,7 +419,7 @@ const Index = () => {
         description: `${rewardCreature.name} saved!`,
       });
     }
-  }, [rewardCreature, addCreature, setDuration, resetDive]);
+  }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
 
   // Task management functions
   const taskLimit = isPro ? TIMER_CONFIG.MAX_TASKS : FREE_TASK_LIMIT;
@@ -546,8 +550,40 @@ const Index = () => {
             </div>
           )}
           
-          {/* Top Right Controls - Sound Toggle, Hangar, Guidebook & Logout */}
-          <div className="absolute top-4 right-4 flex items-center gap-1">
+           {/* Top Right Controls - Fullscreen, Sound Toggle, Hangar, Guidebook & Logout */}
+           <div className="absolute top-4 right-4 flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    toggleFullscreen();
+                    toast(
+                      isFullscreen ? "STANDARD VIEW RESTORED" : "INITIATING FULL IMMERSION",
+                      {
+                        duration: 2000,
+                        position: "bottom-center",
+                        className: "!bg-black/90 !border !border-primary/40 !shadow-[0_0_20px_hsl(var(--primary)/0.3)] !text-primary font-mono !text-xs !tracking-widest",
+                      }
+                    );
+                  }}
+                  className={`p-2 rounded-lg transition-all duration-300 ${
+                    isFullscreen
+                      ? "text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.6)] hover:bg-primary/10"
+                      : "text-muted-foreground/50 hover:bg-muted/10"
+                  }`}
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                >
+                  {isFullscreen ? (
+                    <Minimize className="w-5 h-5 transition-transform duration-300" />
+                  ) : (
+                    <Maximize className="w-5 h-5 transition-transform duration-300" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
+                {isFullscreen ? "EXIT IMMERSION" : "FULL IMMERSION"}
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -1061,6 +1097,19 @@ const Index = () => {
       )}
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Fullscreen Immersion Overlay */}
+      {showOverlay && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/95 animate-fade-in pointer-events-none">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-16 h-[2px] bg-primary/60 rounded-full animate-pulse" />
+            <p className="font-mono text-lg md:text-2xl tracking-[0.3em] uppercase text-primary drop-shadow-[0_0_20px_hsl(var(--primary)/0.8)] animate-pulse">
+              Initiating Full Immersion Protocol
+            </p>
+            <div className="w-16 h-[2px] bg-primary/60 rounded-full animate-pulse" />
+          </div>
+        </div>
+      )}
       
       {/* Emergency Ascent Modal */}
       <EmergencyModal 
