@@ -36,6 +36,7 @@ const AdminSubscriptions = () => {
   const [selectedUser, setSelectedUser] = useState<UserWithSub | null>(null);
   const [planType, setPlanType] = useState<string>("lifetime");
   const [granting, setGranting] = useState(false);
+  const [insertingTestUser, setInsertingTestUser] = useState(false);
 
   const fetchAllUsers = useCallback(async () => {
     setLoadingUsers(true);
@@ -48,6 +49,7 @@ const AdminSubscriptions = () => {
       .select("user_id, display_name, total_pearls, total_depth, created_at")
       .order("created_at", { ascending: false });
 
+    console.log("FETCHED USERS:", profiles);
     console.log("[Admin] Profiles result:", { count: profiles?.length, error: pErr });
 
     if (pErr) {
@@ -66,6 +68,10 @@ const AdminSubscriptions = () => {
     console.log("[Admin] Subs result:", { count: subs?.length, error: sErr });
 
     const subMap = new Map<string, any>();
+    if (sErr) {
+      console.error("[Admin] Subscription fetch error:", sErr);
+    }
+
     if (subs) {
       for (const s of subs) {
         // Keep latest sub per user
@@ -88,6 +94,7 @@ const AdminSubscriptions = () => {
       };
     });
 
+    console.log("[Admin] MERGED USERS:", merged);
     setAllUsers(merged);
     setLoadingUsers(false);
   }, []);
@@ -128,6 +135,7 @@ const AdminSubscriptions = () => {
   const totalUsers = allUsers.length;
   const proUsers = allUsers.filter(isProActive).length;
   const freeUsers = totalUsers - proUsers;
+  const usersToRender = filteredUsers;
 
   const grantPro = async (targetUser: UserWithSub) => {
     setGranting(true);
@@ -186,6 +194,35 @@ const AdminSubscriptions = () => {
     toast.info("Pro access revoked");
     await fetchAllUsers();
     setSelectedUser(null);
+  };
+
+  const insertTestUser = async () => {
+    if (!user?.id) {
+      toast.error("You need to be logged in to insert a test user");
+      return;
+    }
+
+    setInsertingTestUser(true);
+
+    const { error } = await supabase.from("profiles").upsert(
+      {
+        user_id: user.id,
+        display_name: `Test Diver ${new Date().toLocaleTimeString("en-US", { hour12: false })}`,
+        total_depth: 0,
+        total_pearls: 0,
+      },
+      { onConflict: "user_id" }
+    );
+
+    if (error) {
+      console.error("[Admin] Insert test user error:", error);
+      toast.error("Failed to insert test user", { description: error.message });
+    } else {
+      toast.success("Test user upserted");
+      await fetchAllUsers();
+    }
+
+    setInsertingTestUser(false);
   };
 
   const formatDate = (d?: string) => {
@@ -252,18 +289,22 @@ const AdminSubscriptions = () => {
           <div className="text-center py-12 text-primary animate-pulse font-robotic tracking-widest">
             LOADING CREW MANIFEST...
           </div>
-        ) : filteredUsers.length === 0 && allUsers.length === 0 ? (
+        ) : allUsers.length === 0 ? (
           <div className="border border-primary/20 rounded-lg p-12 text-center space-y-4">
-            <div className="text-primary/60 text-4xl">⚓</div>
             <h2 className="text-lg font-bold font-robotic tracking-widest text-primary uppercase">
-              No Divers Found in the System
+              NO DIVERS FOUND IN THE SYSTEM. The database is currently empty.
             </h2>
-            <p className="text-sm text-muted-foreground">
-              The database returned 0 profiles. This could mean RLS policies are blocking access, or no users have signed up yet.
-            </p>
-            <p className="text-xs text-muted-foreground/60 font-mono">
-              Tip: Make sure you're logged in as aaaehgus@gmail.com and the is_admin() function is returning true.
-            </p>
+            <div className="text-foreground text-center py-10">No divers found in DB</div>
+            <div className="flex justify-center">
+              <Button
+                onClick={insertTestUser}
+                disabled={insertingTestUser}
+                variant="outline"
+                className="border-primary/30"
+              >
+                {insertingTestUser ? "Inserting..." : "Insert Test User"}
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="border border-primary/20 rounded-lg overflow-hidden">
@@ -281,14 +322,14 @@ const AdminSubscriptions = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.length === 0 ? (
+                {usersToRender.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                       No users found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((u) => {
+                  usersToRender.map((u) => {
                     const isPro = isProActive(u);
                     const isSelected = selectedUser?.user_id === u.user_id;
 
