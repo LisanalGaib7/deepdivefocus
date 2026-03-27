@@ -85,7 +85,7 @@ const AdminSubscriptions = () => {
       .eq("status", "active")
       .order("ends_at", { ascending: false })
       .limit(1)
-      .maybeSingle();
+      .maybeSingle() as any;
 
     setUserSub(data as Subscription | null);
   };
@@ -110,14 +110,14 @@ const AdminSubscriptions = () => {
     }
 
     // Deactivate existing active subs
-    await supabase
+    await (supabase
       .from("pro_subscriptions" as any)
       .update({ status: "expired" } as any)
       .eq("user_id", selectedUser.user_id)
-      .eq("status", "active");
+      .eq("status", "active") as any);
 
     // Insert new subscription
-    const { error } = await supabase
+    const { error } = await (supabase
       .from("pro_subscriptions" as any)
       .insert({
         user_id: selectedUser.user_id,
@@ -125,7 +125,7 @@ const AdminSubscriptions = () => {
         status: "active",
         starts_at: now,
         ends_at: endsAt,
-      } as any);
+      } as any) as any);
 
     if (error) {
       toast.error("Failed to grant Pro", { description: error.message });
@@ -142,10 +142,10 @@ const AdminSubscriptions = () => {
   const revokePro = async () => {
     if (!selectedUser || !userSub) return;
 
-    await supabase
+    await (supabase
       .from("pro_subscriptions" as any)
       .update({ status: "revoked" } as any)
-      .eq("id", userSub.id);
+      .eq("id", userSub.id) as any);
 
     toast.info("Pro access revoked");
     setUserSub(null);
