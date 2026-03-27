@@ -1098,16 +1098,24 @@ const Index = () => {
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Fullscreen Immersion Overlay */}
+      {/* Fullscreen Immersion Flash Overlay */}
       {showOverlay && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/95 animate-fade-in pointer-events-none">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-16 h-[2px] bg-primary/60 rounded-full animate-pulse" />
-            <p className="font-mono text-lg md:text-2xl tracking-[0.3em] uppercase text-primary drop-shadow-[0_0_20px_hsl(var(--primary)/0.8)] animate-pulse">
-              Initiating Full Immersion Protocol
-            </p>
-            <div className="w-16 h-[2px] bg-primary/60 rounded-full animate-pulse" />
-          </div>
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none will-change-transform"
+          style={{
+            animation: "immersion-flash 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            backgroundColor: "hsl(var(--background))",
+          }}
+        >
+          <p
+            className="font-mono text-lg md:text-2xl tracking-[0.3em] uppercase text-primary"
+            style={{
+              textShadow: "0 0 30px hsl(var(--primary) / 0.9), 0 0 60px hsl(var(--primary) / 0.4)",
+              animation: "immersion-text 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            }}
+          >
+            Full Immersion
+          </p>
         </div>
       )}
       
