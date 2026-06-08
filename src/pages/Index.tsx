@@ -426,27 +426,34 @@ const Index = () => {
   }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
 
   // Task management functions
-  const taskLimit = isPro ? TIMER_CONFIG.MAX_TASKS : FREE_TASK_LIMIT;
+  // HARD_CAP_TASKS is always-on (performance/UX). FREE_TASK_LIMIT only matters
+  // when the legacy subscription flow is re-enabled.
+  const taskLimit = SUBSCRIPTION_ENABLED && !isPro ? FREE_TASK_LIMIT : HARD_CAP_TASKS;
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskText.trim()) return;
 
-    // Free-tier limit enforcement
-    if (!isPro && tasks.length >= FREE_TASK_LIMIT) {
+    // [SUBSCRIPTION] Free-tier upgrade prompt — only when subscription gating is active.
+    if (SUBSCRIPTION_ENABLED && !isPro && tasks.length >= FREE_TASK_LIMIT) {
       setShowUpgradeRequired(true);
       return;
     }
 
-    // [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정
-    // When subscription gating is disabled, bypass the legacy task-count ceiling.
-    if (!SUBSCRIPTION_ENABLED || tasks.length < TIMER_CONFIG.MAX_TASKS) {
-      const newTask = await addTask(newTaskText.trim());
-      setNewTaskText("");
-      // Auto-select if no task selected
-      if (!selectedTaskId && newTask) {
-        setSelectedTaskId(newTask.id);
-      }
+    // Always-on hard ceiling. Show a visible toast so the user knows why
+    // their add was rejected, instead of a silently disabled input.
+    if (tasks.length >= HARD_CAP_TASKS) {
+      toast.error(`Mission slots full (${HARD_CAP_TASKS} max)`, {
+        description: "Complete or remove a mission to add a new one.",
+      });
+      return;
+    }
+
+    const newTask = await addTask(newTaskText.trim());
+    setNewTaskText("");
+    // Auto-select if no task selected
+    if (!selectedTaskId && newTask) {
+      setSelectedTaskId(newTask.id);
     }
   };
 
@@ -956,13 +963,13 @@ const Index = () => {
                   onChange={(e) => setNewTaskText(e.target.value)}
                   placeholder="> Add a focus task..."
                   className="text-center text-lg h-14 font-mono bg-black/60 border border-white/10 placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
-                  disabled={tasks.length >= TIMER_CONFIG.MAX_TASKS}
+                  disabled={tasks.length >= HARD_CAP_TASKS}
                 />
-                <Button 
-                  type="submit" 
-                  size="icon" 
+                <Button
+                  type="submit"
+                  size="icon"
                   className="h-14 w-14 bg-primary hover:bg-primary/90"
-                  disabled={tasks.length >= TIMER_CONFIG.MAX_TASKS || !newTaskText.trim()}
+                  disabled={tasks.length >= HARD_CAP_TASKS || !newTaskText.trim()}
                 >
                   <Plus className="h-5 w-5" />
                 </Button>
