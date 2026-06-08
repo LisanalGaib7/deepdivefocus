@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { SUBSCRIPTION_ENABLED } from '@/config/featureFlags';
 
 const PRO_KEY = 'deepdive_pro_status';
 
@@ -61,5 +62,16 @@ export const useProStatus = () => {
     setIsPro(false);
   }, []);
 
-  return { isPro, activatePro, deactivatePro, refreshProStatus: checkProStatus, proLoading: loading };
+  // [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정
+  // When disabled, all users are treated as Pro so legacy limits are bypassed without deleting the code.
+  const effectiveIsPro = SUBSCRIPTION_ENABLED ? isPro : true;
+
+  return {
+    isPro: effectiveIsPro,
+    rawIsPro: isPro,
+    activatePro,
+    deactivatePro,
+    refreshProStatus: checkProStatus,
+    proLoading: loading,
+  };
 };
