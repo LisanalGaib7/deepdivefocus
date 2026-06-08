@@ -39,6 +39,7 @@ import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { SUBSCRIPTION_ENABLED } from "@/config/featureFlags";
 
 const FREE_TASK_LIMIT = 2;
 
@@ -530,7 +531,8 @@ const Index = () => {
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
           
           {/* Top Left - PRO Badge */}
-          {isPro && (
+          {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
+          {SUBSCRIPTION_ENABLED && isPro && (
             <div className="absolute top-4 left-4">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -922,7 +924,8 @@ const Index = () => {
                   MISSION OBJECTIVE
                 </span>
                 <div className="flex items-center gap-2">
-                  {!isPro && (
+                  {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
+                  {SUBSCRIPTION_ENABLED && !isPro && (
                     <button
                       type="button"
                       onClick={() => setShowPricing(true)}
@@ -931,11 +934,14 @@ const Index = () => {
                       ↑ UPGRADE
                     </button>
                   )}
-                  <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
-                    !isPro && tasks.length >= FREE_TASK_LIMIT ? 'text-yellow-400/80' : 'text-foreground/50'
-                  }`}>
-                    SLOT [{tasks.length}/{taskLimit}]
-                  </span>
+                  {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
+                  {SUBSCRIPTION_ENABLED && (
+                    <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
+                      !isPro && tasks.length >= FREE_TASK_LIMIT ? 'text-yellow-400/80' : 'text-foreground/50'
+                    }`}>
+                      SLOT [{tasks.length}/{taskLimit}]
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2">
@@ -1161,20 +1167,26 @@ const Index = () => {
       />
 
       {/* Upgrade Required Modal */}
-      <UpgradeRequiredModal
-        open={showUpgradeRequired}
-        onClose={() => setShowUpgradeRequired(false)}
-        onOpenPricing={() => setShowPricing(true)}
-      />
+      {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
+      {SUBSCRIPTION_ENABLED && (
+        <UpgradeRequiredModal
+          open={showUpgradeRequired}
+          onClose={() => setShowUpgradeRequired(false)}
+          onOpenPricing={() => setShowPricing(true)}
+        />
+      )}
 
       {/* Pricing / Pro Modal */}
-      <PricingModal
-        open={showPricing}
-        onClose={() => setShowPricing(false)}
-        isPro={isPro}
-        onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
-        currentPearls={profile?.total_pearls || 0}
-      />
+      {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
+      {SUBSCRIPTION_ENABLED && (
+        <PricingModal
+          open={showPricing}
+          onClose={() => setShowPricing(false)}
+          isPro={isPro}
+          onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
+          currentPearls={profile?.total_pearls || 0}
+        />
+      )}
 
     </>
   );
