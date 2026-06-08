@@ -36,12 +36,11 @@ import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
 import { Creature, CREATURES } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
-import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { SUBSCRIPTION_ENABLED } from "@/config/featureFlags";
-
-const FREE_TASK_LIMIT = 2;
+import { HARD_CAP_TASKS, LEGACY_FREE_TASK_LIMIT } from "@/config/limits";
 
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
