@@ -1,7 +1,13 @@
 /**
  * useProStatus — single source of truth for Pro subscription state.
- * Checks Supabase pro_subscriptions table for authenticated users,
- * falls back to localStorage for guest mode.
+ *
+ * Authoritative source: Supabase `is_user_pro` RPC (server-side).
+ * `localStorage` is a CACHE ONLY — never a grant authority. See
+ * `src/features/monetization/README.md` for the full security contract.
+ *
+ * While SUBSCRIPTION_ENABLED is false, this hook short-circuits and reports
+ * `isPro = false` (all paywall UI is hidden anyway, and limits in
+ * `src/config/limits.ts` are not gated on isPro).
  */
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,7 +24,7 @@ export const useProStatus = () => {
 
   // Check pro status from database
   const checkProStatus = useCallback(async () => {
-    // [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정
+    // [SUBSCRIPTION] gated — see src/features/monetization/README.md
     // Skip subscription reads entirely while the legacy monetization layer is disabled.
     if (!SUBSCRIPTION_ENABLED) {
       setIsPro(false);
@@ -27,9 +33,9 @@ export const useProStatus = () => {
     }
 
     const { data: { session } } = await (supabase.auth as any).getSession();
-    
+
     if (!session?.user) {
-      // Guest mode: use localStorage
+      // Guest mode: use localStorage cache only.
       setIsPro(localStorage.getItem(PRO_KEY) === 'true');
       setLoading(false);
       return;
@@ -41,7 +47,7 @@ export const useProStatus = () => {
 
     if (error) {
       console.error('Error checking pro status:', error);
-      // Fallback to localStorage
+      // Fallback to localStorage cache (best-effort, will reconcile on next check).
       setIsPro(localStorage.getItem(PRO_KEY) === 'true');
     } else {
       const proStatus = !!data;
@@ -57,6 +63,8 @@ export const useProStatus = () => {
   }, []);
 
   useEffect(() => {
+    // When the flag is off, the effect is a no-op so we skip the call entirely.
+    if (!SUBSCRIPTION_ENABLED) return;
     checkProStatus();
   }, [checkProStatus]);
 
@@ -71,13 +79,12 @@ export const useProStatus = () => {
     setIsPro(false);
   }, []);
 
-  // [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정
-  // When disabled, all users are treated as Pro so legacy limits are bypassed without deleting the code.
-  const effectiveIsPro = SUBSCRIPTION_ENABLED ? isPro : true;
-
+  // While the flag is off, paywall UI is hidden but we still report
+  // `isPro = false` so that any non-paywall logic (e.g. analytics labels)
+  // does not accidentally mark every user as Pro. Permanent free perks
+  // (task slot count, etc.) are now gated on HARD_CAP_* limits — not isPro.
   return {
-    isPro: effectiveIsPro,
-    rawIsPro: isPro,
+    isPro,
     activatePro,
     deactivatePro,
     refreshProStatus: checkProStatus,

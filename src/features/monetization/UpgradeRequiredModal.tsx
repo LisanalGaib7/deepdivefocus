@@ -1,3 +1,5 @@
+// FLAG: SUBSCRIPTION_ENABLED — gated, DO NOT DELETE.
+// See src/features/monetization/README.md for the reactivation checklist.
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Atom, Zap } from "lucide-react";

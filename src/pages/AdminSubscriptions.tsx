@@ -1,3 +1,6 @@
+// Admin tooling — always on, bypasses SUBSCRIPTION_ENABLED by design.
+// Lets ops grant/revoke Pro and inspect subscriptions regardless of the
+// public-facing feature flag. Access is gated by the `is_admin()` RPC.
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthContext } from "@/contexts/AuthContext";
