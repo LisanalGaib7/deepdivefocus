@@ -435,7 +435,9 @@ const Index = () => {
       return;
     }
 
-    if (tasks.length < TIMER_CONFIG.MAX_TASKS) {
+    // [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정
+    // When subscription gating is disabled, bypass the legacy task-count ceiling.
+    if (!SUBSCRIPTION_ENABLED || tasks.length < TIMER_CONFIG.MAX_TASKS) {
       const newTask = await addTask(newTaskText.trim());
       setNewTaskText("");
       // Auto-select if no task selected
