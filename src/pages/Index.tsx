@@ -430,6 +430,7 @@ const Index = () => {
         maxDepth={completion.completedSessionDepth}
         creature={completion.rewardCreature}
         sessionDuration={completion.completedSessionDuration}
+        isNewDiscovery={completion.isNewDiscovery}
       />
 
       
