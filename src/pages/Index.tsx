@@ -610,187 +610,45 @@ const Index = () => {
           </div>
         )}
 
-        {/* Task List - Hidden when timer is running (Focus Mode) */}
         {!isRunning && (
-          <div className="space-y-4 animate-fade-in w-full max-w-md md:max-w-lg mx-auto">
-            <form onSubmit={handleAddTask} className="space-y-2">
-              <div className="flex justify-between items-center px-1 mb-2">
-                <span className="text-xs uppercase tracking-widest text-primary font-bold">
-                  MISSION OBJECTIVE
-                </span>
-                <div className="flex items-center gap-2">
-                  {taskGating.showUpgradeHint && (
-                    <button
-                      type="button"
-                      onClick={() => setShowPricing(true)}
-                      className="text-[10px] font-mono text-yellow-400/70 hover:text-yellow-400 transition-colors tracking-wider"
-                    >
-                      ↑ UPGRADE
-                    </button>
-                  )}
-                  {taskGating.showSlotCounter && (
-                    <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
-                      taskGating.hitFreeLimit(tasks.length) ? 'text-yellow-400/80' : 'text-foreground/50'
-                    }`}>
-                      SLOT [{tasks.length}/{taskLimit}]
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  value={newTaskText}
-                  onChange={(e) => setNewTaskText(e.target.value)}
-                  placeholder="> Add a focus task..."
-                  className="text-center text-lg h-14 font-mono bg-black/60 border border-white/10 placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
-                  disabled={taskGating.hitHardCap(tasks.length)}
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  className="h-14 w-14 bg-primary hover:bg-primary/90"
-                  disabled={taskGating.hitHardCap(tasks.length) || !newTaskText.trim()}
-                >
-                  <Plus className="h-5 w-5" />
-                </Button>
-              </div>
-            </form>
-            
-            {/* Task List */}
-            {tasks.length > 0 && (
-              <SortableTaskList
-                tasks={tasks}
-                selectedTaskId={selectedTaskId}
-                editingTaskId={editingTaskId}
-                editingText={editingText}
-                onSelect={handleSelectTask}
-                onToggleComplete={handleToggleComplete}
-                onStartEdit={handleStartEdit}
-                onSaveEdit={handleSaveEdit}
-                onEditKeyDown={handleEditKeyDown}
-                onEditTextChange={setEditingText}
-                onDelete={handleDeleteTask}
-                onReorder={reorderTasks}
-                getTimeDisplay={(task) => {
-                  const dbTodayMins = getTaskTodayMinutes(task.text);
-                  const sessionSeconds = task.timeSpentInSeconds;
-                  const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
-                  return {
-                    total: totalTodaySeconds,
-                    formatted: formatTimeSpent(totalTodaySeconds),
-                  };
-                }}
-              />
-            )}
-          </div>
+          <MissionObjectivePanel
+            tasks={tasks}
+            selectedTaskId={selectedTaskId}
+            editingTaskId={editingTaskId}
+            editingText={editingText}
+            newTaskText={newTaskText}
+            taskGating={taskGating}
+            onNewTaskTextChange={setNewTaskText}
+            onSubmit={handleAddTask}
+            onOpenPricing={() => setShowPricing(true)}
+            onSelect={handleSelectTask}
+            onToggleComplete={handleToggleComplete}
+            onStartEdit={handleStartEdit}
+            onSaveEdit={handleSaveEdit}
+            onEditKeyDown={handleEditKeyDown}
+            onEditTextChange={setEditingText}
+            onDelete={handleDeleteTask}
+            onReorder={reorderTasks}
+            getTimeDisplay={(task) => {
+              const dbTodayMins = getTaskTodayMinutes(task.text);
+              const sessionSeconds = task.timeSpentInSeconds;
+              const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
+              return {
+                total: totalTodaySeconds,
+                formatted: formatTimeSpent(totalTodaySeconds),
+              };
+            }}
+          />
         )}
 
-        {/* Unified Control Module - Time + Theme */}
-        <div className="flex justify-center">
-          <div className="relative inline-flex flex-col items-center rounded-2xl bg-background/40 backdrop-blur-md border border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.15)] overflow-hidden">
-            {/* Corner accents for HUD feel */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/50 rounded-tl-xl" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary/50 rounded-tr-xl" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary/50 rounded-bl-xl" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 rounded-br-xl" />
-            
-            {/* Top Section - Time Display */}
-            <div className="flex flex-col items-center gap-3 px-10 py-5">
-              {/* Label with status indicator */}
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="text-[10px] uppercase tracking-[0.25em] text-primary font-bold">
-                  TODAY'S DIVE TIME
-                </span>
-              </div>
-              
-              {/* Main value display with glow */}
-              <div className="flex items-baseline gap-2">
-                <span 
-                  className="text-5xl md:text-6xl font-mono font-black text-foreground tracking-tight tabular-nums drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]"
-                >
-                  {todayMinutes}
-                </span>
-                <span className="text-base font-mono uppercase tracking-widest text-foreground/50 font-bold">
-                  mins
-                </span>
-              </div>
-            </div>
-            
-            {/* Divider */}
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            
-            {/* Bottom Section - Theme Controls */}
-            {!isRunning && (
-              <div className="flex flex-col items-center gap-2 px-8 py-4 animate-fade-in">
-                <span className="text-[9px] uppercase tracking-[0.2em] text-foreground/40 font-bold">
-                  CALIBRATION
-                </span>
-                <ThemeSwitcher />
-              </div>
-            )}
-          </div>
-        </div>
+        <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
 
-        {/* Ambient Sound Mixer - Moved to bottom */}
-        <div className="space-y-3">
-          <div className="flex justify-center">
-            <Button
-              onClick={() => setShowSoundMixer(!showSoundMixer)}
-              variant="ghost"
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Volume2 className={`h-5 w-5 ${activeSoundsCount > 0 ? "text-foreground" : ""}`} />
-              <span className="text-sm font-semibold">
-                Ambient Sounds {activeSoundsCount > 0 && `(${activeSoundsCount})`}
-              </span>
-            </Button>
-          </div>
-          
-          {showSoundMixer && (
-            <div className="flex justify-center gap-4 animate-fade-in">
-              <Button
-                onClick={() => toggleSound("rain")}
-                variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${
-                  sounds.rain
-                    ? "text-foreground bg-foreground/10"
-                    : "text-muted-foreground/50 hover:text-muted-foreground"
-                }`}
-              >
-                <CloudRain className="h-6 w-6" />
-                <span className="text-xs">Rain</span>
-              </Button>
-              
-              <Button
-                onClick={() => toggleSound("ocean")}
-                variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${
-                  sounds.ocean
-                    ? "text-foreground bg-foreground/10"
-                    : "text-muted-foreground/50 hover:text-muted-foreground"
-                }`}
-              >
-                <Waves className="h-6 w-6" />
-                <span className="text-xs">Ocean Waves</span>
-              </Button>
-              
-              <Button
-                onClick={() => toggleSound("whiteNoise")}
-                variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${
-                  sounds.whiteNoise
-                    ? "text-foreground bg-foreground/10"
-                    : "text-muted-foreground/50 hover:text-muted-foreground"
-                }`}
-              >
-                <Wind className="h-6 w-6" />
-                <span className="text-xs">White Noise</span>
-              </Button>
-            </div>
-          )}
-        </div>
+        <AmbientSoundMixer
+          sounds={sounds}
+          toggleSound={toggleSound}
+          activeSoundsCount={activeSoundsCount}
+        />
+
           </div>
         </div>
       )}
