@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Search, Crown, ArrowLeft, Shield, Users, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { logger } from "@/lib/logger";
 
 const ADMIN_EMAIL = "aaaehgus@gmail.com";
 
@@ -207,7 +208,7 @@ const AdminSubscriptions = () => {
     );
 
     if (error) {
-      console.error("[Admin] Insert test user error:", error);
+      logger.error("Admin", "Insert test user error:", error);
       toast.error("Failed to insert test user", { description: error.message });
     } else {
       toast.success("Test user upserted");
