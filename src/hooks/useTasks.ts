@@ -59,7 +59,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
    const fetchTasks = useCallback(async () => {
      if (!user || isGuestMode) {
         // Load from localStorage for guests, with daily reset
-        const saved = localStorage.getItem(GUEST_TASKS_KEY);
+        const parsed = readGuestTasks();
         if (saved) {
           const today = getTodayLocal();
           const parsed: LocalTask[] = JSON.parse(saved);
@@ -68,7 +68,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
               ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today } 
               : t
           );
-          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(resetTasks));
+          writeGuestTasks(resetTasks);
           setTasks(resetTasks);
         }
         setLoading(false);
@@ -121,7 +121,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
          };
        setTasks(prev => {
          const updated = [...prev, newTask];
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return newTask;
@@ -159,7 +159,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
          const updated = prev.map(t =>
            t.id === taskId ? { ...t, ...updates } : t
          );
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return;
@@ -194,7 +194,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
        // Guest mode: local storage
        setTasks(prev => {
          const updated = prev.filter(t => t.id !== taskId);
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return;
@@ -232,13 +232,13 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
       
       if (!user || isGuestMode) {
         // Already saved in local state
-        const saved = localStorage.getItem(GUEST_TASKS_KEY);
+        const parsed = readGuestTasks();
         if (saved) {
           const parsed = JSON.parse(saved);
           const updated = parsed.map((t: LocalTask) =>
             t.id === taskId ? { ...t, timeSpentInSeconds: totalSeconds, lastActiveDate: today } : t
           );
-          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+          writeGuestTasks(updated);
         }
         return;
       }
@@ -301,7 +301,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
       setTasks(updated);
 
       if (!user || isGuestMode) {
-        localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+        writeGuestTasks(updated);
         return;
       }
 
