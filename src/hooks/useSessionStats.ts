@@ -70,30 +70,28 @@ export const useSessionStats = (): SessionStats => {
     return new Date().toISOString().split('T')[0];
   }, []);
 
-  // Today's focus time (since 00:00 local time)
+  // Today's focus time (since 00:00 LOCAL time — same logic in both branches
+  // to avoid a UTC vs local mismatch that previously shifted guest stats
+  // by the user's timezone offset).
   const todayMinutes = useMemo(() => {
-    const todayStr = getTodayString();
-    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTimestamp = today.getTime();
+
     if (isAuthenticated && !isGuestMode) {
-      // Database sessions: session_date is a full timestamp
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const todayTimestamp = today.getTime();
-      
       return Math.round(
         sessions
           .filter(s => new Date(s.session_date).getTime() >= todayTimestamp)
           .reduce((sum, s) => sum + s.duration / 60, 0)
       );
     } else {
-      // Local sessions: compare by date string derived from timestamp
       return Math.round(
         localSessions
-          .filter(s => new Date(s.timestamp).toISOString().split('T')[0] === todayStr)
+          .filter(s => s.timestamp >= todayTimestamp)
           .reduce((sum, s) => sum + s.duration / 60, 0)
       );
     }
-  }, [sessions, localSessions, isAuthenticated, isGuestMode, getTodayString]);
+  }, [sessions, localSessions, isAuthenticated, isGuestMode]);
 
   // This week's focus time (Sunday to Saturday)
   const weeklyMinutes = useMemo(() => {

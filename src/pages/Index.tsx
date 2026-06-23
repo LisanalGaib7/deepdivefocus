@@ -3,6 +3,7 @@ import { Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { hapticsWarning } from "@/lib/haptics";
+import { supabase } from "@/integrations/supabase/client";
 
 
 // Common components
@@ -54,14 +55,14 @@ const Index = () => {
   const { isPro, activatePro } = useProStatus();
   const taskGating = useTaskGating();
   const monetizationUI = useMonetizationUI();
-  const { addSession } = useFocusSessions();
-  const { addCreature } = useUserCreatures();
+  // NOTE: addSession / addCreature are no longer used here — the
+  // award_session_rewards RPC inside useDiveCompletion handles both atomically.
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
-  const { 
-    tasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
+  const {
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
     incrementTimeSpent,
     saveTimeSpent,
     reorderTasks,
@@ -128,8 +129,6 @@ const Index = () => {
   const completion = useDiveCompletion({
     selectedTask,
     saveTimeSpent,
-    addSession,
-    addCreature,
     addLocalFocusSession,
     refetchSessions,
     refetchProfile,
@@ -228,7 +227,7 @@ const Index = () => {
     [getTaskTodayMinutes],
   );
 
-  const handleUpgrade = useCallback((moduleId: string) => {
+  const handleUpgrade = useCallback(async (moduleId: string) => {
     const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
     const cost = getUpgradeCost(currentTier);
     const pearls = profile?.total_pearls || 0;
@@ -242,7 +241,23 @@ const Index = () => {
       return;
     }
 
-    updateProfile({ total_pearls: pearls - cost });
+    if (isAuthenticated && !isGuestMode) {
+      // Server-authoritative spend via SECURITY DEFINER RPC.
+      // Prevents tampering and handles cross-device race conditions atomically.
+      const { error } = await supabase.rpc('spend_pearls', { p_amount: cost });
+      if (error) {
+        const msg = /insufficient/i.test(error.message)
+          ? 'Not enough pearls!'
+          : 'Upgrade failed. Please try again.';
+        toast.error(msg, { description: error.message });
+        return;
+      }
+      // Refresh profile so balance UI reflects the new total.
+      refetchProfile();
+    } else {
+      // Guest mode: local-only profile mutation is still permitted.
+      updateProfile({ total_pearls: pearls - cost });
+    }
 
     if (moduleId === 'hull') {
       setHullLevel(prev => prev + 1);
@@ -251,7 +266,7 @@ const Index = () => {
     }
 
     toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
-  }, [hullLevel, engineLevel, profile?.total_pearls, updateProfile, setHullLevel, setEngineLevel]);
+  }, [hullLevel, engineLevel, profile?.total_pearls, isAuthenticated, isGuestMode, updateProfile, refetchProfile, setHullLevel, setEngineLevel]);
 
   const handleActivatePro = useCallback(() => {
     activatePro();
@@ -415,6 +430,7 @@ const Index = () => {
         maxDepth={completion.completedSessionDepth}
         creature={completion.rewardCreature}
         sessionDuration={completion.completedSessionDuration}
+        isNewDiscovery={completion.isNewDiscovery}
       />
 
       

@@ -22,7 +22,7 @@ export type Database = {
           duration: number
           id: string
           is_verified: boolean
-          pearls_earned: number | null
+          pearls_earned: number
           session_date: string
           task_name: string
           user_id: string
@@ -34,7 +34,7 @@ export type Database = {
           duration: number
           id?: string
           is_verified?: boolean
-          pearls_earned?: number | null
+          pearls_earned?: number
           session_date?: string
           task_name?: string
           user_id: string
@@ -46,7 +46,7 @@ export type Database = {
           duration?: number
           id?: string
           is_verified?: boolean
-          pearls_earned?: number | null
+          pearls_earned?: number
           session_date?: string
           task_name?: string
           user_id?: string
@@ -205,6 +205,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_session_rewards: {
+        Args: {
+          p_creature_id?: string
+          p_depth: number
+          p_duration: number
+          p_pearls: number
+          p_task_name: string
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -214,6 +224,7 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_user_pro: { Args: { _user_id: string }; Returns: boolean }
+      spend_pearls: { Args: { p_amount: number }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "user"

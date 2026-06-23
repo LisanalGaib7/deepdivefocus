@@ -1,14 +1,11 @@
 import { Creature, getCreaturesAtDepth, CreatureRarity } from '@/data/creatures';
 import { RARITY_CONFIG, PEARL_VALUES } from '@/constants/gameConfig';
-import { STORAGE_KEYS } from '@/lib/storage/keys';
-import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
-
 
 // Rarity weights calibrated for exact percentages at 3000m max depth:
 // Legendary: 7%, Epic: 13%, Rare: 30%, Common+Uncommon: 50%
 const getRarityWeight = (rarity: CreatureRarity, depth: number): number => {
   const depthRatio = depth / RARITY_CONFIG.DEPTH_DIVISOR; // 0 at surface, 3.0 at 3000m
-  
+
   switch (rarity) {
     case 'Common':
       // Decay from 1.0 → 0.5 (64% at surface → 5% at max)
@@ -33,49 +30,24 @@ const getRarityWeight = (rarity: CreatureRarity, depth: number): number => {
 // Roll for a random creature based on depth reached
 export const rollForCreature = (maxDepth: number): Creature | null => {
   const availableCreatures = getCreaturesAtDepth(maxDepth);
-  
   if (availableCreatures.length === 0) return null;
-  
-  // Calculate weighted probabilities
+
   const weightedCreatures = availableCreatures.map(creature => ({
     creature,
     weight: getRarityWeight(creature.rarity, maxDepth),
   }));
-  
+
   const totalWeight = weightedCreatures.reduce((sum, item) => sum + item.weight, 0);
   let random = Math.random() * totalWeight;
-  
+
   for (const item of weightedCreatures) {
     random -= item.weight;
-    if (random <= 0) {
-      return item.creature;
-    }
+    if (random <= 0) return item.creature;
   }
-  
-  // Fallback to first creature
   return availableCreatures[0];
 };
 
-// Get collected creatures from localStorage
-export const getCollection = (): string[] =>
-  readJSON<string[]>(STORAGE_KEYS.collection, []);
-
-// Add a creature to the collection
-export const addToCollection = (creatureId: string): void => {
-  const collection = getCollection();
-  if (!collection.includes(creatureId)) {
-    collection.push(creatureId);
-    writeJSON(STORAGE_KEYS.collection, collection);
-  }
-};
-
-
-// Check if creature is already collected
-export const isCreatureCollected = (creatureId: string): boolean => {
-  return getCollection().includes(creatureId);
-};
-
-// Get pearl value - always derived from rarity tier (single source of truth)
+// Pearl value per rarity tier — single source of truth.
 export const getPearlValue = (rarity: CreatureRarity): number => {
   return PEARL_VALUES[rarity] ?? PEARL_VALUES.Common;
 };
