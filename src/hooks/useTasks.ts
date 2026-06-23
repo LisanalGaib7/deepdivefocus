@@ -60,12 +60,11 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
      if (!user || isGuestMode) {
         // Load from localStorage for guests, with daily reset
         const parsed = readGuestTasks();
-        if (saved) {
+        if (parsed.length > 0) {
           const today = getTodayLocal();
-          const parsed: LocalTask[] = JSON.parse(saved);
-          const resetTasks = parsed.map(t => 
-            t.lastActiveDate !== today 
-              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today } 
+          const resetTasks = parsed.map(t =>
+            t.lastActiveDate !== today
+              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today }
               : t
           );
           writeGuestTasks(resetTasks);
@@ -74,6 +73,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
         setLoading(false);
         return;
      }
+
  
      const { data, error } = await supabase
        .from('tasks')
