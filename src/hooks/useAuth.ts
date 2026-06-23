@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logger } from "@/lib/logger";
 
-export type AuthUser = any;
-export type AuthSession = any;
+export type AuthUser = User;
+export type AuthSession = Session;
 
 export interface UserProfile {
   id: string;
@@ -24,14 +26,16 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [isGuestMode, setIsGuestMode] = useState(false);
 
-  const authClient = supabase.auth as any;
-
   // Fetch user profile
   const fetchProfile = useCallback(async (userId: string) => {
-    const { data, error } = await supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
 
     if (error) {
-      console.error("Error fetching profile:", error);
+      logger.error("useAuth", "Error fetching profile:", error);
       return null;
     }
     return data as UserProfile | null;
@@ -42,7 +46,9 @@ export const useAuth = () => {
     async (updates: Partial<UserProfile>) => {
       // Guest mode: update in-memory profile only
       if (isGuestMode) {
-        setProfile((prev) => (prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : prev));
+        setProfile((prev) =>
+          prev ? { ...prev, ...updates, updated_at: new Date().toISOString() } : prev,
+        );
         return { error: null };
       }
 
@@ -51,7 +57,7 @@ export const useAuth = () => {
       const { error } = await supabase.from("profiles").update(updates).eq("user_id", user.id);
 
       if (error) {
-        console.error("Error updating profile:", error);
+        logger.error("useAuth", "Error updating profile:", error);
         return { error };
       }
 
@@ -68,44 +74,30 @@ export const useAuth = () => {
   const signUp = useCallback(async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;
 
-    const { data, error } = await authClient.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
+      options: { emailRedirectTo: redirectUrl },
     });
 
-    if (error) {
-      return { error };
-    }
-
+    if (error) return { error };
     return { data, error: null };
-  }, [authClient]);
+  }, []);
 
   // Sign in with email/password
   const signIn = useCallback(async (email: string, password: string) => {
-    const { data, error } = await authClient.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return { error };
-    }
-
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { error };
     return { data, error: null };
-  }, [authClient]);
+  }, []);
 
   // Sign in with Google OAuth
   const signInWithGoogle = useCallback(async () => {
     const redirectUrl = `${window.location.origin}/`;
 
-    const { error } = await authClient.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-      },
+      options: { redirectTo: redirectUrl },
     });
 
     if (error) {
@@ -114,11 +106,10 @@ export const useAuth = () => {
     }
 
     return { error: null };
-  }, [authClient]);
+  }, []);
 
   // Sign out
   const signOut = useCallback(async () => {
-    // Handle guest mode logout
     if (isGuestMode) {
       setIsGuestMode(false);
       setProfile(null);
@@ -126,7 +117,7 @@ export const useAuth = () => {
       return { error: null };
     }
 
-    const { error } = await authClient.signOut();
+    const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error("Sign out failed", { description: error.message });
       return { error };
@@ -136,11 +127,10 @@ export const useAuth = () => {
     setSession(null);
     setProfile(null);
     return { error: null };
-  }, [authClient, isGuestMode]);
+  }, [isGuestMode]);
 
   // Sign in as guest (demo mode)
   const signInAsGuest = useCallback(() => {
-    // Create a mock profile for demo purposes
     const mockProfile: UserProfile = {
       id: "guest-profile",
       user_id: "guest-user",
@@ -165,7 +155,7 @@ export const useAuth = () => {
     // Set up auth state listener FIRST
     const {
       data: { subscription },
-    } = authClient.onAuthStateChange((event: string, currentSession: AuthSession | null) => {
+    } = supabase.auth.onAuthStateChange((event, currentSession) => {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
 
@@ -186,7 +176,7 @@ export const useAuth = () => {
     });
 
     // THEN check for existing session
-    authClient.getSession().then(({ data }: { data: { session: AuthSession | null } }) => {
+    supabase.auth.getSession().then(({ data }) => {
       const currentSession = data.session;
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
@@ -202,7 +192,7 @@ export const useAuth = () => {
     });
 
     return () => subscription?.unsubscribe?.();
-  }, [authClient, fetchProfile]);
+  }, [fetchProfile]);
 
   return {
     user,
@@ -220,4 +210,3 @@ export const useAuth = () => {
     refetchProfile: () => user && fetchProfile(user.id).then(setProfile),
   };
 };
-

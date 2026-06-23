@@ -91,7 +91,7 @@ export interface LocalTask {
           if (dbTask.last_active_date !== today) {
             supabase
               .from('tasks')
-              .update({ time_spent_seconds: 0, last_active_date: today } as any)
+              .update({ time_spent_seconds: 0, last_active_date: today })
               .eq('id', dbTask.id)
               .eq('user_id', user!.id)
               .then();
@@ -125,11 +125,11 @@ export interface LocalTask {
  
      const { data, error } = await supabase
        .from('tasks')
-        .insert({
+       .insert({
           user_id: user.id,
           title: title.trim(),
           sort_order: tasks.length,
-        } as any)
+        })
        .select()
        .single();
  
@@ -241,7 +241,7 @@ export interface LocalTask {
 
       await supabase
         .from('tasks')
-        .update({ time_spent_seconds: totalSeconds, last_active_date: today } as any)
+        .update({ time_spent_seconds: totalSeconds, last_active_date: today })
         .eq('id', taskId)
         .eq('user_id', user.id);
     }, [user, isGuestMode]);
@@ -305,7 +305,7 @@ export interface LocalTask {
       for (let i = 0; i < updated.length; i++) {
         supabase
           .from('tasks')
-          .update({ sort_order: i } as any)
+          .update({ sort_order: i })
           .eq('id', updated[i].id)
           .eq('user_id', user.id)
           .then();

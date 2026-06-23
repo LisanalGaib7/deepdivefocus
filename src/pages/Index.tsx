@@ -346,7 +346,7 @@ const Index = () => {
         }
         
         const basePearls = Math.floor(currentDepth / 10);
-        const creatureBonus = creature ? getPearlValue(creature.rarity as any) : 0;
+        const creatureBonus = creature ? getPearlValue(creature.rarity) : 0;
         const totalPearls = basePearls + creatureBonus;
 
         if (isAuthenticated && !isGuestMode) {
