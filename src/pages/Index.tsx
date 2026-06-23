@@ -3,6 +3,7 @@ import { Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { hapticsWarning } from "@/lib/haptics";
+import { supabase } from "@/integrations/supabase/client";
 
 
 // Common components
