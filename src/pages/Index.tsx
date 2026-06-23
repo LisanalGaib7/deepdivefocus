@@ -1,16 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, RotateCcw, Check, Volume2, VolumeX, CloudRain, Waves, Wind, Plus, Trash2, Anchor, Power, Pencil, Wrench, Crown, Maximize, Minimize } from "lucide-react";
-import SortableTaskList from "@/components/common/SortableTaskList";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { hapticsMedium, hapticsSuccess, hapticsWarning } from "@/lib/haptics";
 
 // Common components
-import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 import BottomNav from "@/components/common/BottomNav";
-import GuidebookModal from "@/components/common/GuidebookModal";
 
 // Feature components
 import { EngineeringBayModal } from "@/features/hangar";
@@ -21,6 +16,13 @@ import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
 import OxygenBar from "@/features/timer/OxygenBar";
 import EmergencyModal from "@/features/timer/EmergencyModal";
 import MissionCompleteModal from "@/features/timer/MissionCompleteModal";
+
+// Dive feature components (Phase 3 decomposition)
+import TopBar from "@/features/dive/TopBar";
+import DiveGauge from "@/features/dive/DiveGauge";
+import DiveTimeCard from "@/features/dive/DiveTimeCard";
+import AmbientSoundMixer from "@/features/dive/AmbientSoundMixer";
+import MissionObjectivePanel from "@/features/dive/MissionObjectivePanel";
 
 // Pages
 import History from "@/pages/History";
@@ -34,13 +36,14 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
-import { Creature, CREATURES } from "@/data/creatures";
+import { Creature } from "@/data/creatures";
 import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
 import { useTaskGating, useMonetizationUI } from "@/features/monetization/gating";
+
 
 const Index = () => {
   const { signOut, profile, updateProfile, refetchProfile, isGuestMode, isAuthenticated } = useAuthContext();
