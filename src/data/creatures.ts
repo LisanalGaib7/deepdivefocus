@@ -2,6 +2,9 @@ import { LucideIcon } from "lucide-react";
 
 export type CreatureRarity = "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary";
 
+// NOTE: Pearl rewards are NOT stored per-creature.
+// Single source of truth: PEARL_VALUES in src/constants/gameConfig.ts,
+// looked up via getPearlValue(rarity) in src/lib/lootSystem.ts.
 export interface Creature {
   id: string;
   name: string;
@@ -9,7 +12,6 @@ export interface Creature {
   rarity: CreatureRarity;
   description: string;
   icon: string;
-  pearls: number;
   traits: string[];
 }
 
@@ -22,7 +24,6 @@ export const CREATURES: Creature[] = [
     rarity: "Common",
     description: "UNIT.SARDINE // BASIC_LIFEFORM // SIGNAL_WEAK",
     icon: "Fish",
-    pearls: 10,
     traits: ["Basic", "Swarm"],
   },
   {
@@ -32,7 +33,6 @@ export const CREATURES: Creature[] = [
     rarity: "Common",
     description: "UNIT.CRAB // SHELL_DETECTED // MOBILITY_LOW",
     icon: "Shell",
-    pearls: 10,
     traits: ["Shell", "Defensive"],
   },
   {
@@ -42,7 +42,6 @@ export const CREATURES: Creature[] = [
     rarity: "Common",
     description: "UNIT.STARFISH // REGENERATIVE // STATIC_ENTITY",
     icon: "Star",
-    pearls: 15,
     traits: ["Regenerative", "Static"],
   },
   {
@@ -52,7 +51,6 @@ export const CREATURES: Creature[] = [
     rarity: "Common",
     description: "UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE",
     icon: "Waves",
-    pearls: 15,
     traits: ["Camouflage", "Fragile"],
   },
   // TIER 2: TWILIGHT ZONE (100m - 500m)
@@ -63,7 +61,6 @@ export const CREATURES: Creature[] = [
     rarity: "Uncommon",
     description: "UNIT.JELLYFISH // BIOLUMINESCENT // TOXIN_WARNING",
     icon: "Sparkles",
-    pearls: 30,
     traits: ["Bioluminescent", "Toxic"],
   },
   {
@@ -73,7 +70,6 @@ export const CREATURES: Creature[] = [
     rarity: "Uncommon",
     description: "UNIT.EEL // HIGH_VOLTAGE // BATTERY_DETECTED",
     icon: "Zap",
-    pearls: 40,
     traits: ["Electric", "Danger"],
   },
   {
@@ -83,7 +79,6 @@ export const CREATURES: Creature[] = [
     rarity: "Uncommon",
     description: "UNIT.TURTLE // AGE_UNKNOWN // WISDOM_DETECTED",
     icon: "Shield",
-    pearls: 45,
     traits: ["Ancient", "Wise"],
   },
   {
@@ -93,7 +88,6 @@ export const CREATURES: Creature[] = [
     rarity: "Uncommon",
     description: "UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED",
     icon: "Grip",
-    pearls: 50,
     traits: ["Intelligent", "Camouflage"],
   },
   {
@@ -103,7 +97,6 @@ export const CREATURES: Creature[] = [
     rarity: "Rare",
     description: "UNIT.MANTA // WINGSPAN_MASSIVE // SILENT_GLIDE",
     icon: "Wind",
-    pearls: 60,
     traits: ["Majestic", "Silent"],
   },
   // TIER 3: MIDNIGHT ZONE (500m - 1000m)
@@ -114,7 +107,6 @@ export const CREATURES: Creature[] = [
     rarity: "Rare",
     description: "UNIT.ANGLER // LURE_ACTIVE // PREDATOR_APEX",
     icon: "Flashlight",
-    pearls: 70,
     traits: ["Apex", "Lure"],
   },
   {
@@ -124,7 +116,6 @@ export const CREATURES: Creature[] = [
     rarity: "Rare",
     description: "UNIT.ISOPOD // SCAVENGER // ARMOR_HEAVY",
     icon: "Bug",
-    pearls: 75,
     traits: ["Tank", "Ancient"],
   },
   {
@@ -134,7 +125,6 @@ export const CREATURES: Creature[] = [
     rarity: "Epic",
     description: "UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED",
     icon: "Anchor",
-    pearls: 100,
     traits: ["Mythical", "Massive"],
   },
   {
@@ -144,7 +134,6 @@ export const CREATURES: Creature[] = [
     rarity: "Epic",
     description: "UNIT.SNAIL // SHELL_IRON // CORE_MOLTEN",
     icon: "Flame",
-    pearls: 120,
     traits: ["Armored", "Magma"],
   },
   // TIER 4: THE ABYSS (1000m+)
@@ -155,7 +144,6 @@ export const CREATURES: Creature[] = [
     rarity: "Epic",
     description: "UNIT.SHARK // THERMAL_ZERO // GHOST_PROTOCOL",
     icon: "Ghost",
-    pearls: 150,
     traits: ["Spectral", "Predator"],
   },
   {
@@ -165,7 +153,6 @@ export const CREATURES: Creature[] = [
     rarity: "Legendary",
     description: "UNIT.DRAGON // SOLAR_CORE // RADIANCE_INFINITE",
     icon: "Sun",
-    pearls: 500,
     traits: ["Radiant", "Majestic"],
   },
   {
@@ -175,7 +162,6 @@ export const CREATURES: Creature[] = [
     rarity: "Legendary",
     description: "UNIT.UNKNOWN // COSMOS_BOUND // STARS_WITHIN",
     icon: "Skull",
-    pearls: 500,
     traits: ["Cosmic", "Ancient"],
   },
 ];
