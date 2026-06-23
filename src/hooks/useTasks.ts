@@ -2,7 +2,9 @@
  import { supabase } from '@/integrations/supabase/client';
  import { useAuthContext } from '@/contexts/AuthContext';
  import { toast } from 'sonner';
- 
+ import { STORAGE_KEYS } from '@/lib/storage/keys';
+ import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
+
 export interface Task {
   id: string;
   user_id: string;
@@ -23,13 +25,15 @@ export interface LocalTask {
   lastActiveDate: string;
   sortOrder: number;
 }
- 
- const GUEST_TASKS_KEY = 'deepDiveTasks';
- 
+
+const readGuestTasks = (): LocalTask[] => readJSON<LocalTask[]>(STORAGE_KEYS.tasks, []);
+const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, tasks);
+
  export const useTasks = () => {
    const { user, isGuestMode, isAuthenticated } = useAuthContext();
    const [tasks, setTasks] = useState<LocalTask[]>([]);
    const [loading, setLoading] = useState(true);
+
  
   // Get today's local date string
   const getTodayLocal = () => {
