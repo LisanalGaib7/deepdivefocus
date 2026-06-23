@@ -504,15 +504,10 @@ const Index = () => {
     return `${mins}m`;
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
   // Progress: starts at 100% (full) and depletes to 0%
   // When dragging, show the setDuration position directly; otherwise show timeLeft progress
   const displayTime = isDragging ? setDuration : timeLeft;
+
   const displayProgress = setDuration > 0 ? (displayTime / TIMER_CONFIG.MAX_TIME_SECONDS) * 100 : 0;
 
   const handleLogout = async () => {
