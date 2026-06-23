@@ -43,7 +43,9 @@ import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
 import { useDiveTimer } from "@/hooks/useDiveTimer";
 import { useDiveCompletion } from "@/hooks/useDiveCompletion";
+import { useTaskHandlers } from "@/hooks/useTaskHandlers";
 import { useTaskGating, useMonetizationUI } from "@/features/monetization/gating";
+
 
 
 
@@ -65,11 +67,6 @@ const Index = () => {
     reorderTasks,
   } = useTasks();
 
-  const [newTaskText, setNewTaskText] = useState("");
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [editingText, setEditingText] = useState("");
-
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
@@ -82,12 +79,23 @@ const Index = () => {
   // Persistent upgrade levels (localStorage for both guest & auth).
   const { engineLevel, setEngineLevel, hullLevel, setHullLevel } = useUpgradeLevels();
 
-  // Derived: selected task (needed by both timer + completion hooks)
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
-
-  // Forward refs so circular hook deps (timer -> completion -> timer) stay consistent.
+  // Refs used to break circular dependencies between the timer / task / completion / gamification hooks.
+  const isRunningRef = useRef(false);
   const completionRef = useRef<{ triggerMissionComplete: (d: number, s: number) => void } | null>(null);
   const gamificationRef = useRef<{ depth: number; elapsedSeconds: number }>({ depth: 0, elapsedSeconds: 0 });
+
+  // Task state + handlers (Phase 3 final extraction)
+  const taskHandlers = useTaskHandlers({
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    getIsRunning: () => isRunningRef.current,
+    taskGating,
+    onHitFreeLimit: () => setShowUpgradeRequired(true),
+  });
+  const { selectedTaskId, selectedTask } = taskHandlers;
+
 
   // Timer (Phase 3.5 hook extraction)
   const timer = useDiveTimer({
