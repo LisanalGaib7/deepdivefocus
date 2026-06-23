@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 
 interface OxygenBarProps {
@@ -95,4 +96,4 @@ export const OxygenBar = ({ oxygen, className }: OxygenBarProps) => {
   );
 };
 
-export default OxygenBar;
+export default memo(OxygenBar);

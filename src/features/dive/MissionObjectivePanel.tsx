@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -126,4 +127,4 @@ const MissionObjectivePanel = ({
   );
 };
 
-export default MissionObjectivePanel;
+export default memo(MissionObjectivePanel);

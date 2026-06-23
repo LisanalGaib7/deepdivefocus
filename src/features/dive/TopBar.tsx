@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Crown, Wrench, Power, Volume2, VolumeX, Maximize, Minimize } from "lucide-react";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -138,4 +139,4 @@ const TopBar = ({
   );
 };
 
-export default TopBar;
+export default memo(TopBar);
