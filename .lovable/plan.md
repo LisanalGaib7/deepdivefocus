@@ -53,10 +53,12 @@ src/features/tasks/TaskPanel.tsx      # 추가/리스트/정렬
 src/pages/Index.tsx                   # orchestration only (~300줄 목표)
 ```
 
-### Phase 5 — 스토리지 추상화
-- `src/lib/storage/` (creatureStore, themeStore, audioPrefsStore)
-- guest ↔ user 마이그레이션 단일 진입점
-- `STORAGE_KEYS` 상수화
+### ✅ Phase 5 — 스토리지 추상화 (완료)
+- `src/lib/storage/keys.ts` — `STORAGE_KEYS` 단일 출처 (8개 키)
+- `src/lib/storage/safeStorage.ts` — SSR-safe + 예외-safe 래퍼 (`readJSON`/`writeJSON`/`readString`/`writeString`/`removeKey`)
+- 마이그레이션 완료: `sessionStorage.ts`, `lootSystem.ts`, `useTasks.ts`, `useUpgradeLevels.ts`, `useUserCreatures.ts`, `useDeepDiveAudio.ts`, `useProStatus.ts`, `ThemeContext.tsx`
+- `main.tsx`는 의도적으로 인라인 유지 (boot script, FOUC 방지용)
+
 
 ## 🔒 보안 메모
 
