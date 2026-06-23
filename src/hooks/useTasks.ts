@@ -231,10 +231,9 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
       const today = getTodayLocal();
       
       if (!user || isGuestMode) {
-        // Already saved in local state
+        // Already saved in local state; mirror final value to localStorage
         const parsed = readGuestTasks();
-        if (saved) {
-          const parsed = JSON.parse(saved);
+        if (parsed.length > 0) {
           const updated = parsed.map((t: LocalTask) =>
             t.id === taskId ? { ...t, timeSpentInSeconds: totalSeconds, lastActiveDate: today } : t
           );
@@ -242,6 +241,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
         }
         return;
       }
+
 
       await supabase
         .from('tasks')
