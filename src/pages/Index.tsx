@@ -64,7 +64,7 @@ const Index = () => {
     saveTimeSpent,
     reorderTasks,
   } = useTasks();
-  
+
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -82,13 +82,23 @@ const Index = () => {
   // Persistent upgrade levels (localStorage for both guest & auth).
   const { engineLevel, setEngineLevel, hullLevel, setHullLevel } = useUpgradeLevels();
 
-  // Timer (Phase 3.5 hook extraction) — onComplete wired below once gamification is ready.
+  // Derived: selected task (needed by both timer + completion hooks)
+  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+
+  // Forward refs so circular hook deps (timer -> completion -> timer) stay consistent.
+  const completionRef = useRef<{ triggerMissionComplete: (d: number, s: number) => void } | null>(null);
+  const gamificationRef = useRef<{ depth: number; elapsedSeconds: number }>({ depth: 0, elapsedSeconds: 0 });
+
+  // Timer (Phase 3.5 hook extraction)
   const timer = useDiveTimer({
     selectedTaskId,
     incrementTimeSpent,
     onComplete: () => {
       playCompletionSound();
-      completion.triggerMissionComplete(depth, elapsedSeconds);
+      completionRef.current?.triggerMissionComplete(
+        gamificationRef.current.depth,
+        gamificationRef.current.elapsedSeconds,
+      );
     },
   });
   const { isRunning } = timer;
@@ -98,10 +108,13 @@ const Index = () => {
     engineLevel,
     hullLevel,
   });
+  useEffect(() => {
+    gamificationRef.current = { depth, elapsedSeconds };
+  }, [depth, elapsedSeconds]);
 
   // Mission completion flow
   const completion = useDiveCompletion({
-    selectedTask: undefined as LocalTask | undefined, // set below via closure-safe pattern
+    selectedTask,
     saveTimeSpent,
     addSession,
     addCreature,
@@ -118,10 +131,11 @@ const Index = () => {
       exitFullscreen();
     },
   });
+  useEffect(() => {
+    completionRef.current = { triggerMissionComplete: completion.triggerMissionComplete };
+  }, [completion.triggerMissionComplete]);
 
   const maxDepthToastShownRef = useRef(false);
-
-  const svgRef = useRef<SVGSVGElement>(null);
 
   // Auto-select first uncompleted task when tasks load
   useEffect(() => {
@@ -134,17 +148,16 @@ const Index = () => {
   // Handle emergency ascent (oxygen depleted)
   useEffect(() => {
     if (isEmergency && isRunning) {
-      setIsRunning(false);
+      timer.setIsRunning(false);
       hapticsWarning();
       setShowEmergencyModal(true);
     }
-  }, [isEmergency, isRunning]);
+  }, [isEmergency, isRunning, timer]);
 
   // Show toast when max depth is reached
   useEffect(() => {
     if (isAtMaxDepth && isRunning && !maxDepthToastShownRef.current) {
       maxDepthToastShownRef.current = true;
-      // Nuclear option: bypass Sonner's title/description rendering by injecting our own JSX content.
       toast(
         <div className="flex flex-col gap-1">
           <p className="text-amber-400 font-bold text-base flex items-center gap-2">
@@ -159,287 +172,23 @@ const Index = () => {
           duration: 5000,
           position: "top-center",
           className: "!bg-black !border-2 !border-amber-400 !shadow-[0_0_40px_rgba(251,191,36,0.6)] !p-4",
-          // IMPORTANT: intentionally no `description` prop here
         }
       );
     }
-    // Reset toast flag when starting a new dive
     if (!isRunning) {
       maxDepthToastShownRef.current = false;
     }
   }, [isAtMaxDepth, isRunning, maxDepth, depth]);
 
-  const selectedTask = tasks.find(t => t.id === selectedTaskId);
-
-  // Track if we've already handled completion for this session
-  const completionHandledRef = useRef(false);
-
-  // Timer logic with per-task time accumulation
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    
-    if (isRunning && timeLeft > 0) {
-      completionHandledRef.current = false; // Reset on new session start
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          const newTime = prev - 1;
-          
-          // Add time to selected task (local tracking during session)
-          if (selectedTaskId) {
-            incrementTimeSpent(selectedTaskId);
-          }
-          
-          return newTime;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, selectedTaskId, incrementTimeSpent]);
-
-
-  // Calculate angle from mouse/touch position (0 at top, clockwise 0-360)
-  const getAngleFromEvent = useCallback((clientX: number, clientY: number): number => {
-    if (!svgRef.current) return 0;
-    
-    const rect = svgRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const deltaX = clientX - centerX;
-    const deltaY = clientY - centerY;
-    
-    // Calculate angle in degrees (0 at top, clockwise positive)
-    let angle = Math.atan2(deltaX, -deltaY) * (180 / Math.PI);
-    if (angle < 0) angle += 360;
-    
-    return angle;
-  }, []);
-
-  // Convert angle (0-360) to time in seconds
-  const angleToTime = useCallback((angle: number): number => {
-    // Map 360 degrees to MAX_TIME (60 minutes)
-    const rawTime = (angle / 360) * TIMER_CONFIG.MAX_TIME_SECONDS;
-    // Snap to nearest minute
-    const snappedTime = Math.round(rawTime / 60) * 60;
-    // Clamp between min and max, ensure at least MIN_TIME
-    return Math.max(TIMER_CONFIG.MIN_TIME_SECONDS, Math.min(TIMER_CONFIG.MAX_TIME_SECONDS, snappedTime));
-  }, []);
-
-  // Handle drag start
-  const handleDragStart = useCallback((clientX: number, clientY: number) => {
-    if (isRunning) return;
-    setIsDragging(true);
-    // Immediately set time based on click position
-    const angle = getAngleFromEvent(clientX, clientY);
-    const newTime = angleToTime(angle);
-    setSetDuration(newTime);
-  }, [isRunning, getAngleFromEvent, angleToTime]);
-
-  // Handle drag move - directly map position to time
-  const handleDragMove = useCallback((clientX: number, clientY: number) => {
-    if (!isDragging || isRunning) return;
-    
-    const angle = getAngleFromEvent(clientX, clientY);
-    const newTime = angleToTime(angle);
-    setSetDuration(newTime);
-  }, [isDragging, isRunning, getAngleFromEvent, angleToTime]);
-
-  // Handle drag end
-  const handleDragEnd = useCallback(() => {
-    if (isDragging) {
-      setIsDragging(false);
-      // Sync timeLeft with setDuration when done dragging
-      setTimeLeft(setDuration);
-    }
-  }, [isDragging, setDuration]);
-
-  // Mouse events
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    handleDragStart(e.clientX, e.clientY);
-  };
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    handleDragMove(e.clientX, e.clientY);
-  }, [handleDragMove]);
-
-  const handleMouseUp = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  // Touch events
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    handleDragStart(touch.clientX, touch.clientY);
-  };
-
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    const touch = e.touches[0];
-    handleDragMove(touch.clientX, touch.clientY);
-  }, [handleDragMove]);
-
-  const handleTouchEnd = useCallback(() => {
-    handleDragEnd();
-  }, [handleDragEnd]);
-
-  // Add/remove global event listeners for drag
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-      window.addEventListener("touchmove", handleTouchMove);
-      window.addEventListener("touchend", handleTouchEnd);
-    }
-    
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
-
-  // Sync timeLeft with setDuration when dragging
-  useEffect(() => {
-    if (isDragging && !isRunning) {
-      setTimeLeft(setDuration);
-    }
-  }, [setDuration, isDragging, isRunning]);
-
-
-  const handleStart = () => {
-    if (!isRunning && timeLeft === 0) {
-      // Reset to set duration if timer finished
-      setTimeLeft(setDuration);
-    }
-    
-    // Trigger dive transition burst when starting
-    if (!isRunning) {
-      setIsDiveTransition(true);
-      setTimeout(() => setIsDiveTransition(false), 2000);
-    }
-    
-    hapticsMedium();
-    setIsRunning(!isRunning);
-  };
-  
-  const handleReset = () => {
-    setIsRunning(false);
-    setTimeLeft(setDuration);
-    resetDive();
-  };
-
   const handleEmergencyClose = () => {
     setShowEmergencyModal(false);
-    setTimeLeft(setDuration);
+    timer.resetTimer();
     resetDive();
     exitFullscreen();
   };
 
-  const handleMissionComplete = useCallback(() => {
-    // Capture current values immediately (avoid stale closures)
-    const currentDepth = depth;
-    const currentDuration = elapsedSeconds;
-    const taskName = selectedTask?.text || "Focus Session";
-    
-    // Store current depth and duration before reset
-    setCompletedSessionDepth(currentDepth);
-    setCompletedSessionDuration(currentDuration);
-    
-    // Roll for a creature reward
-    const creature = rollForCreature(currentDepth);
-    setRewardCreature(creature);
-    
-    // Show the mission complete modal INSTANTLY
-    hapticsSuccess();
-    setShowMissionCompleteModal(true);
-    
-    // Fire all async saves in the background (non-blocking)
-    (async () => {
-      try {
-        if (selectedTask) {
-          saveTimeSpent(selectedTask.id, selectedTask.timeSpentInSeconds);
-        }
-        
-        const basePearls = Math.floor(currentDepth / 10);
-        const creatureBonus = creature ? getPearlValue(creature.rarity) : 0;
-        const totalPearls = basePearls + creatureBonus;
-
-        if (isAuthenticated && !isGuestMode) {
-          await addSession({
-            task_name: taskName,
-            duration: currentDuration,
-            depth_reached: currentDepth,
-            pearls_earned: totalPearls,
-            creature_id: creature?.id || null,
-          });
-          
-          if (profile) {
-            updateProfile({ 
-              total_depth: (profile.total_depth || 0) + currentDepth,
-              total_pearls: (profile.total_pearls || 0) + totalPearls,
-            });
-          }
-        } else {
-          // Guest mode: update in-memory profile pearls
-          if (profile) {
-            updateProfile({ 
-              total_pearls: (profile.total_pearls || 0) + totalPearls,
-              total_depth: (profile.total_depth || 0) + currentDepth,
-            });
-          }
-          addLocalFocusSession({
-            taskId: selectedTask?.id || null,
-            taskName: taskName,
-            duration: currentDuration,
-            timestamp: Date.now(),
-          });
-        }
-
-        await refetchSessions();
-      } catch (err) {
-        console.error('[MissionComplete] Background save error:', err);
-      }
-    })();
-  }, [depth, elapsedSeconds, selectedTask, addSession, profile, updateProfile, refetchSessions, isGuestMode, isAuthenticated, addLocalFocusSession, saveTimeSpent]);
-
-  // Handle timer completion separately to avoid closure issues
-  useEffect(() => {
-    if (timeLeft === 0 && isRunning && !completionHandledRef.current) {
-      completionHandledRef.current = true;
-      setIsRunning(false);
-      playCompletionSound();
-      
-      
-      handleMissionComplete();
-    }
-  }, [timeLeft, isRunning, playCompletionSound, handleMissionComplete, elapsedSeconds, depth]);
-
-  const handleMissionCompleteClose = useCallback(async () => {
-    // Add creature to collection if one was found
-    if (rewardCreature) {
-      await addCreature(rewardCreature.id);
-    }
-    
-    setShowMissionCompleteModal(false);
-    setRewardCreature(null);
-    setTimeLeft(setDuration);
-    resetDive();
-    exitFullscreen();
-    
-    // Trigger Collection & Engineering Bay to refresh with latest data
-    setCollectionRefreshKey(prev => prev + 1);
-    refetchProfile();
-    
-    if (rewardCreature) {
-      toast.success("Creature added to collection!", {
-        description: `${rewardCreature.name} saved!`,
-      });
-    }
-  }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
-
   // Task gating rules live in src/features/monetization/gating.ts.
+
 
 
   const handleAddTask = async (e: React.FormEvent) => {
