@@ -478,7 +478,7 @@ const mantisShrimp = (): GridData => ({
   glowColor: "#22ddaa",
 });
 
-const barreleye = (): GridData => ({
+const barrelEye = (): GridData => ({
   grid: [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0],
