@@ -1,9 +1,11 @@
 // Admin tooling — always on, bypasses SUBSCRIPTION_ENABLED by design.
 // Lets ops grant/revoke Pro and inspect subscriptions regardless of the
-// public-facing feature flag. Access is gated by the `is_admin()` RPC.
+// public-facing feature flag. Access is gated server-side via `is_admin()`
+// RPC backed by `public.user_roles` (no hardcoded emails on the client).
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { Navigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +17,6 @@ import { Search, Crown, ArrowLeft, Shield, Users, RefreshCw } from "lucide-react
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/lib/logger";
 
-const ADMIN_EMAIL = "aaaehgus@gmail.com";
 
 interface UserWithSub {
   user_id: string;
@@ -32,7 +33,9 @@ interface UserWithSub {
 }
 
 const AdminSubscriptions = () => {
-  const { user, loading } = useAuthContext();
+  const { user, loading: authLoading } = useAuthContext();
+  const { isAdmin, loading: adminLoading } = useIsAdmin();
+  const loading = authLoading || adminLoading;
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [allUsers, setAllUsers] = useState<UserWithSub[]>([]);
@@ -96,10 +99,10 @@ const AdminSubscriptions = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && user?.email === ADMIN_EMAIL) {
+    if (!loading && isAdmin) {
       fetchAllUsers();
     }
-  }, [loading, user, fetchAllUsers]);
+  }, [loading, isAdmin, fetchAllUsers]);
 
   if (loading) {
     return (
@@ -109,7 +112,7 @@ const AdminSubscriptions = () => {
     );
   }
 
-  if (!user?.email || user.email !== ADMIN_EMAIL) {
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
 

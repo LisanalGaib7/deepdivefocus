@@ -1,24 +1,38 @@
 import { useState, useEffect, useCallback } from "react";
 
+// Vendor-prefixed fullscreen API surface (Safari/iOS).
+// Narrow typing isolates the only place we need `any`-equivalents.
+type FullscreenElement = HTMLElement & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+};
+type FullscreenDocument = Document & {
+  webkitExitFullscreen?: () => Promise<void> | void;
+  webkitFullscreenElement?: Element | null;
+};
+
 export function useFullscreen() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
+    const doc = document as FullscreenDocument;
     const handleChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(!!(document.fullscreenElement || doc.webkitFullscreenElement));
     };
     document.addEventListener("fullscreenchange", handleChange);
-    return () => document.removeEventListener("fullscreenchange", handleChange);
+    document.addEventListener("webkitfullscreenchange", handleChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleChange);
+      document.removeEventListener("webkitfullscreenchange", handleChange);
+    };
   }, []);
 
   const enterFullscreen = useCallback(async () => {
-    // Fire fullscreen API immediately — don't wait for animations
-    const fsPromise = document.documentElement.requestFullscreen
-      ? document.documentElement.requestFullscreen()
-      : (document.documentElement as any).webkitRequestFullscreen?.();
+    const el = document.documentElement as FullscreenElement;
+    const fsPromise = el.requestFullscreen
+      ? el.requestFullscreen()
+      : el.webkitRequestFullscreen?.();
 
-    // Show flash overlay concurrently (not blocking)
     setShowOverlay(true);
     setTimeout(() => setShowOverlay(false), 150);
 
@@ -26,21 +40,19 @@ export function useFullscreen() {
   }, []);
 
   const exitFullscreen = useCallback(async () => {
+    const doc = document as FullscreenDocument;
     try {
       if (document.fullscreenElement) {
         await document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
+      } else if (doc.webkitExitFullscreen) {
+        await doc.webkitExitFullscreen();
       }
     } catch { /* silent */ }
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    if (isFullscreen) {
-      exitFullscreen();
-    } else {
-      enterFullscreen();
-    }
+    if (isFullscreen) exitFullscreen();
+    else enterFullscreen();
   }, [isFullscreen, enterFullscreen, exitFullscreen]);
 
   return { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen };
