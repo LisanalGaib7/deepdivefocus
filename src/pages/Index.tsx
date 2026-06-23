@@ -422,25 +422,22 @@ const Index = () => {
     }
   }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
 
-  // Task management functions
-  // HARD_CAP_TASKS is always-on (performance/UX). FREE_TASK_LIMIT only matters
-  // when the legacy subscription flow is re-enabled.
-  const taskLimit = SUBSCRIPTION_ENABLED && !isPro ? FREE_TASK_LIMIT : HARD_CAP_TASKS;
+  // Task gating: see src/features/monetization/gating.ts for the rules.
+  const taskLimit = taskGating.limit;
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskText.trim()) return;
 
-    // [SUBSCRIPTION] Free-tier upgrade prompt — only when subscription gating is active.
-    if (SUBSCRIPTION_ENABLED && !isPro && tasks.length >= FREE_TASK_LIMIT) {
+    // Free-tier soft limit → upgrade prompt (only active when SUBSCRIPTION_ENABLED).
+    if (taskGating.hitFreeLimit(tasks.length)) {
       setShowUpgradeRequired(true);
       return;
     }
 
-    // Always-on hard ceiling. Show a visible toast so the user knows why
-    // their add was rejected, instead of a silently disabled input.
-    if (tasks.length >= HARD_CAP_TASKS) {
-      toast.error(`Mission slots full (${HARD_CAP_TASKS} max)`, {
+    // Always-on hard ceiling (performance/UX, not monetization).
+    if (taskGating.hitHardCap(tasks.length)) {
+      toast.error(`Mission slots full (${taskGating.hardCap} max)`, {
         description: "Complete or remove a mission to add a new one.",
       });
       return;
@@ -539,9 +536,8 @@ const Index = () => {
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
           
-          {/* Top Left - PRO Badge */}
-          {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-          {SUBSCRIPTION_ENABLED && isPro && (
+          {/* Top Left - PRO Badge (only when monetization UI is enabled and user is Pro) */}
+          {monetizationUI.enabled && isPro && (
             <div className="absolute top-4 left-4">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -933,8 +929,7 @@ const Index = () => {
                   MISSION OBJECTIVE
                 </span>
                 <div className="flex items-center gap-2">
-                  {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-                  {SUBSCRIPTION_ENABLED && !isPro && (
+                  {taskGating.showUpgradeHint && (
                     <button
                       type="button"
                       onClick={() => setShowPricing(true)}
@@ -943,10 +938,9 @@ const Index = () => {
                       ↑ UPGRADE
                     </button>
                   )}
-                  {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-                  {SUBSCRIPTION_ENABLED && (
+                  {taskGating.showSlotCounter && (
                     <span className={`text-xs uppercase tracking-widest font-mono font-semibold ${
-                      !isPro && tasks.length >= FREE_TASK_LIMIT ? 'text-yellow-400/80' : 'text-foreground/50'
+                      taskGating.hitFreeLimit(tasks.length) ? 'text-yellow-400/80' : 'text-foreground/50'
                     }`}>
                       SLOT [{tasks.length}/{taskLimit}]
                     </span>
@@ -960,13 +954,13 @@ const Index = () => {
                   onChange={(e) => setNewTaskText(e.target.value)}
                   placeholder="> Add a focus task..."
                   className="text-center text-lg h-14 font-mono bg-black/60 border border-white/10 placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
-                  disabled={tasks.length >= HARD_CAP_TASKS}
+                  disabled={taskGating.hitHardCap(tasks.length)}
                 />
                 <Button
                   type="submit"
                   size="icon"
                   className="h-14 w-14 bg-primary hover:bg-primary/90"
-                  disabled={tasks.length >= HARD_CAP_TASKS || !newTaskText.trim()}
+                  disabled={taskGating.hitHardCap(tasks.length) || !newTaskText.trim()}
                 >
                   <Plus className="h-5 w-5" />
                 </Button>
@@ -1175,26 +1169,22 @@ const Index = () => {
         }}
       />
 
-      {/* Upgrade Required Modal */}
-      {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-      {SUBSCRIPTION_ENABLED && (
-        <UpgradeRequiredModal
-          open={showUpgradeRequired}
-          onClose={() => setShowUpgradeRequired(false)}
-          onOpenPricing={() => setShowPricing(true)}
-        />
-      )}
-
-      {/* Pricing / Pro Modal */}
-      {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-      {SUBSCRIPTION_ENABLED && (
-        <PricingModal
-          open={showPricing}
-          onClose={() => setShowPricing(false)}
-          isPro={isPro}
-          onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
-          currentPearls={profile?.total_pearls || 0}
-        />
+      {/* Monetization modals — only mounted when subscription UI is enabled. */}
+      {monetizationUI.enabled && (
+        <>
+          <UpgradeRequiredModal
+            open={showUpgradeRequired}
+            onClose={() => setShowUpgradeRequired(false)}
+            onOpenPricing={() => setShowPricing(true)}
+          />
+          <PricingModal
+            open={showPricing}
+            onClose={() => setShowPricing(false)}
+            isPro={isPro}
+            onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
+            currentPearls={profile?.total_pearls || 0}
+          />
+        </>
       )}
 
     </>
