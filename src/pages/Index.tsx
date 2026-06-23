@@ -305,21 +305,22 @@ const Index = () => {
           <MissionObjectivePanel
             tasks={tasks}
             selectedTaskId={selectedTaskId}
-            editingTaskId={editingTaskId}
-            editingText={editingText}
-            newTaskText={newTaskText}
+            editingTaskId={taskHandlers.editingTaskId}
+            editingText={taskHandlers.editingText}
+            newTaskText={taskHandlers.newTaskText}
             taskGating={taskGating}
-            onNewTaskTextChange={setNewTaskText}
-            onSubmit={handleAddTask}
+            onNewTaskTextChange={taskHandlers.setNewTaskText}
+            onSubmit={taskHandlers.handleAddTask}
             onOpenPricing={() => setShowPricing(true)}
-            onSelect={handleSelectTask}
-            onToggleComplete={handleToggleComplete}
-            onStartEdit={handleStartEdit}
-            onSaveEdit={handleSaveEdit}
-            onEditKeyDown={handleEditKeyDown}
-            onEditTextChange={setEditingText}
-            onDelete={handleDeleteTask}
+            onSelect={taskHandlers.handleSelectTask}
+            onToggleComplete={taskHandlers.handleToggleComplete}
+            onStartEdit={taskHandlers.handleStartEdit}
+            onSaveEdit={taskHandlers.handleSaveEdit}
+            onEditKeyDown={taskHandlers.handleEditKeyDown}
+            onEditTextChange={taskHandlers.setEditingText}
+            onDelete={taskHandlers.handleDeleteTask}
             onReorder={reorderTasks}
+
             getTimeDisplay={(task) => {
               const dbTodayMins = getTaskTodayMinutes(task.text);
               const sessionSeconds = task.timeSpentInSeconds;
