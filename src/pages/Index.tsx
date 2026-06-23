@@ -39,6 +39,7 @@ import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
 import { useTaskGating, useMonetizationUI } from "@/features/monetization/gating";
 
 const Index = () => {
@@ -84,19 +85,9 @@ const Index = () => {
   const [isDiveTransition, setIsDiveTransition] = useState(false);
   const [collectionRefreshKey, setCollectionRefreshKey] = useState(0);
   
-  // Persistent upgrade levels (localStorage for both guest & auth, synced on load)
-  const [engineLevel, setEngineLevel] = useState(() => {
-    const saved = localStorage.getItem('deepdive_engine_level');
-    return saved ? parseInt(saved, 10) : 1;
-  });
-  const [hullLevel, setHullLevel] = useState(() => {
-    const saved = localStorage.getItem('deepdive_hull_level');
-    return saved ? parseInt(saved, 10) : 1;
-  });
+  // Persistent upgrade levels (localStorage for both guest & auth).
+  const { engineLevel, setEngineLevel, hullLevel, setHullLevel } = useUpgradeLevels();
 
-  // Persist upgrade levels
-  useEffect(() => { localStorage.setItem('deepdive_engine_level', String(engineLevel)); }, [engineLevel]);
-  useEffect(() => { localStorage.setItem('deepdive_hull_level', String(hullLevel)); }, [hullLevel]);
 
   const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
