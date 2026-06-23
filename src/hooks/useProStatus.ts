@@ -9,13 +9,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { SUBSCRIPTION_ENABLED } from '@/config/featureFlags';
 import { logger } from '@/lib/logger';
+import { STORAGE_KEYS } from '@/lib/storage/keys';
+import { readString, writeString, removeKey } from '@/lib/storage/safeStorage';
 
-const PRO_KEY = 'deepdive_pro_status';
+const readProCache = () => readString(STORAGE_KEYS.proStatus) === 'true';
 
 export const useProStatus = () => {
   const [isPro, setIsPro] = useState<boolean>(() => {
     if (!SUBSCRIPTION_ENABLED) return false;
-    return localStorage.getItem(PRO_KEY) === 'true';
+    return readProCache();
   });
   const [loading, setLoading] = useState(SUBSCRIPTION_ENABLED);
 
@@ -29,7 +31,7 @@ export const useProStatus = () => {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session?.user) {
-      setIsPro(localStorage.getItem(PRO_KEY) === 'true');
+      setIsPro(readProCache());
       setLoading(false);
       return;
     }
@@ -40,14 +42,14 @@ export const useProStatus = () => {
 
     if (error) {
       logger.error('useProStatus', 'Error checking pro status:', error);
-      setIsPro(localStorage.getItem(PRO_KEY) === 'true');
+      setIsPro(readProCache());
     } else {
       const proStatus = !!data;
       setIsPro(proStatus);
       if (proStatus) {
-        localStorage.setItem(PRO_KEY, 'true');
+        writeString(STORAGE_KEYS.proStatus, 'true');
       } else {
-        localStorage.removeItem(PRO_KEY);
+        removeKey(STORAGE_KEYS.proStatus);
       }
     }
     setLoading(false);
@@ -59,12 +61,12 @@ export const useProStatus = () => {
   }, [checkProStatus]);
 
   const activatePro = useCallback(() => {
-    localStorage.setItem(PRO_KEY, 'true');
+    writeString(STORAGE_KEYS.proStatus, 'true');
     setIsPro(true);
   }, []);
 
   const deactivatePro = useCallback(() => {
-    localStorage.removeItem(PRO_KEY);
+    removeKey(STORAGE_KEYS.proStatus);
     setIsPro(false);
   }, []);
 

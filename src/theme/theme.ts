@@ -1,7 +1,11 @@
+import { STORAGE_KEYS } from "@/lib/storage/keys";
+
 export type Theme = "ocean" | "sage" | "rose" | "lavender" | "mono";
 
 export const DEFAULT_THEME: Theme = "ocean";
-export const THEME_STORAGE_KEY = "deepDiveTheme";
+/** @deprecated Import `STORAGE_KEYS.theme` from `@/lib/storage/keys` instead. */
+export const THEME_STORAGE_KEY = STORAGE_KEYS.theme;
+
 
 export const themes: { id: Theme; label: string; colors: [string, string] }[] = [
   { id: "ocean", label: "Ocean", colors: ["#0ea5e9", "#3b82f6"] },

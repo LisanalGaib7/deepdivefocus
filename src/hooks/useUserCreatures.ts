@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { STORAGE_KEYS } from '@/lib/storage/keys';
+import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
 
 export interface UserCreatureDB {
   id: string;
@@ -9,24 +11,17 @@ export interface UserCreatureDB {
   unlocked_at: string;
 }
 
-const GUEST_CREATURES_KEY = 'deepdive_guest_creatures';
-
-const getGuestCreatures = (): string[] => {
-  try {
-    const stored = localStorage.getItem(GUEST_CREATURES_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-};
+const getGuestCreatures = (): string[] =>
+  readJSON<string[]>(STORAGE_KEYS.guestCreatures, []);
 
 const saveGuestCreature = (creatureId: string) => {
   const existing = getGuestCreatures();
   if (!existing.includes(creatureId)) {
     existing.push(creatureId);
-    localStorage.setItem(GUEST_CREATURES_KEY, JSON.stringify(existing));
+    writeJSON(STORAGE_KEYS.guestCreatures, existing);
   }
 };
+
 
 export const useUserCreatures = () => {
   const { user, isGuestMode } = useAuthContext();

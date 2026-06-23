@@ -1,5 +1,8 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 import { AUDIO_PATHS, DEFAULT_VOLUMES } from "@/constants/gameConfig";
+import { STORAGE_KEYS } from "@/lib/storage/keys";
+import { readString, writeString } from "@/lib/storage/safeStorage";
+
 
 export type SoundType = "rain" | "ocean" | "whiteNoise";
 
@@ -20,7 +23,6 @@ export interface UseDeepDiveAudioReturn {
 }
 
 const SOUND_TYPES: SoundType[] = ["rain", "ocean", "whiteNoise"];
-const SOUND_ENABLED_KEY = "deepdive_sound_enabled";
 
 export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   const [sounds, setSounds] = useState<SoundState>({
@@ -30,7 +32,7 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
   });
 
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(() => {
-    const saved = localStorage.getItem(SOUND_ENABLED_KEY);
+    const saved = readString(STORAGE_KEYS.soundEnabled);
     return saved !== null ? saved === "true" : true;
   });
 
@@ -39,8 +41,9 @@ export const useDeepDiveAudio = (): UseDeepDiveAudioReturn => {
 
   // Persist sound preference
   useEffect(() => {
-    localStorage.setItem(SOUND_ENABLED_KEY, String(isSoundEnabled));
+    writeString(STORAGE_KEYS.soundEnabled, String(isSoundEnabled));
   }, [isSoundEnabled]);
+
 
   // Initialize audio elements + preload alarm
   useEffect(() => {

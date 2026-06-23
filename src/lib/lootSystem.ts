@@ -1,7 +1,8 @@
 import { Creature, getCreaturesAtDepth, CreatureRarity } from '@/data/creatures';
 import { RARITY_CONFIG, PEARL_VALUES } from '@/constants/gameConfig';
+import { STORAGE_KEYS } from '@/lib/storage/keys';
+import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
 
-const COLLECTION_STORAGE_KEY = 'deepDiveCollection';
 
 // Rarity weights calibrated for exact percentages at 3000m max depth:
 // Legendary: 7%, Epic: 13%, Rare: 30%, Common+Uncommon: 50%
@@ -56,19 +57,18 @@ export const rollForCreature = (maxDepth: number): Creature | null => {
 };
 
 // Get collected creatures from localStorage
-export const getCollection = (): string[] => {
-  const saved = localStorage.getItem(COLLECTION_STORAGE_KEY);
-  return saved ? JSON.parse(saved) : [];
-};
+export const getCollection = (): string[] =>
+  readJSON<string[]>(STORAGE_KEYS.collection, []);
 
 // Add a creature to the collection
 export const addToCollection = (creatureId: string): void => {
   const collection = getCollection();
   if (!collection.includes(creatureId)) {
     collection.push(creatureId);
-    localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
+    writeJSON(STORAGE_KEYS.collection, collection);
   }
 };
+
 
 // Check if creature is already collected
 export const isCreatureCollected = (creatureId: string): boolean => {
