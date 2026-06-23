@@ -37,7 +37,7 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
-import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
@@ -137,11 +137,11 @@ const Index = () => {
     updateProfile,
     isAuthenticated,
     isGuestMode,
-    onAfterClose: () => {
+    onAfterClose: useCallback(() => {
       timer.resetTimer();
       resetDive();
       exitFullscreen();
-    },
+    }, [timer, resetDive, exitFullscreen]),
   });
   useEffect(() => {
     completionRef.current = { triggerMissionComplete: completion.triggerMissionComplete };
@@ -187,12 +187,12 @@ const Index = () => {
     }
   }, [isAtMaxDepth, isRunning, maxDepth, depth]);
 
-  const handleEmergencyClose = () => {
+  const handleEmergencyClose = useCallback(() => {
     setShowEmergencyModal(false);
     timer.resetTimer();
     resetDive();
     exitFullscreen();
-  };
+  }, [timer, resetDive, exitFullscreen]);
 
   // Task handlers extracted to useTaskHandlers.
 
@@ -203,9 +203,61 @@ const Index = () => {
     return `${mins}m`;
   };
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await signOut();
-  };
+  }, [signOut]);
+
+  // Stable handlers passed to memoized child components.
+  const handleOpenPricing = useCallback(() => setShowPricing(true), []);
+  const handleOpenEngineeringBay = useCallback(() => setShowEngineeringBay(true), []);
+  const handleResetAll = useCallback(() => {
+    timer.handleReset();
+    resetDive();
+  }, [timer, resetDive]);
+
+  const getTimeDisplay = useCallback(
+    (task: LocalTask) => {
+      const dbTodayMins = getTaskTodayMinutes(task.text);
+      const sessionSeconds = task.timeSpentInSeconds;
+      const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
+      return {
+        total: totalTodaySeconds,
+        formatted: formatTimeSpent(totalTodaySeconds),
+      };
+    },
+    [getTaskTodayMinutes],
+  );
+
+  const handleUpgrade = useCallback((moduleId: string) => {
+    const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
+    const cost = getUpgradeCost(currentTier);
+    const pearls = profile?.total_pearls || 0;
+
+    if (currentTier >= 5) {
+      toast.error('Already at maximum tier!');
+      return;
+    }
+    if (pearls < cost) {
+      toast.error('Not enough pearls!', { description: `Need ${cost.toLocaleString()} pearls.` });
+      return;
+    }
+
+    updateProfile({ total_pearls: pearls - cost });
+
+    if (moduleId === 'hull') {
+      setHullLevel(prev => prev + 1);
+    } else if (moduleId === 'engine') {
+      setEngineLevel(prev => prev + 1);
+    }
+
+    toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
+  }, [hullLevel, engineLevel, profile?.total_pearls, updateProfile, setHullLevel, setEngineLevel]);
+
+  const handleActivatePro = useCallback(() => {
+    activatePro();
+    setShowPricing(false);
+    toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 });
+  }, [activatePro]);
 
   return (
     <>
@@ -221,12 +273,12 @@ const Index = () => {
           
           <TopBar
             showProBadge={monetizationUI.enabled && isPro}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
             isFullscreen={isFullscreen}
             onToggleFullscreen={toggleFullscreen}
             isSoundEnabled={isSoundEnabled}
             onToggleSound={toggleSoundEnabled}
-            onOpenEngineeringBay={() => setShowEngineeringBay(true)}
+            onOpenEngineeringBay={handleOpenEngineeringBay}
             onLogout={handleLogout}
           />
 
@@ -281,7 +333,7 @@ const Index = () => {
 
             {/* Reset Button - Theme-aware Dark Glass Effect */}
             <Button
-              onClick={() => { timer.handleReset(); resetDive(); }}
+              onClick={handleResetAll}
               size="lg"
               variant="ghost"
               className="reset-button-themed h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all duration-300 active:scale-95"
@@ -311,7 +363,7 @@ const Index = () => {
             taskGating={taskGating}
             onNewTaskTextChange={taskHandlers.setNewTaskText}
             onSubmit={taskHandlers.handleAddTask}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
             onSelect={taskHandlers.handleSelectTask}
             onToggleComplete={taskHandlers.handleToggleComplete}
             onStartEdit={taskHandlers.handleStartEdit}
@@ -320,16 +372,7 @@ const Index = () => {
             onEditTextChange={taskHandlers.setEditingText}
             onDelete={taskHandlers.handleDeleteTask}
             onReorder={reorderTasks}
-
-            getTimeDisplay={(task) => {
-              const dbTodayMins = getTaskTodayMinutes(task.text);
-              const sessionSeconds = task.timeSpentInSeconds;
-              const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
-              return {
-                total: totalTodaySeconds,
-                formatted: formatTimeSpent(totalTodaySeconds),
-              };
-            }}
+            getTimeDisplay={getTimeDisplay}
           />
         )}
 
@@ -375,40 +418,17 @@ const Index = () => {
       />
 
       
-      {/* Engineering Bay Modal */}
-      <EngineeringBayModal
-        open={showEngineeringBay}
-        onClose={() => setShowEngineeringBay(false)}
-        engineLevel={engineLevel}
-        hullLevel={hullLevel}
-        currentPearls={profile?.total_pearls || 0}
-        onUpgrade={(moduleId) => {
-          const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
-          const cost = getUpgradeCost(currentTier);
-          const pearls = profile?.total_pearls || 0;
-
-          if (currentTier >= 5) {
-            toast.error('Already at maximum tier!');
-            return;
-          }
-          if (pearls < cost) {
-            toast.error('Not enough pearls!', { description: `Need ${cost.toLocaleString()} pearls.` });
-            return;
-          }
-
-          // Deduct pearls
-          updateProfile({ total_pearls: pearls - cost });
-
-          // Increment tier
-          if (moduleId === 'hull') {
-            setHullLevel(prev => prev + 1);
-          } else if (moduleId === 'engine') {
-            setEngineLevel(prev => prev + 1);
-          }
-
-          toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
-        }}
-      />
+      {/* Engineering Bay Modal — only mount when open (avoids constant remount cost) */}
+      {showEngineeringBay && (
+        <EngineeringBayModal
+          open={showEngineeringBay}
+          onClose={() => setShowEngineeringBay(false)}
+          engineLevel={engineLevel}
+          hullLevel={hullLevel}
+          currentPearls={profile?.total_pearls || 0}
+          onUpgrade={handleUpgrade}
+        />
+      )}
 
       {/* Monetization modals — only mounted when subscription UI is enabled. */}
       {monetizationUI.enabled && (
@@ -416,17 +436,20 @@ const Index = () => {
           <UpgradeRequiredModal
             open={showUpgradeRequired}
             onClose={() => setShowUpgradeRequired(false)}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
           />
-          <PricingModal
-            open={showPricing}
-            onClose={() => setShowPricing(false)}
-            isPro={isPro}
-            onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
-            currentPearls={profile?.total_pearls || 0}
-          />
+          {showPricing && (
+            <PricingModal
+              open={showPricing}
+              onClose={() => setShowPricing(false)}
+              isPro={isPro}
+              onActivatePro={handleActivatePro}
+              currentPearls={profile?.total_pearls || 0}
+            />
+          )}
         </>
       )}
+
 
     </>
   );

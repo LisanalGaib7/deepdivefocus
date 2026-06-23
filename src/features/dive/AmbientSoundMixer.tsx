@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { CloudRain, Volume2, Waves, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -57,4 +57,4 @@ const AmbientSoundMixer = ({ sounds, toggleSound, activeSoundsCount }: AmbientSo
   );
 };
 
-export default AmbientSoundMixer;
+export default memo(AmbientSoundMixer);

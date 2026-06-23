@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { hapticsSuccess } from "@/lib/haptics";
 import { Creature } from "@/data/creatures";
@@ -38,6 +38,13 @@ export function useDiveCompletion(deps: {
   isGuestMode: boolean;
   onAfterClose: () => void; // reset timer + exit fullscreen
 }) {
+  // Stable deps ref — avoids invalidating callbacks every render, which would
+  // recreate `triggerMissionComplete` and force `Index.tsx` effect to refire.
+  const depsRef = useRef(deps);
+  useEffect(() => {
+    depsRef.current = deps;
+  });
+
   const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
   const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
   const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
@@ -48,7 +55,7 @@ export function useDiveCompletion(deps: {
     const {
       selectedTask, saveTimeSpent, addSession, addLocalFocusSession,
       refetchSessions, profile, updateProfile, isAuthenticated, isGuestMode,
-    } = deps;
+    } = depsRef.current;
 
     const taskName = selectedTask?.text || "Focus Session";
     setCompletedSessionDepth(currentDepth);
@@ -102,10 +109,10 @@ export function useDiveCompletion(deps: {
         console.error("[MissionComplete] Background save error:", err);
       }
     })();
-  }, [deps]);
+  }, []);
 
   const handleMissionCompleteClose = useCallback(async () => {
-    const { addCreature, refetchProfile, onAfterClose } = deps;
+    const { addCreature, refetchProfile, onAfterClose } = depsRef.current;
     if (rewardCreature) await addCreature(rewardCreature.id);
 
     setShowMissionCompleteModal(false);
@@ -119,7 +126,7 @@ export function useDiveCompletion(deps: {
     if (reward) {
       toast.success("Creature added to collection!", { description: `${reward.name} saved!` });
     }
-  }, [rewardCreature, deps]);
+  }, [rewardCreature]);
 
   return {
     showMissionCompleteModal,

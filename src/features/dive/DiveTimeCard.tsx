@@ -1,3 +1,4 @@
+import { memo } from "react";
 import ThemeSwitcher from "@/components/common/ThemeSwitcher";
 
 interface DiveTimeCardProps {
@@ -47,4 +48,4 @@ const DiveTimeCard = ({ todayMinutes, showCalibration }: DiveTimeCardProps) => {
   );
 };
 
-export default DiveTimeCard;
+export default memo(DiveTimeCard);

@@ -7,17 +7,16 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { 
-  Anchor, 
-  Shield, 
-  Zap, 
+import {
+  Anchor,
+  Shield,
+  Zap,
   ChevronRight,
   Gauge,
-  ArrowUp,
   Lock,
-  Circle
 } from "lucide-react";
 import { getUpgradeCost, getHullMaxDepth, getEngineSpeedPercent } from "@/constants/gameConfig";
+import PearlBadge from "@/components/common/PearlBadge";
 
 interface UpgradeModule {
   id: string;
@@ -136,10 +135,7 @@ export const EngineeringBayModal = ({
                 <p className="text-xs text-primary/60 font-robotic tracking-wider transition-colors duration-500">VESSEL CLASS</p>
                 <p className="text-lg font-robotic text-primary tracking-wide transition-colors duration-500">VOYAGER-{hullLevel}</p>
               </div>
-              <div className="flex items-center gap-2 bg-pearl/10 border border-pearl/30 rounded-lg px-3 py-1.5 transition-colors duration-500">
-                <Circle className="h-4 w-4 text-pearl fill-pearl drop-shadow-[0_0_5px_hsl(var(--pearl)/0.8)] transition-colors duration-500" />
-                <span className="text-pearl font-robotic text-sm transition-colors duration-500">{currentPearls.toLocaleString()}</span>
-              </div>
+              <PearlBadge amount={currentPearls} variant="header" />
             </div>
 
             {/* Current Stats Grid */}
@@ -238,10 +234,7 @@ export const EngineeringBayModal = ({
                                 <span>UPGRADING</span>
                               </div>
                             ) : (
-                              <div className="flex items-center gap-2">
-                                <Circle className="h-3 w-3 fill-current drop-shadow-[0_0_4px_hsl(var(--pearl)/0.6)]" />
-                                <span>{module.cost}</span>
-                              </div>
+                              <PearlBadge amount={module.cost} variant="cost" />
                             )}
                           </Button>
                         </div>

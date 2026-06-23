@@ -10,38 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
 import PixelCreature from "@/components/common/PixelCreature";
-import { 
-  Anchor, 
-  Circle, 
-  Sparkles, 
-  Fish, 
-  Shell, 
-  Star, 
-  Waves, 
-  Shield, 
-  Grip, 
-  Wind, 
-  Flashlight, 
-  Ghost, 
-  Skull,
-  HelpCircle,
-  LucideIcon
-} from "lucide-react";
-
-const iconMap: Record<string, LucideIcon> = {
-  Fish,
-  Shell,
-  Star,
-  Waves,
-  Sparkles,
-  Shield,
-  Grip,
-  Wind,
-  Flashlight,
-  Anchor,
-  Ghost,
-  Skull,
-};
+import PearlBadge from "@/components/common/PearlBadge";
+import { Anchor, Sparkles } from "lucide-react";
 
 interface MissionCompleteModalProps {
   open: boolean;
@@ -185,12 +155,7 @@ export const MissionCompleteModal = ({
                 </div>
 
                 {/* Pearl reward */}
-                <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-border">
-                  <Circle className="h-4 w-4 text-amber-400 fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]" />
-                  <span className="text-amber-400 font-robotic text-sm">
-                    +{pearls} PEARLS
-                  </span>
-                </div>
+                <PearlBadge amount={pearls} variant="reward" className="mt-3" />
               </div>
             </div>
           </div>
