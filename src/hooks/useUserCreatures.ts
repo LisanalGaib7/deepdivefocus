@@ -3,6 +3,24 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { STORAGE_KEYS } from '@/lib/storage/keys';
 import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
+import { CREATURES } from '@/data/creatures';
+
+// TEMP DEV: unlock every creature in the preview. Toggle in browser console:
+//   localStorage.setItem('devUnlockAll', '1')  // enable
+//   localStorage.removeItem('devUnlockAll')    // disable
+// Also auto-enabled with ?unlockAll=1 in the URL.
+const isDevUnlockAll = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  try {
+    if (window.localStorage.getItem('devUnlockAll') === '1') return true;
+    if (new URLSearchParams(window.location.search).get('unlockAll') === '1') {
+      window.localStorage.setItem('devUnlockAll', '1');
+      return true;
+    }
+  } catch {}
+  return false;
+};
+
 
 export interface UserCreatureDB {
   id: string;
