@@ -363,7 +363,7 @@ const Index = () => {
             taskGating={taskGating}
             onNewTaskTextChange={taskHandlers.setNewTaskText}
             onSubmit={taskHandlers.handleAddTask}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
             onSelect={taskHandlers.handleSelectTask}
             onToggleComplete={taskHandlers.handleToggleComplete}
             onStartEdit={taskHandlers.handleStartEdit}
@@ -372,16 +372,7 @@ const Index = () => {
             onEditTextChange={taskHandlers.setEditingText}
             onDelete={taskHandlers.handleDeleteTask}
             onReorder={reorderTasks}
-
-            getTimeDisplay={(task) => {
-              const dbTodayMins = getTaskTodayMinutes(task.text);
-              const sessionSeconds = task.timeSpentInSeconds;
-              const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
-              return {
-                total: totalTodaySeconds,
-                formatted: formatTimeSpent(totalTodaySeconds),
-              };
-            }}
+            getTimeDisplay={getTimeDisplay}
           />
         )}
 
@@ -427,40 +418,17 @@ const Index = () => {
       />
 
       
-      {/* Engineering Bay Modal */}
-      <EngineeringBayModal
-        open={showEngineeringBay}
-        onClose={() => setShowEngineeringBay(false)}
-        engineLevel={engineLevel}
-        hullLevel={hullLevel}
-        currentPearls={profile?.total_pearls || 0}
-        onUpgrade={(moduleId) => {
-          const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
-          const cost = getUpgradeCost(currentTier);
-          const pearls = profile?.total_pearls || 0;
-
-          if (currentTier >= 5) {
-            toast.error('Already at maximum tier!');
-            return;
-          }
-          if (pearls < cost) {
-            toast.error('Not enough pearls!', { description: `Need ${cost.toLocaleString()} pearls.` });
-            return;
-          }
-
-          // Deduct pearls
-          updateProfile({ total_pearls: pearls - cost });
-
-          // Increment tier
-          if (moduleId === 'hull') {
-            setHullLevel(prev => prev + 1);
-          } else if (moduleId === 'engine') {
-            setEngineLevel(prev => prev + 1);
-          }
-
-          toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
-        }}
-      />
+      {/* Engineering Bay Modal — only mount when open (avoids constant remount cost) */}
+      {showEngineeringBay && (
+        <EngineeringBayModal
+          open={showEngineeringBay}
+          onClose={() => setShowEngineeringBay(false)}
+          engineLevel={engineLevel}
+          hullLevel={hullLevel}
+          currentPearls={profile?.total_pearls || 0}
+          onUpgrade={handleUpgrade}
+        />
+      )}
 
       {/* Monetization modals — only mounted when subscription UI is enabled. */}
       {monetizationUI.enabled && (
@@ -468,17 +436,20 @@ const Index = () => {
           <UpgradeRequiredModal
             open={showUpgradeRequired}
             onClose={() => setShowUpgradeRequired(false)}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
           />
-          <PricingModal
-            open={showPricing}
-            onClose={() => setShowPricing(false)}
-            isPro={isPro}
-            onActivatePro={() => { activatePro(); setShowPricing(false); toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 }); }}
-            currentPearls={profile?.total_pearls || 0}
-          />
+          {showPricing && (
+            <PricingModal
+              open={showPricing}
+              onClose={() => setShowPricing(false)}
+              isPro={isPro}
+              onActivatePro={handleActivatePro}
+              currentPearls={profile?.total_pearls || 0}
+            />
+          )}
         </>
       )}
+
 
     </>
   );
