@@ -9,7 +9,9 @@ import React, {
   type ReactNode,
 } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { DEFAULT_THEME, isTheme, THEME_STORAGE_KEY, type Theme } from "@/theme/theme";
+import { DEFAULT_THEME, isTheme, type Theme } from "@/theme/theme";
+import { STORAGE_KEYS } from "@/lib/storage/keys";
+import { readString, writeString } from "@/lib/storage/safeStorage";
 
 type ThemeContextValue = {
   theme: Theme;
@@ -19,12 +21,8 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 const readStoredTheme = (): Theme | null => {
-  try {
-    const raw = localStorage.getItem(THEME_STORAGE_KEY);
-    return isTheme(raw) ? raw : null;
-  } catch {
-    return null;
-  }
+  const raw = readString(STORAGE_KEYS.theme);
+  return isTheme(raw) ? raw : null;
 };
 
 const applyThemeToDocument = (theme: Theme) => {
@@ -32,6 +30,7 @@ const applyThemeToDocument = (theme: Theme) => {
   // Also set on body to guarantee inheritance even if markup changes
   document.body?.setAttribute("data-theme", theme);
 };
+
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const { profile, updateProfile, isAuthenticated, isGuestMode } = useAuthContext();
@@ -65,23 +64,16 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
     setThemeState(profileTheme);
     applyThemeToDocument(profileTheme);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, profileTheme);
-    } catch {
-      // ignore
-    }
+    writeString(STORAGE_KEYS.theme, profileTheme);
+
   }, [isAuthenticated, isGuestMode, profile?.theme_color]);
 
   const setTheme = useCallback(
     async (next: Theme) => {
       setThemeState(next);
       applyThemeToDocument(next);
+      writeString(STORAGE_KEYS.theme, next);
 
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        // ignore
-      }
 
       // Persist remotely for authenticated (non-guest) users.
       if (isAuthenticated && !isGuestMode) {

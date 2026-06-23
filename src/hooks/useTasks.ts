@@ -2,7 +2,9 @@
  import { supabase } from '@/integrations/supabase/client';
  import { useAuthContext } from '@/contexts/AuthContext';
  import { toast } from 'sonner';
- 
+ import { STORAGE_KEYS } from '@/lib/storage/keys';
+ import { readJSON, writeJSON } from '@/lib/storage/safeStorage';
+
 export interface Task {
   id: string;
   user_id: string;
@@ -23,13 +25,15 @@ export interface LocalTask {
   lastActiveDate: string;
   sortOrder: number;
 }
- 
- const GUEST_TASKS_KEY = 'deepDiveTasks';
- 
+
+const readGuestTasks = (): LocalTask[] => readJSON<LocalTask[]>(STORAGE_KEYS.tasks, []);
+const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, tasks);
+
  export const useTasks = () => {
    const { user, isGuestMode, isAuthenticated } = useAuthContext();
    const [tasks, setTasks] = useState<LocalTask[]>([]);
    const [loading, setLoading] = useState(true);
+
  
   // Get today's local date string
   const getTodayLocal = () => {
@@ -55,21 +59,21 @@ export interface LocalTask {
    const fetchTasks = useCallback(async () => {
      if (!user || isGuestMode) {
         // Load from localStorage for guests, with daily reset
-        const saved = localStorage.getItem(GUEST_TASKS_KEY);
-        if (saved) {
+        const parsed = readGuestTasks();
+        if (parsed.length > 0) {
           const today = getTodayLocal();
-          const parsed: LocalTask[] = JSON.parse(saved);
-          const resetTasks = parsed.map(t => 
-            t.lastActiveDate !== today 
-              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today } 
+          const resetTasks = parsed.map(t =>
+            t.lastActiveDate !== today
+              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today }
               : t
           );
-          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(resetTasks));
+          writeGuestTasks(resetTasks);
           setTasks(resetTasks);
         }
         setLoading(false);
         return;
      }
+
  
      const { data, error } = await supabase
        .from('tasks')
@@ -117,7 +121,7 @@ export interface LocalTask {
          };
        setTasks(prev => {
          const updated = [...prev, newTask];
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return newTask;
@@ -155,7 +159,7 @@ export interface LocalTask {
          const updated = prev.map(t =>
            t.id === taskId ? { ...t, ...updates } : t
          );
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return;
@@ -190,7 +194,7 @@ export interface LocalTask {
        // Guest mode: local storage
        setTasks(prev => {
          const updated = prev.filter(t => t.id !== taskId);
-         localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+         writeGuestTasks(updated);
          return updated;
        });
        return;
@@ -227,17 +231,17 @@ export interface LocalTask {
       const today = getTodayLocal();
       
       if (!user || isGuestMode) {
-        // Already saved in local state
-        const saved = localStorage.getItem(GUEST_TASKS_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
+        // Already saved in local state; mirror final value to localStorage
+        const parsed = readGuestTasks();
+        if (parsed.length > 0) {
           const updated = parsed.map((t: LocalTask) =>
             t.id === taskId ? { ...t, timeSpentInSeconds: totalSeconds, lastActiveDate: today } : t
           );
-          localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+          writeGuestTasks(updated);
         }
         return;
       }
+
 
       await supabase
         .from('tasks')
@@ -297,7 +301,7 @@ export interface LocalTask {
       setTasks(updated);
 
       if (!user || isGuestMode) {
-        localStorage.setItem(GUEST_TASKS_KEY, JSON.stringify(updated));
+        writeGuestTasks(updated);
         return;
       }
 
