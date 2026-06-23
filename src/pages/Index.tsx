@@ -65,41 +65,62 @@ const Index = () => {
     reorderTasks,
   } = useTasks();
   
-  const [setDuration, setSetDuration] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
-  const [timeLeft, setTimeLeft] = useState(TIMER_CONFIG.DEFAULT_DURATION_SECONDS);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
-  
+
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
   const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
-  const [showMissionCompleteModal, setShowMissionCompleteModal] = useState(false);
   const [showEngineeringBay, setShowEngineeringBay] = useState(false);
   const [showUpgradeRequired, setShowUpgradeRequired] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
-  const [rewardCreature, setRewardCreature] = useState<Creature | null>(null);
-  const [completedSessionDepth, setCompletedSessionDepth] = useState(0);
-  const [completedSessionDuration, setCompletedSessionDuration] = useState(0);
-  const [isDiveTransition, setIsDiveTransition] = useState(false);
-  const [collectionRefreshKey, setCollectionRefreshKey] = useState(0);
-  
+
   // Persistent upgrade levels (localStorage for both guest & auth).
   const { engineLevel, setEngineLevel, hullLevel, setHullLevel } = useUpgradeLevels();
 
+  // Timer (Phase 3.5 hook extraction) — onComplete wired below once gamification is ready.
+  const timer = useDiveTimer({
+    selectedTaskId,
+    incrementTimeSpent,
+    onComplete: () => {
+      playCompletionSound();
+      completion.triggerMissionComplete(depth, elapsedSeconds);
+    },
+  });
+  const { isRunning } = timer;
 
   const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
     engineLevel,
     hullLevel,
   });
+
+  // Mission completion flow
+  const completion = useDiveCompletion({
+    selectedTask: undefined as LocalTask | undefined, // set below via closure-safe pattern
+    saveTimeSpent,
+    addSession,
+    addCreature,
+    addLocalFocusSession,
+    refetchSessions,
+    refetchProfile,
+    profile,
+    updateProfile,
+    isAuthenticated,
+    isGuestMode,
+    onAfterClose: () => {
+      timer.resetTimer();
+      resetDive();
+      exitFullscreen();
+    },
+  });
+
   const maxDepthToastShownRef = useRef(false);
+
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Auto-select first uncompleted task when tasks load
