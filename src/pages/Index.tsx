@@ -69,7 +69,7 @@ const Index = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [showSoundMixer, setShowSoundMixer] = useState(false);
+  
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
   
