@@ -397,7 +397,7 @@ const Index = () => {
       setIsRunning(false);
       playCompletionSound();
       
-      console.log('[Timer] Session complete, saving...', { elapsedSeconds, depth });
+      
       handleMissionComplete();
     }
   }, [timeLeft, isRunning, playCompletionSound, handleMissionComplete, elapsedSeconds, depth]);

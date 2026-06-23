@@ -107,7 +107,6 @@ const YearlyDepthLog = ({ sessions }: YearlyDepthLogProps) => {
       map[dateKey] = (map[dateKey] || 0) + s.duration / 60;
     });
 
-    console.log('[YearlyDepthLog] Daily data aggregated:', map);
     return map;
   }, [sessions]);
 

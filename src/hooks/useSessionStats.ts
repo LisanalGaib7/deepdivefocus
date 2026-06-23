@@ -62,7 +62,6 @@ export const useSessionStats = (): SessionStats => {
   // Add a local session (guest mode)
   const addLocalFocusSession = useCallback((session: Omit<FocusSession, 'id'>) => {
     const newSession = addLocalSession(session);
-    console.log('[SessionStats] Added local session:', newSession);
     setLocalSessions(prev => [...prev, newSession]);
   }, []);
 
