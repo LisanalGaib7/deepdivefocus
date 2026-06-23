@@ -273,12 +273,12 @@ const Index = () => {
           
           <TopBar
             showProBadge={monetizationUI.enabled && isPro}
-            onOpenPricing={() => setShowPricing(true)}
+            onOpenPricing={handleOpenPricing}
             isFullscreen={isFullscreen}
             onToggleFullscreen={toggleFullscreen}
             isSoundEnabled={isSoundEnabled}
             onToggleSound={toggleSoundEnabled}
-            onOpenEngineeringBay={() => setShowEngineeringBay(true)}
+            onOpenEngineeringBay={handleOpenEngineeringBay}
             onLogout={handleLogout}
           />
 
@@ -333,7 +333,7 @@ const Index = () => {
 
             {/* Reset Button - Theme-aware Dark Glass Effect */}
             <Button
-              onClick={() => { timer.handleReset(); resetDive(); }}
+              onClick={handleResetAll}
               size="lg"
               variant="ghost"
               className="reset-button-themed h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all duration-300 active:scale-95"
