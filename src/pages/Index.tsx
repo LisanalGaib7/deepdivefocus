@@ -54,14 +54,14 @@ const Index = () => {
   const { isPro, activatePro } = useProStatus();
   const taskGating = useTaskGating();
   const monetizationUI = useMonetizationUI();
-  const { addSession } = useFocusSessions();
-  const { addCreature } = useUserCreatures();
+  // NOTE: addSession / addCreature are no longer used here — the
+  // award_session_rewards RPC inside useDiveCompletion handles both atomically.
   const { todayMinutes, getTaskTodayMinutes, refetch: refetchSessions, addLocalFocusSession } = useSessionStats();
-  const { 
-    tasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
+  const {
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
     incrementTimeSpent,
     saveTimeSpent,
     reorderTasks,
@@ -128,8 +128,6 @@ const Index = () => {
   const completion = useDiveCompletion({
     selectedTask,
     saveTimeSpent,
-    addSession,
-    addCreature,
     addLocalFocusSession,
     refetchSessions,
     refetchProfile,
