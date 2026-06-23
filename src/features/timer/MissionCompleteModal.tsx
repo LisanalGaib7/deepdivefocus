@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
-import { getPearlValue, isCreatureCollected } from "@/lib/lootSystem";
+import { getPearlValue } from "@/lib/lootSystem";
 import PixelCreature from "@/components/common/PixelCreature";
 import PearlBadge from "@/components/common/PearlBadge";
 import { Anchor, Sparkles } from "lucide-react";
@@ -19,6 +19,8 @@ interface MissionCompleteModalProps {
   maxDepth: number;
   creature: Creature | null;
   sessionDuration: number;
+  /** True if this is the user's first time unlocking this creature. */
+  isNewDiscovery?: boolean;
 }
 
 export const MissionCompleteModal = ({
@@ -27,8 +29,8 @@ export const MissionCompleteModal = ({
   maxDepth,
   creature,
   sessionDuration,
+  isNewDiscovery = false,
 }: MissionCompleteModalProps) => {
-  const isNewDiscovery = creature ? !isCreatureCollected(creature.id) : false;
   const pearls = creature ? getPearlValue(creature.rarity) : 0;
 
   const formatDuration = (seconds: number) => {
