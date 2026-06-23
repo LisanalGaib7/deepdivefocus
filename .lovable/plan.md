@@ -1,29 +1,30 @@
-# Add 6 New Creatures to Bestiary
+## 픽셀 크리쳐 5종 재디자인
 
-## 1. `src/data/creatures.ts` — Add 6 entries
+`src/components/common/PixelCreature.tsx` 내부의 16x16 그리드 데이터를 각 생물 특징이 더 잘 드러나도록 다시 그립니다. 색상 팔레트는 기존 톤(글로우 컬러 포함)을 유지하되 형태만 개선합니다.
 
-| id | name | icon | minDepth | rarity | traits | 배치 위치 |
-|---|---|---|---|---|---|---|
-| clownfish | Clownfish | Fish | 10 | Common | ["Vibrant","Symbiotic"] | sardine 뒤 |
-| pufferfish | Pufferfish | CircleDot | 90 | Uncommon | ["Inflatable","Toxic"] | Tier 1 끝 |
-| nautilus | Nautilus | Shell | 200 | Uncommon | ["Ancient","Spiral"] | turtle 근처 |
-| mantis_shrimp | Mantis Shrimp | Bug | 320 | Rare | ["Striker","Colorful"] | octopus 뒤 |
-| barreleye | Barreleye | ScanEye | 680 | Rare | ["Transparent","Observant"] | giant_isopod 뒤 |
-| vampire_squid | Vampire Squid | Ghost | 820 | Epic | ["Eerie","Cloaked"] | giant_squid 뒤 |
+### 1. Pufferfish (복어)
+- 현재: 둥근 공 모양에 점 패턴이라 정체불명
+- 개선: 둥근 몸통 + **명확한 부리 모양 입**, **큰 눈**, **꼬리 지느러미**, **가슴 지느러미**, 가시(spike) 실루엣을 외곽에 짧게 추가해 복어 특유의 부풀어 오른 실루엣 강조
 
-## 2. `src/components/common/PixelCreature.tsx`
+### 2. Nautilus (앵무조개)
+- 현재: 껍질 무늬가 평평하고 촉수가 빈약
+- 개선: **나선형 소용돌이(spiral)** 패턴을 껍질 내부에 명확히 그려 암모나이트/앵무조개 형태 표현, 줄무늬는 방사형으로 배치, 앞쪽에 **다발로 모인 촉수**와 후드 추가
 
-- 6개 `GridData` 함수 추가 (사용자가 첨부한 grid/colorMap/glowColor 그대로)
-- `getCreatureData` switch에 6개 case 추가
-- 애니메이션 클래스: clownfish/pufferfish/mantis_shrimp → `swim`, nautilus/vampire_squid → `float`, barreleye → `float`
+### 3. Mantis Shrimp (갯가재)
+- 현재: 형태가 흩어져 있어 새우 같지 않음
+- 개선: **길쭉한 분절(segmented) 몸통**, **부채꼴 꼬리**, **두 개의 큰 펀치 집게(앞발)**, **자루눈(stalked eyes)**, **더듬이**를 명확히 표현. 무지개색 등 패턴 유지
 
-## 3. 검증
+### 4. Barreleye (배럴아이)
+- 현재: 둥근 몸이 해파리처럼 보임
+- 개선: **물고기형 유선형 실루엣**(머리쪽 굵고 꼬리쪽 좁아짐), 투명 머리 안쪽에 **녹색 통형 눈 2개**, **꼬리 지느러미와 등/배 지느러미** 추가
 
-- 빌드 통과 확인
-- Bestiary(도감)에서 6개 신규 카드 잠금/해제 표시 확인
-- MissionCompleteModal에서 픽셀 아트 정상 렌더 확인
+### 5. Vampire Squid (흡혈오징어)
+- 현재: 촉수가 너무 흩어지고 몸이 둥글둥글
+- 개선: **삼각형 망토(웹) 실루엣**, 머리 위 **귀 모양 지느러미 2개**, 아래로 **함께 모인 촉수 8개 + 웹 막**, 큰 푸른 눈 유지
 
-## 참고
+### 기술 세부
+- 파일: `src/components/common/PixelCreature.tsx`
+- 변경 범위: `pufferfish()`, `nautilus()`, `mantisShrimp()`, `barreleye()`, `vampireSquid()` 5개 함수의 `grid` 배열만 교체 (colorMap/glowColor/애니메이션은 그대로 두거나 필요시 색상 인덱스만 추가)
+- 도감 확인은 기존 `?unlockAll=1` 링크로 가능
 
-- 동일 rarity 내 종 수가 늘면 드롭 확률이 종별로 희석됨 (예: Tier 1 Uncommon에 pufferfish 추가 시 기존 종들 ~12% 감소)
-- DB `user_creatures.creature_id`는 free-form text라 마이그레이션 불필요
+승인하시면 픽셀 그리드를 다시 그려서 적용하겠습니다.
