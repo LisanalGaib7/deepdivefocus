@@ -194,88 +194,8 @@ const Index = () => {
     exitFullscreen();
   };
 
-  // Task gating rules live in src/features/monetization/gating.ts.
+  // Task handlers extracted to useTaskHandlers.
 
-
-
-  const handleAddTask = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTaskText.trim()) return;
-
-    // Free-tier soft limit → upgrade prompt (only active when SUBSCRIPTION_ENABLED).
-    if (taskGating.hitFreeLimit(tasks.length)) {
-      setShowUpgradeRequired(true);
-      return;
-    }
-
-    // Always-on hard ceiling (performance/UX, not monetization).
-    if (taskGating.hitHardCap(tasks.length)) {
-      toast.error(`Mission slots full (${taskGating.hardCap} max)`, {
-        description: "Complete or remove a mission to add a new one.",
-      });
-      return;
-    }
-
-    const newTask = await addTask(newTaskText.trim());
-    setNewTaskText("");
-    // Auto-select if no task selected
-    if (!selectedTaskId && newTask) {
-      setSelectedTaskId(newTask.id);
-    }
-  };
-
-  const handleSelectTask = (taskId: string) => {
-    if (!isRunning) {
-      setSelectedTaskId(taskId);
-    }
-  };
-
-  const handleToggleComplete = (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-      updateTask(taskId, { isCompleted: !task.isCompleted });
-    }
-    // If completing the selected task, select next uncompleted
-    if (task && !task.isCompleted && selectedTaskId === taskId) {
-      const nextUncompleted = tasks.find(t => t.id !== taskId && !t.isCompleted);
-      setSelectedTaskId(nextUncompleted?.id || null);
-    }
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    await deleteTask(taskId);
-    if (selectedTaskId === taskId) {
-      const remaining = tasks.filter(t => t.id !== taskId && !t.isCompleted);
-      setSelectedTaskId(remaining[0]?.id || null);
-    }
-  };
-
-  const handleStartEdit = (task: LocalTask) => {
-    setEditingTaskId(task.id);
-    setEditingText(task.text);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingTaskId && editingText.trim()) {
-      updateTask(editingTaskId, { text: editingText.trim() });
-    }
-    setEditingTaskId(null);
-    setEditingText("");
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTaskId(null);
-    setEditingText("");
-  };
-
-  const handleEditKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSaveEdit();
-    } else if (e.key === "Escape") {
-      handleCancelEdit();
-    }
-  };
 
   const formatTimeSpent = (seconds: number) => {
     if (seconds < 60) return `${seconds}s`;
