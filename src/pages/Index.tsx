@@ -416,8 +416,8 @@ const Index = () => {
     }
   }, [rewardCreature, addCreature, setDuration, resetDive, exitFullscreen]);
 
-  // Task gating: see src/features/monetization/gating.ts for the rules.
-  const taskLimit = taskGating.limit;
+  // Task gating rules live in src/features/monetization/gating.ts.
+
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
