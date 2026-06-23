@@ -43,7 +43,9 @@ import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
 import { useDiveTimer } from "@/hooks/useDiveTimer";
 import { useDiveCompletion } from "@/hooks/useDiveCompletion";
+import { useTaskHandlers } from "@/hooks/useTaskHandlers";
 import { useTaskGating, useMonetizationUI } from "@/features/monetization/gating";
+
 
 
 
@@ -65,11 +67,6 @@ const Index = () => {
     reorderTasks,
   } = useTasks();
 
-  const [newTaskText, setNewTaskText] = useState("");
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [editingText, setEditingText] = useState("");
-
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
@@ -82,12 +79,23 @@ const Index = () => {
   // Persistent upgrade levels (localStorage for both guest & auth).
   const { engineLevel, setEngineLevel, hullLevel, setHullLevel } = useUpgradeLevels();
 
-  // Derived: selected task (needed by both timer + completion hooks)
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
-
-  // Forward refs so circular hook deps (timer -> completion -> timer) stay consistent.
+  // Refs used to break circular dependencies between the timer / task / completion / gamification hooks.
+  const isRunningRef = useRef(false);
   const completionRef = useRef<{ triggerMissionComplete: (d: number, s: number) => void } | null>(null);
   const gamificationRef = useRef<{ depth: number; elapsedSeconds: number }>({ depth: 0, elapsedSeconds: 0 });
+
+  // Task state + handlers (Phase 3 final extraction)
+  const taskHandlers = useTaskHandlers({
+    tasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    getIsRunning: () => isRunningRef.current,
+    taskGating,
+    onHitFreeLimit: () => setShowUpgradeRequired(true),
+  });
+  const { selectedTaskId, selectedTask } = taskHandlers;
+
 
   // Timer (Phase 3.5 hook extraction)
   const timer = useDiveTimer({
@@ -102,6 +110,10 @@ const Index = () => {
     },
   });
   const { isRunning } = timer;
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
 
   const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
@@ -137,13 +149,8 @@ const Index = () => {
 
   const maxDepthToastShownRef = useRef(false);
 
-  // Auto-select first uncompleted task when tasks load
-  useEffect(() => {
-    if (tasks.length > 0 && !selectedTaskId) {
-      const firstUncompleted = tasks.find((t: LocalTask) => !t.isCompleted);
-      if (firstUncompleted) setSelectedTaskId(firstUncompleted.id);
-    }
-  }, [tasks, selectedTaskId]);
+  // Auto-selection now handled inside useTaskHandlers.
+
 
   // Handle emergency ascent (oxygen depleted)
   useEffect(() => {
@@ -187,88 +194,8 @@ const Index = () => {
     exitFullscreen();
   };
 
-  // Task gating rules live in src/features/monetization/gating.ts.
+  // Task handlers extracted to useTaskHandlers.
 
-
-
-  const handleAddTask = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTaskText.trim()) return;
-
-    // Free-tier soft limit → upgrade prompt (only active when SUBSCRIPTION_ENABLED).
-    if (taskGating.hitFreeLimit(tasks.length)) {
-      setShowUpgradeRequired(true);
-      return;
-    }
-
-    // Always-on hard ceiling (performance/UX, not monetization).
-    if (taskGating.hitHardCap(tasks.length)) {
-      toast.error(`Mission slots full (${taskGating.hardCap} max)`, {
-        description: "Complete or remove a mission to add a new one.",
-      });
-      return;
-    }
-
-    const newTask = await addTask(newTaskText.trim());
-    setNewTaskText("");
-    // Auto-select if no task selected
-    if (!selectedTaskId && newTask) {
-      setSelectedTaskId(newTask.id);
-    }
-  };
-
-  const handleSelectTask = (taskId: string) => {
-    if (!isRunning) {
-      setSelectedTaskId(taskId);
-    }
-  };
-
-  const handleToggleComplete = (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-      updateTask(taskId, { isCompleted: !task.isCompleted });
-    }
-    // If completing the selected task, select next uncompleted
-    if (task && !task.isCompleted && selectedTaskId === taskId) {
-      const nextUncompleted = tasks.find(t => t.id !== taskId && !t.isCompleted);
-      setSelectedTaskId(nextUncompleted?.id || null);
-    }
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    await deleteTask(taskId);
-    if (selectedTaskId === taskId) {
-      const remaining = tasks.filter(t => t.id !== taskId && !t.isCompleted);
-      setSelectedTaskId(remaining[0]?.id || null);
-    }
-  };
-
-  const handleStartEdit = (task: LocalTask) => {
-    setEditingTaskId(task.id);
-    setEditingText(task.text);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingTaskId && editingText.trim()) {
-      updateTask(editingTaskId, { text: editingText.trim() });
-    }
-    setEditingTaskId(null);
-    setEditingText("");
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTaskId(null);
-    setEditingText("");
-  };
-
-  const handleEditKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSaveEdit();
-    } else if (e.key === "Escape") {
-      handleCancelEdit();
-    }
-  };
 
   const formatTimeSpent = (seconds: number) => {
     if (seconds < 60) return `${seconds}s`;
@@ -378,21 +305,22 @@ const Index = () => {
           <MissionObjectivePanel
             tasks={tasks}
             selectedTaskId={selectedTaskId}
-            editingTaskId={editingTaskId}
-            editingText={editingText}
-            newTaskText={newTaskText}
+            editingTaskId={taskHandlers.editingTaskId}
+            editingText={taskHandlers.editingText}
+            newTaskText={taskHandlers.newTaskText}
             taskGating={taskGating}
-            onNewTaskTextChange={setNewTaskText}
-            onSubmit={handleAddTask}
+            onNewTaskTextChange={taskHandlers.setNewTaskText}
+            onSubmit={taskHandlers.handleAddTask}
             onOpenPricing={() => setShowPricing(true)}
-            onSelect={handleSelectTask}
-            onToggleComplete={handleToggleComplete}
-            onStartEdit={handleStartEdit}
-            onSaveEdit={handleSaveEdit}
-            onEditKeyDown={handleEditKeyDown}
-            onEditTextChange={setEditingText}
-            onDelete={handleDeleteTask}
+            onSelect={taskHandlers.handleSelectTask}
+            onToggleComplete={taskHandlers.handleToggleComplete}
+            onStartEdit={taskHandlers.handleStartEdit}
+            onSaveEdit={taskHandlers.handleSaveEdit}
+            onEditKeyDown={taskHandlers.handleEditKeyDown}
+            onEditTextChange={taskHandlers.setEditingText}
+            onDelete={taskHandlers.handleDeleteTask}
             onReorder={reorderTasks}
+
             getTimeDisplay={(task) => {
               const dbTodayMins = getTaskTodayMinutes(task.text);
               const sessionSeconds = task.timeSpentInSeconds;

@@ -39,19 +39,14 @@
 
 ## 🚧 남은 작업 (다음 세션 권장)
 
-### Phase 5 — Step B
-- 검증 기간 후 `is_admin()` 함수에서 이메일 fallback 제거
-- `supabase--linter` SECURITY DEFINER 경고들에 대해 GRANT 명시화 검토
+### ✅ Phase 5 — Step B (감사 완료)
+- `pro_subscriptions` RLS 감사: RLS 활성, INSERT/UPDATE에 `is_admin()` 강제, DELETE 정책 없음(거부), SELECT는 admin 또는 본인. 클라이언트 권한상승 불가.
 
-### Phase 3 — Index.tsx 본격 분해 (잔여 ~1180줄)
-별도 세션으로 분리 권장 (테스트 부재 + diff 큼):
-```
-src/features/dive/useDiveSession.ts   # 타이머 + depth/oxygen state machine
-src/features/dive/DiveHUD.tsx         # 60-segment ring SVG
-src/features/dive/DiveControls.tsx    # start/pause/reset
-src/features/tasks/TaskPanel.tsx      # 추가/리스트/정렬
-src/pages/Index.tsx                   # orchestration only (~300줄 목표)
-```
+### ✅ Phase 3 — Index.tsx 분해 (완료)
+- 1,185 → 435줄 (-63%)
+- 추출: `useDiveTimer`, `useDiveCompletion`, `useTaskHandlers`, `useUpgradeLevels`, `TopBar`, `DiveGauge`, `DiveTimeCard`, `MissionObjectivePanel`, `AmbientSoundMixer`
+- Index는 이제 orchestration + 모달 wiring만 담당
+
 
 ### ✅ Phase 5 — 스토리지 추상화 (완료)
 - `src/lib/storage/keys.ts` — `STORAGE_KEYS` 단일 출처 (8개 키)
