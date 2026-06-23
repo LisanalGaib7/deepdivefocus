@@ -276,12 +276,6 @@ const Index = () => {
     return `${mins}m`;
   };
 
-  // Progress: starts at 100% (full) and depletes to 0%
-  // When dragging, show the setDuration position directly; otherwise show timeLeft progress
-  const displayTime = isDragging ? setDuration : timeLeft;
-
-  const displayProgress = setDuration > 0 ? (displayTime / TIMER_CONFIG.MAX_TIME_SECONDS) * 100 : 0;
-
   const handleLogout = async () => {
     await signOut();
   };
@@ -291,11 +285,12 @@ const Index = () => {
       {activeTab === "history" ? (
         <History />
       ) : activeTab === "collection" ? (
-        <Collection key={collectionRefreshKey} />
+        <Collection key={completion.collectionRefreshKey} />
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
-          <DeepSeaAmbience isActive={isRunning} isDiving={isDiveTransition} />
+          <DeepSeaAmbience isActive={isRunning} isDiving={timer.isDiveTransition} />
+
           
           <TopBar
             showProBadge={monetizationUI.enabled && isPro}
@@ -323,17 +318,18 @@ const Index = () => {
         {/* Timer Circle - Submarine HUD Gauge */}
         <div className="flex flex-col items-center gap-6">
           <DiveGauge
-            ref={svgRef}
-            setDuration={setDuration}
-            timeLeft={timeLeft}
+            ref={timer.svgRef}
+            setDuration={timer.setDuration}
+            timeLeft={timer.timeLeft}
             isRunning={isRunning}
-            isDragging={isDragging}
-            displayProgress={displayProgress}
+            isDragging={timer.isDragging}
+            displayProgress={timer.displayProgress}
             depth={depth}
             isAtMaxDepth={isAtMaxDepth}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
+            onMouseDown={timer.handleMouseDown}
+            onTouchStart={timer.handleTouchStart}
           />
+
 
           
           {/* Oxygen Bar - shown when diving */}
@@ -345,7 +341,7 @@ const Index = () => {
           <div className="flex items-center justify-center gap-6">
             {/* Play/Pause Button - Theme-aware Glowing Glass Effect */}
             <Button
-              onClick={handleStart}
+              onClick={timer.handleStart}
               size="lg"
               className="play-button-themed h-16 w-16 rounded-full p-0 backdrop-blur-md transition-all duration-300 active:scale-95"
             >
@@ -355,16 +351,17 @@ const Index = () => {
                 <Play className="h-7 w-7 ml-0.5 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
               )}
             </Button>
-            
+
             {/* Reset Button - Theme-aware Dark Glass Effect */}
             <Button
-              onClick={handleReset}
+              onClick={() => { timer.handleReset(); resetDive(); }}
               size="lg"
               variant="ghost"
               className="reset-button-themed h-16 w-16 rounded-full p-0 bg-white/5 backdrop-blur-md border border-white/10 text-muted-foreground shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all duration-300 active:scale-95"
             >
               <RotateCcw className="h-6 w-6" />
             </Button>
+
           </div>
         </div>
 
@@ -442,12 +439,13 @@ const Index = () => {
       
       {/* Mission Complete Modal */}
       <MissionCompleteModal
-        open={showMissionCompleteModal}
-        onClose={handleMissionCompleteClose}
-        maxDepth={completedSessionDepth}
-        creature={rewardCreature}
-        sessionDuration={completedSessionDuration}
+        open={completion.showMissionCompleteModal}
+        onClose={completion.handleMissionCompleteClose}
+        maxDepth={completion.completedSessionDepth}
+        creature={completion.rewardCreature}
+        sessionDuration={completion.completedSessionDuration}
       />
+
       
       {/* Engineering Bay Modal */}
       <EngineeringBayModal
