@@ -46,6 +46,15 @@ export const useUserCreatures = () => {
 
   // Fetch all creatures for the user
   const fetchCreatures = useCallback(async (): Promise<UserCreatureDB[]> => {
+    if (isDevUnlockAll()) {
+      return CREATURES.map((c) => ({
+        id: `dev-${c.id}`,
+        user_id: user?.id ?? 'dev-user',
+        creature_id: c.id,
+        unlocked_at: new Date().toISOString(),
+      }));
+    }
+
     if (isGuestMode) {
       return getGuestCreatures().map(id => ({
         id: `guest-${id}`,
