@@ -137,11 +137,11 @@ const Index = () => {
     updateProfile,
     isAuthenticated,
     isGuestMode,
-    onAfterClose: () => {
+    onAfterClose: useCallback(() => {
       timer.resetTimer();
       resetDive();
       exitFullscreen();
-    },
+    }, [timer, resetDive, exitFullscreen]),
   });
   useEffect(() => {
     completionRef.current = { triggerMissionComplete: completion.triggerMissionComplete };
