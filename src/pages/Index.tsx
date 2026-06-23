@@ -226,7 +226,7 @@ const Index = () => {
     [getTaskTodayMinutes],
   );
 
-  const handleUpgrade = useCallback((moduleId: string) => {
+  const handleUpgrade = useCallback(async (moduleId: string) => {
     const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
     const cost = getUpgradeCost(currentTier);
     const pearls = profile?.total_pearls || 0;
@@ -240,7 +240,23 @@ const Index = () => {
       return;
     }
 
-    updateProfile({ total_pearls: pearls - cost });
+    if (isAuthenticated && !isGuestMode) {
+      // Server-authoritative spend via SECURITY DEFINER RPC.
+      // Prevents tampering and handles cross-device race conditions atomically.
+      const { error } = await supabase.rpc('spend_pearls', { p_amount: cost });
+      if (error) {
+        const msg = /insufficient/i.test(error.message)
+          ? 'Not enough pearls!'
+          : 'Upgrade failed. Please try again.';
+        toast.error(msg, { description: error.message });
+        return;
+      }
+      // Refresh profile so balance UI reflects the new total.
+      refetchProfile();
+    } else {
+      // Guest mode: local-only profile mutation is still permitted.
+      updateProfile({ total_pearls: pearls - cost });
+    }
 
     if (moduleId === 'hull') {
       setHullLevel(prev => prev + 1);
@@ -249,7 +265,7 @@ const Index = () => {
     }
 
     toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
-  }, [hullLevel, engineLevel, profile?.total_pearls, updateProfile, setHullLevel, setEngineLevel]);
+  }, [hullLevel, engineLevel, profile?.total_pearls, isAuthenticated, isGuestMode, updateProfile, refetchProfile, setHullLevel, setEngineLevel]);
 
   const handleActivatePro = useCallback(() => {
     activatePro();
