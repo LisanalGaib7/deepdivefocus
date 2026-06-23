@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { hapticsMedium, hapticsSuccess, hapticsWarning } from "@/lib/haptics";
+import { hapticsWarning } from "@/lib/haptics";
+
 
 // Common components
 import BottomNav from "@/components/common/BottomNav";
@@ -36,13 +37,14 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
-import { Creature } from "@/data/creatures";
-import { rollForCreature, getPearlValue } from "@/lib/lootSystem";
 import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
+import { useDiveTimer } from "@/hooks/useDiveTimer";
+import { useDiveCompletion } from "@/hooks/useDiveCompletion";
 import { useTaskGating, useMonetizationUI } from "@/features/monetization/gating";
+
 
 
 const Index = () => {
