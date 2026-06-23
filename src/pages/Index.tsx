@@ -110,6 +110,10 @@ const Index = () => {
     },
   });
   const { isRunning } = timer;
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
 
   const { depth, oxygen, isEmergency, elapsedSeconds, isAtMaxDepth, maxDepth, resetDive } = useGamification({
     isDiving: isRunning,
@@ -145,13 +149,8 @@ const Index = () => {
 
   const maxDepthToastShownRef = useRef(false);
 
-  // Auto-select first uncompleted task when tasks load
-  useEffect(() => {
-    if (tasks.length > 0 && !selectedTaskId) {
-      const firstUncompleted = tasks.find((t: LocalTask) => !t.isCompleted);
-      if (firstUncompleted) setSelectedTaskId(firstUncompleted.id);
-    }
-  }, [tasks, selectedTaskId]);
+  // Auto-selection now handled inside useTaskHandlers.
+
 
   // Handle emergency ascent (oxygen depleted)
   useEffect(() => {
