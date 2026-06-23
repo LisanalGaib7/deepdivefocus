@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Search, Crown, ArrowLeft, Shield, Users, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { logger } from "@/lib/logger";
 
 const ADMIN_EMAIL = "aaaehgus@gmail.com";
 
@@ -44,19 +45,14 @@ const AdminSubscriptions = () => {
   const fetchAllUsers = useCallback(async () => {
     setLoadingUsers(true);
 
-    console.log("[Admin] Fetching all profiles...");
-
     // Fetch all profiles
     const { data: profiles, error: pErr } = await supabase
       .from("profiles")
       .select("user_id, display_name, total_pearls, total_depth, created_at")
       .order("created_at", { ascending: false });
 
-    console.log("FETCHED USERS:", profiles);
-    console.log("[Admin] Profiles result:", { count: profiles?.length, error: pErr });
-
     if (pErr) {
-      console.error("[Admin] Profile fetch error:", pErr);
+      logger.error("Admin", "Profile fetch error:", pErr);
       toast.error("Failed to load users", { description: pErr.message });
       setLoadingUsers(false);
       return;
@@ -68,11 +64,9 @@ const AdminSubscriptions = () => {
       .select("*")
       .eq("status", "active");
 
-    console.log("[Admin] Subs result:", { count: subs?.length, error: sErr });
-
     const subMap = new Map<string, any>();
     if (sErr) {
-      console.error("[Admin] Subscription fetch error:", sErr);
+      logger.error("Admin", "Subscription fetch error:", sErr);
     }
 
     if (subs) {
@@ -97,17 +91,13 @@ const AdminSubscriptions = () => {
       };
     });
 
-    console.log("[Admin] MERGED USERS:", merged);
     setAllUsers(merged);
     setLoadingUsers(false);
   }, []);
 
   useEffect(() => {
     if (!loading && user?.email === ADMIN_EMAIL) {
-      console.log("[Admin] User verified as admin, fetching users...");
       fetchAllUsers();
-    } else if (!loading) {
-      console.log("[Admin] Not admin:", user?.email);
     }
   }, [loading, user, fetchAllUsers]);
 
@@ -218,7 +208,7 @@ const AdminSubscriptions = () => {
     );
 
     if (error) {
-      console.error("[Admin] Insert test user error:", error);
+      logger.error("Admin", "Insert test user error:", error);
       toast.error("Failed to insert test user", { description: error.message });
     } else {
       toast.success("Test user upserted");

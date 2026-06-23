@@ -10,7 +10,7 @@ import { YearlyDepthLog } from "@/features/history";
 import TimeRangeSelector from "@/components/common/TimeRangeSelector";
 import { useProStatus } from "@/hooks/useProStatus";
 import { PricingModal } from "@/features/monetization";
-import { SUBSCRIPTION_ENABLED } from "@/config/featureFlags";
+import { useHistoryRangeLock, useMonetizationUI } from "@/features/monetization/gating";
 
 const { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } = Recharts as any;
 
@@ -45,9 +45,11 @@ const History = () => {
   const themePalette = getThemePalette(currentTheme);
   const { isGuestMode, isAuthenticated, profile } = useAuthContext();
   const { isPro, activatePro } = useProStatus();
-  
+  const monetizationUI = useMonetizationUI();
+
   // Time range filter state - default to "all" for charts/stats
   const [timeRange, setTimeRange] = useState<TimeRange>("all");
+  const { isLocked: rangeLocked } = useHistoryRangeLock(timeRange);
   const [showPricing, setShowPricing] = useState(false);
   
   // Use unified session stats hook (single source of truth)
@@ -189,9 +191,8 @@ const History = () => {
         <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
 
         <div className="relative">
-          {/* Blur Overlay for Free Users */}
-          {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-          {SUBSCRIPTION_ENABLED && !isPro && ["month", "year", "all"].includes(timeRange) && (
+          {/* Paywall overlay for locked analytics ranges. */}
+          {rangeLocked && (
             <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-3xl backdrop-blur-md bg-background/40 border border-primary/20" style={{ margin: '-12px' }}>
               <div className="text-center space-y-4 p-6">
                 <Lock className="w-10 h-10 mx-auto text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.6)]" />
@@ -213,8 +214,8 @@ const History = () => {
             </div>
           )}
 
-          {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-          <div className={SUBSCRIPTION_ENABLED && !isPro && ["month", "year", "all"].includes(timeRange) ? "opacity-30 pointer-events-none select-none blur-sm transition-all" : "transition-all"}>
+          <div className={rangeLocked ? "opacity-30 pointer-events-none select-none blur-sm transition-all" : "transition-all"}>
+
             {/* ===== BENTO GRID STATS ===== */}
         <div className="space-y-3">
           {/* Hero Card - Full Width with Tight Grouping */}
@@ -468,8 +469,7 @@ const History = () => {
         </div>
       </div>
 
-      {/* [SUBSCRIPTION] 추후 AI 분석 리포트 Pro 기능과 함께 재활성화 예정 */}
-      {SUBSCRIPTION_ENABLED && (
+      {monetizationUI.enabled && (
         <PricingModal
           open={showPricing}
           onClose={() => setShowPricing(false)}
