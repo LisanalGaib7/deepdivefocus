@@ -386,19 +386,163 @@ const astralLeviathan = (): GridData => ({
   glowColor: "#aa66ff",
 });
 
+const clownfish = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,1,1,1,2,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,2,2,1,1,1,2,2,1,0,4,0],
+    [0,0,1,1,1,2,2,1,1,1,2,2,1,1,4,4],
+    [0,1,3,1,1,2,2,1,1,1,2,2,1,1,4,4],
+    [0,1,3,1,1,2,2,1,1,1,2,2,1,1,4,4],
+    [0,0,1,1,1,2,2,1,1,1,2,2,1,1,4,4],
+    [0,0,0,1,1,2,2,1,1,1,2,2,1,0,4,0],
+    [0,0,0,0,1,1,1,2,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#ff7722", 2: "#ffffff", 3: "#1a1a2e", 4: "#ee5511" },
+  glowColor: "#ff7722",
+});
+
+const pufferfish = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0],
+    [0,0,0,4,0,0,1,1,1,1,0,0,4,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,4,0,1,1,1,1,1,1,1,1,1,1,0,4,0],
+    [0,0,1,1,1,3,1,1,1,1,3,1,1,1,0,0],
+    [4,0,1,1,3,3,1,1,1,3,3,1,1,1,0,4],
+    [0,0,1,1,3,1,1,1,1,1,3,1,1,1,0,0],
+    [4,0,1,1,1,1,1,2,2,1,1,1,1,1,0,4],
+    [0,0,1,1,1,1,2,2,2,2,1,1,1,1,0,0],
+    [4,0,1,1,1,1,1,1,1,1,1,1,1,1,0,4],
+    [0,0,1,1,2,1,1,1,1,1,1,2,1,1,0,0],
+    [0,4,0,1,1,2,2,1,1,2,2,1,1,0,4,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,4,0,1,1,1,1,1,1,0,0,4,0,0],
+    [0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#d9a04a", 2: "#f0c878", 3: "#1a1a2e", 4: "#b07828" },
+  glowColor: "#e8b860",
+});
+
+const nautilus = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,1,1,1,2,1,1,2,1,1,1,0,0,0],
+    [0,0,1,1,2,1,1,2,2,1,1,2,1,1,0,0],
+    [0,1,1,1,1,2,1,1,1,1,2,1,1,1,1,0],
+    [0,1,2,1,1,1,2,1,1,2,1,1,1,2,1,0],
+    [1,1,1,2,1,2,1,3,3,1,2,1,2,1,1,1],
+    [1,2,1,1,2,1,3,3,3,3,1,2,1,1,2,1],
+    [1,1,2,1,1,3,3,1,1,3,3,1,1,2,1,1],
+    [1,2,1,2,1,1,3,1,1,3,1,1,2,1,2,1],
+    [1,1,1,1,2,1,1,3,3,1,1,2,1,1,1,1],
+    [0,1,2,1,1,2,1,1,1,1,2,1,1,2,1,0],
+    [0,1,1,2,1,1,2,1,1,2,1,1,2,1,1,0],
+    [4,4,1,1,2,1,1,2,2,1,1,2,1,1,0,0],
+    [0,4,4,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [4,4,4,4,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#ede0c8", 2: "#a83c28", 3: "#3a2a2a", 4: "#e8c0a0" },
+  glowColor: "#d8b890",
+});
+
+const mantisShrimp = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,4,0,0,4,0,0,0,0,0,0,0,0,0,0,0],
+    [4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0],
+    [0,5,4,4,5,0,1,1,1,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,1,3,1,1,1,0,0,0,0,0],
+    [0,1,1,2,1,3,1,1,3,1,1,1,1,0,0,0],
+    [0,1,2,2,1,1,3,1,1,3,1,2,1,1,0,0],
+    [6,6,1,2,2,1,1,3,1,1,3,1,2,1,1,0],
+    [6,6,1,1,2,2,1,1,3,1,1,3,1,2,1,2],
+    [6,6,1,1,1,2,2,1,1,3,1,1,3,1,2,1],
+    [0,6,1,2,1,1,2,2,1,1,3,1,1,3,1,2],
+    [0,0,1,1,2,1,1,1,2,1,1,3,1,1,2,1],
+    [0,0,0,1,1,1,1,1,1,1,1,1,2,1,2,2],
+    [0,0,0,0,1,2,1,2,1,2,1,2,1,2,1,1],
+    [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#22b890", 2: "#ff4422", 3: "#ffdd33", 4: "#44ddff", 5: "#1a2a2a", 6: "#ff7733" },
+  glowColor: "#22ddaa",
+});
+
+const barreleye = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,1,1,2,2,2,2,2,2,1,1,0,0,0],
+    [0,0,1,2,2,2,2,2,2,2,2,2,2,1,0,0],
+    [0,1,2,2,2,2,2,2,2,2,2,2,2,2,1,0],
+    [0,1,2,2,3,3,2,2,2,2,3,3,2,2,1,0],
+    [1,2,2,3,3,3,3,2,2,3,3,3,3,2,2,1],
+    [1,2,2,3,3,5,3,2,2,3,3,5,3,2,2,1],
+    [1,2,2,2,3,3,2,2,2,2,3,3,2,2,2,1],
+    [0,1,2,2,2,2,2,4,4,2,2,2,2,2,1,0],
+    [0,0,1,1,2,2,4,4,4,4,2,2,1,1,0,0],
+    [0,0,0,0,4,4,4,5,5,4,4,4,0,0,0,0],
+    [0,0,0,4,4,4,4,4,4,4,4,4,4,0,0,0],
+    [0,0,4,4,0,4,4,4,4,4,4,0,4,4,0,0],
+    [0,4,4,0,0,0,4,4,4,4,0,0,0,4,4,0],
+    [0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: { 1: "#5588aa", 2: "#bfe8f5", 3: "#44ff66", 4: "#2a3a4a", 5: "#ffffff" },
+  glowColor: "#88ddee",
+});
+
+const vampireSquid = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,3,3,1,1,1,1,1,3,3,1,0,0],
+    [0,1,1,3,3,6,3,1,1,1,3,6,3,1,1,0],
+    [0,1,1,1,3,3,1,1,1,1,1,3,3,1,1,0],
+    [0,1,1,1,1,1,1,2,2,1,1,1,1,1,1,0],
+    [0,4,1,1,1,1,2,2,2,2,1,1,1,1,4,0],
+    [4,4,4,1,1,4,4,2,2,4,4,1,1,4,4,4],
+    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
+    [5,0,4,4,4,4,4,4,4,4,4,4,4,4,0,5],
+    [0,5,0,4,4,4,4,4,4,4,4,4,4,0,5,0],
+    [5,0,5,0,4,4,4,4,4,4,4,4,0,5,0,5],
+    [0,5,0,5,0,5,0,4,4,0,5,0,5,0,5,0],
+    [5,0,0,0,5,0,5,0,0,5,0,5,0,0,0,5],
+  ],
+  colorMap: { 1: "#7a1530", 2: "#1a0510", 3: "#2299ff", 4: "#4a0d22", 5: "#9fe0ff", 6: "#ffffff" },
+  glowColor: "#aa2244",
+});
+
 const getCreatureData = (type: string): GridData => {
   switch (type) {
     case 'sardine': return sardine();
+    case 'clownfish': return clownfish();
     case 'crab': return crab();
     case 'starfish': return starfish();
     case 'seahorse': return seahorse();
+    case 'pufferfish': return pufferfish();
     case 'electric_eel': return electricEel();
     case 'turtle': return turtle();
+    case 'nautilus': return nautilus();
     case 'octopus': return octopus();
+    case 'mantis_shrimp': return mantisShrimp();
     case 'manta': return mantaRay();
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
+    case 'barreleye': return barreleye();
     case 'giant_squid': return krakenSpawn();
+    case 'vampire_squid': return vampireSquid();
     case 'volcano_snail': return volcanoSnail();
     case 'glowing_shark': return spectralShark();
     case 'solar_golden_dragonfish': return solarGoldenDragonfish();
@@ -411,16 +555,22 @@ const getCreatureData = (type: string): GridData => {
 const getCreatureAnimation = (type: string): string => {
   switch (type) {
     case 'sardine': return 'animate-creature-swim';
+    case 'clownfish': return 'animate-creature-swim';
     case 'crab': return 'animate-creature-bounce';
     case 'starfish': return 'animate-creature-breathe';
     case 'seahorse': return 'animate-creature-float';
+    case 'pufferfish': return 'animate-creature-swim';
     case 'electric_eel': return 'animate-creature-slither';
     case 'turtle': return 'animate-creature-glide';
+    case 'nautilus': return 'animate-creature-float';
     case 'octopus': return 'animate-creature-pulse';
+    case 'mantis_shrimp': return 'animate-creature-swim';
     case 'manta': return 'animate-creature-wingflap';
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';
+    case 'barreleye': return 'animate-creature-float';
     case 'giant_squid': return 'animate-creature-writhe';
+    case 'vampire_squid': return 'animate-creature-float';
     case 'volcano_snail': return 'animate-creature-magma';
     case 'glowing_shark': return 'animate-creature-ghost';
     case 'solar_golden_dragonfish': return 'animate-creature-solar-pulse';

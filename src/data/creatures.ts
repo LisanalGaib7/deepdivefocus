@@ -27,6 +27,15 @@ export const CREATURES: Creature[] = [
     traits: ["Basic", "Swarm"],
   },
   {
+    id: "clownfish",
+    name: "Clownfish",
+    minDepth: 10,
+    rarity: "Common",
+    description: "UNIT.CLOWNFISH // VIBRANT_PATTERN // SYMBIOTIC_LINK",
+    icon: "Fish",
+    traits: ["Vibrant", "Symbiotic"],
+  },
+  {
     id: "crab",
     name: "Hermit Crab",
     minDepth: 25,
@@ -52,6 +61,15 @@ export const CREATURES: Creature[] = [
     description: "UNIT.SEAHORSE // CAMOUFLAGE_ACTIVE // FRAGILE",
     icon: "Waves",
     traits: ["Camouflage", "Fragile"],
+  },
+  {
+    id: "pufferfish",
+    name: "Pufferfish",
+    minDepth: 90,
+    rarity: "Uncommon",
+    description: "UNIT.PUFFERFISH // INFLATION_READY // TOXIN_DETECTED",
+    icon: "CircleDot",
+    traits: ["Inflatable", "Toxic"],
   },
   // TIER 2: TWILIGHT ZONE (100m - 500m)
   {
@@ -82,6 +100,15 @@ export const CREATURES: Creature[] = [
     traits: ["Ancient", "Wise"],
   },
   {
+    id: "nautilus",
+    name: "Nautilus",
+    minDepth: 200,
+    rarity: "Uncommon",
+    description: "UNIT.NAUTILUS // SPIRAL_SHELL // ANCIENT_LINEAGE",
+    icon: "Shell",
+    traits: ["Ancient", "Spiral"],
+  },
+  {
     id: "octopus",
     name: "Phantom Octopus",
     minDepth: 250,
@@ -89,6 +116,15 @@ export const CREATURES: Creature[] = [
     description: "UNIT.OCTOPUS // INTELLIGENCE_HIGH // INK_ARMED",
     icon: "Grip",
     traits: ["Intelligent", "Camouflage"],
+  },
+  {
+    id: "mantis_shrimp",
+    name: "Mantis Shrimp",
+    minDepth: 320,
+    rarity: "Rare",
+    description: "UNIT.MANTIS_SHRIMP // PUNCH_VELOCITY_MAX // SPECTRUM_FULL",
+    icon: "Bug",
+    traits: ["Striker", "Colorful"],
   },
   {
     id: "manta",
@@ -119,6 +155,15 @@ export const CREATURES: Creature[] = [
     traits: ["Tank", "Ancient"],
   },
   {
+    id: "barreleye",
+    name: "Barreleye",
+    minDepth: 680,
+    rarity: "Rare",
+    description: "UNIT.BARRELEYE // TRANSPARENT_DOME // OPTICS_UPWARD",
+    icon: "ScanEye",
+    traits: ["Transparent", "Observant"],
+  },
+  {
     id: "giant_squid",
     name: "Kraken Spawn",
     minDepth: 750,
@@ -126,6 +171,15 @@ export const CREATURES: Creature[] = [
     description: "UNIT.SQUID // TENTACLES_10 // MYTH_CONFIRMED",
     icon: "Anchor",
     traits: ["Mythical", "Massive"],
+  },
+  {
+    id: "vampire_squid",
+    name: "Vampire Squid",
+    minDepth: 820,
+    rarity: "Epic",
+    description: "UNIT.VAMPIRE_SQUID // CLOAK_DEPLOYED // BIOLUMINESCENT_EYES",
+    icon: "Ghost",
+    traits: ["Eerie", "Cloaked"],
   },
   {
     id: "volcano_snail",
