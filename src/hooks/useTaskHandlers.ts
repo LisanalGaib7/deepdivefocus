@@ -18,7 +18,7 @@ export function useTaskHandlers({
   addTask,
   updateTask,
   deleteTask,
-  isRunning,
+  getIsRunning,
   taskGating,
   onHitFreeLimit,
 }: {
@@ -29,10 +29,12 @@ export function useTaskHandlers({
     updates: Partial<Pick<LocalTask, "text" | "isCompleted" | "timeSpentInSeconds">>,
   ) => Promise<void> | void;
   deleteTask: (id: string) => Promise<void> | void;
-  isRunning: boolean;
+  /** Read at call-time to avoid circular hook ordering with useDiveTimer. */
+  getIsRunning: () => boolean;
   taskGating: TaskGating;
   onHitFreeLimit: () => void;
 }) {
+
   const [newTaskText, setNewTaskText] = useState("");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -71,10 +73,11 @@ export function useTaskHandlers({
 
   const handleSelectTask = useCallback(
     (taskId: string) => {
-      if (!isRunning) setSelectedTaskId(taskId);
+      if (!getIsRunning()) setSelectedTaskId(taskId);
     },
-    [isRunning],
+    [getIsRunning],
   );
+
 
   const handleToggleComplete = useCallback(
     (taskId: string) => {
