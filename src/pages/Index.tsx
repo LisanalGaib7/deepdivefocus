@@ -187,12 +187,12 @@ const Index = () => {
     }
   }, [isAtMaxDepth, isRunning, maxDepth, depth]);
 
-  const handleEmergencyClose = () => {
+  const handleEmergencyClose = useCallback(() => {
     setShowEmergencyModal(false);
     timer.resetTimer();
     resetDive();
     exitFullscreen();
-  };
+  }, [timer, resetDive, exitFullscreen]);
 
   // Task handlers extracted to useTaskHandlers.
 
@@ -203,9 +203,61 @@ const Index = () => {
     return `${mins}m`;
   };
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await signOut();
-  };
+  }, [signOut]);
+
+  // Stable handlers passed to memoized child components.
+  const handleOpenPricing = useCallback(() => setShowPricing(true), []);
+  const handleOpenEngineeringBay = useCallback(() => setShowEngineeringBay(true), []);
+  const handleResetAll = useCallback(() => {
+    timer.handleReset();
+    resetDive();
+  }, [timer, resetDive]);
+
+  const getTimeDisplay = useCallback(
+    (task: LocalTask) => {
+      const dbTodayMins = getTaskTodayMinutes(task.text);
+      const sessionSeconds = task.timeSpentInSeconds;
+      const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
+      return {
+        total: totalTodaySeconds,
+        formatted: formatTimeSpent(totalTodaySeconds),
+      };
+    },
+    [getTaskTodayMinutes],
+  );
+
+  const handleUpgrade = useCallback((moduleId: string) => {
+    const currentTier = moduleId === 'hull' ? hullLevel : engineLevel;
+    const cost = getUpgradeCost(currentTier);
+    const pearls = profile?.total_pearls || 0;
+
+    if (currentTier >= 5) {
+      toast.error('Already at maximum tier!');
+      return;
+    }
+    if (pearls < cost) {
+      toast.error('Not enough pearls!', { description: `Need ${cost.toLocaleString()} pearls.` });
+      return;
+    }
+
+    updateProfile({ total_pearls: pearls - cost });
+
+    if (moduleId === 'hull') {
+      setHullLevel(prev => prev + 1);
+    } else if (moduleId === 'engine') {
+      setEngineLevel(prev => prev + 1);
+    }
+
+    toast.success(`${moduleId === 'hull' ? 'Hull' : 'Engine'} upgraded to Tier ${currentTier + 1}!`);
+  }, [hullLevel, engineLevel, profile?.total_pearls, updateProfile, setHullLevel, setEngineLevel]);
+
+  const handleActivatePro = useCallback(() => {
+    activatePro();
+    setShowPricing(false);
+    toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 });
+  }, [activatePro]);
 
   return (
     <>
