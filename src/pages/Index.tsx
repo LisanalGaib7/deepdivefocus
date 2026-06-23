@@ -37,7 +37,7 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
-import { TIMER_CONFIG, getUpgradeCost } from "@/constants/gameConfig";
+import { getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { useUpgradeLevels } from "@/hooks/useUpgradeLevels";
