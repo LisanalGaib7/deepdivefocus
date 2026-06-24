@@ -606,12 +606,12 @@ const getCreatureAnimation = (type: string): string => {
 };
 
 const PixelCreature = ({ type = 'jellyfish', className = "w-32 h-32" }: PixelCreatureProps) => {
-  const { grid, colorMap, glowColor } = getCreatureData(type);
+  const { grid, colorMap, glowColor, size = 16 } = getCreatureData(type);
   const animClass = getCreatureAnimation(type);
 
   return (
     <svg
-      viewBox="0 0 16 16"
+      viewBox={`0 0 ${size} ${size}`}
       className={`${className} ${animClass}`}
       style={{
         filter: `drop-shadow(0 0 8px ${glowColor}) drop-shadow(0 0 16px ${glowColor}66)`,
