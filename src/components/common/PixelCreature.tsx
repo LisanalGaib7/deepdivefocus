@@ -7,6 +7,7 @@ type GridData = {
   grid: number[][];
   colorMap: Record<number, string>;
   glowColor: string;
+  size?: number;
 };
 
 const jellyfish = (): GridData => ({
