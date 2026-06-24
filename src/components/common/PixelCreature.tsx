@@ -532,7 +532,7 @@ const barreleye = (): GridData => ({
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   ],
   colorMap: {
-    1: "#501414", // body dark brown
+    1: "#120404", // body very dark brown (near-black)
     2: "#5a8fc8", // dome blue
     3: "#2e6b2e", // green eye sclera (dark)
     4: "#0f0505", // black outline / fin shadow
