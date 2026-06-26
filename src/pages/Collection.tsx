@@ -315,7 +315,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
       <div className={`space-y-3 ${!unlocked ? 'opacity-20 blur-sm' : ''}`}>
         {/* PixelCreature SVG in circular frame */}
         <div className="flex justify-center">
-          <div className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50"
+          <div className={`rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
             style={unlocked ? {
               boxShadow: creature.rarity === 'Legendary'
                 ? '0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 10px rgba(245, 158, 11, 0.2)'
@@ -331,7 +331,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
                 : undefined,
             } : {}}
           >
-            <PixelCreature type={pixelType} className="w-16 h-16" />
+            <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' ? 'w-20 h-20' : 'w-16 h-16'} />
           </div>
         </div>
 
