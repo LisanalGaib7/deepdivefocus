@@ -331,7 +331,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
                 : undefined,
             } : {}}
           >
-            <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' ? 'w-20 h-20' : 'w-16 h-16'} />
+            <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' || pixelType === 'barreleye' ? 'w-20 h-20' : 'w-16 h-16'} />
           </div>
         </div>
 
