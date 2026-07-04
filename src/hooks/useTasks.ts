@@ -12,6 +12,7 @@ export interface Task {
   is_completed: boolean;
   time_spent_seconds: number;
   last_active_date: string | null;
+  sort_order: number | null;
   created_at: string;
   updated_at: string;
 }
