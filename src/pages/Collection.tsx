@@ -250,7 +250,7 @@ interface CreatureCardProps {
 
 const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
   const styles = getRarityStyles(creature.rarity, unlocked);
-  const pixelType = creatureTypeMap[creature.id] || creature.id;
+  const pixelType = creature.id;
 
   // Rarity badge color
   const getBadgeClasses = () => {
