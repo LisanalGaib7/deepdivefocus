@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import * as Recharts from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import { Calendar, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 import { PricingModal } from "@/features/monetization";
 import { useHistoryRangeLock, useMonetizationUI } from "@/features/monetization/gating";
 
-const { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } = Recharts as any;
+
 
 // Helper to get date range text for badge
 const getDateRangeText = (range: TimeRange): string | null => {

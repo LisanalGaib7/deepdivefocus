@@ -393,6 +393,9 @@ const CreatureComparison = () => {
   const [active, setActive] = useState<Res | "all">("all");
   const [displayPx, setDisplayPx] = useState(192);
 
+  // Dev-only page. In production builds this renders nothing (route still exists but is inert).
+  if (!import.meta.env.DEV) return null;
+
   const getRows = (s: Sample, r: Res) => (r === 16 ? s.g16 : r === 32 ? s.g32 : s.g48);
 
   return (

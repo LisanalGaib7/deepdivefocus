@@ -143,25 +143,8 @@ const getRarityStyles = (rarity: string, unlocked: boolean) => {
   }
 };
 
-// Map creature IDs to PixelCreature type prop
-const creatureTypeMap: Record<string, string> = {
-  sardine: 'sardine',
-  crab: 'crab',
-  starfish: 'starfish',
-  seahorse: 'seahorse',
-  jellyfish: 'jellyfish',
-  electric_eel: 'electric_eel',
-  turtle: 'turtle',
-  octopus: 'octopus',
-  manta: 'manta',
-  anglerfish: 'anglerfish',
-  giant_isopod: 'giant_isopod',
-  giant_squid: 'giant_squid',
-  volcano_snail: 'volcano_snail',
-  glowing_shark: 'glowing_shark',
-  solar_golden_dragonfish: 'solar_golden_dragonfish',
-  astral_leviathan: 'astral_leviathan',
-};
+// Note: creature IDs are used directly as PixelCreature `type` props.
+// If a divergence is ever needed, map it inside creaturePixelData.ts.
 
 const Collection = () => {
   const [collectedIds, setCollectedIds] = useState<string[]>([]);
@@ -267,7 +250,7 @@ interface CreatureCardProps {
 
 const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
   const styles = getRarityStyles(creature.rarity, unlocked);
-  const pixelType = creatureTypeMap[creature.id] || creature.id;
+  const pixelType = creature.id;
 
   // Rarity badge color
   const getBadgeClasses = () => {
