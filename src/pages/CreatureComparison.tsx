@@ -390,6 +390,9 @@ const RESOLUTIONS = [16, 32, 48] as const;
 type Res = typeof RESOLUTIONS[number];
 
 const CreatureComparison = () => {
+  // Dev-only page. In production builds this renders nothing (route still exists but is inert).
+  if (!import.meta.env.DEV) return null;
+
   const [active, setActive] = useState<Res | "all">("all");
   const [displayPx, setDisplayPx] = useState(192);
 
