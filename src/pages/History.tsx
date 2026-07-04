@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import * as Recharts from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from "recharts";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import { Calendar, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
