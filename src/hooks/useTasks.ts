@@ -43,7 +43,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
   };
 
   // Convert DB task to local format, resetting time if date changed
-  const dbToLocal = (dbTask: any): LocalTask => {
+  const dbToLocal = (dbTask: Task): LocalTask => {
     const today = getTodayLocal();
     const needsReset = dbTask.last_active_date !== today;
     return {
