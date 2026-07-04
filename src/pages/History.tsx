@@ -12,7 +12,7 @@ import { useProStatus } from "@/hooks/useProStatus";
 import { PricingModal } from "@/features/monetization";
 import { useHistoryRangeLock, useMonetizationUI } from "@/features/monetization/gating";
 
-const { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } = Recharts as any;
+
 
 // Helper to get date range text for badge
 const getDateRangeText = (range: TimeRange): string | null => {
