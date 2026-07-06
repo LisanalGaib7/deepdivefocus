@@ -33,11 +33,7 @@ export const MissionCompleteModal = ({
 }: MissionCompleteModalProps) => {
   const pearls = creature ? getPearlValue(creature.rarity) : 0;
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-  };
+  // formatMinutesSeconds imported from @/lib/formatTime
 
   return (
     <AlertDialog open={open}>
