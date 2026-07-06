@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Search, Crown, ArrowLeft, Shield, Users, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { logger } from "@/lib/logger";
+import { computeSubscriptionEndsAt, type PlanType } from "@/features/monetization/subscriptionUtils";
 
 
 interface UserWithSub {
@@ -136,19 +137,7 @@ const AdminSubscriptions = () => {
   const grantPro = async (targetUser: UserWithSub) => {
     setGranting(true);
     const now = new Date().toISOString();
-    let endsAt: string;
-
-    if (planType === "lifetime") {
-      endsAt = "2099-12-31T23:59:59Z";
-    } else if (planType === "yearly") {
-      const d = new Date();
-      d.setFullYear(d.getFullYear() + 1);
-      endsAt = d.toISOString();
-    } else {
-      const d = new Date();
-      d.setMonth(d.getMonth() + 1);
-      endsAt = d.toISOString();
-    }
+    const endsAt = computeSubscriptionEndsAt(planType as PlanType);
 
     // Deactivate existing
     await supabase
