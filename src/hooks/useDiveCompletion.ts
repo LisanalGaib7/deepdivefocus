@@ -287,6 +287,5 @@ export function useDiveCompletion(deps: {
     collectionRefreshKey,
     triggerMissionComplete,
     handleMissionCompleteClose,
-    flushPendingRewards,
   };
 }
