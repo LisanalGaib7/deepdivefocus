@@ -196,11 +196,7 @@ const Index = () => {
   // Task handlers extracted to useTaskHandlers.
 
 
-  const formatTimeSpent = (seconds: number) => {
-    if (seconds < 60) return `${seconds}s`;
-    const mins = Math.floor(seconds / 60);
-    return `${mins}m`;
-  };
+  // formatShortDuration lives in src/lib/formatTime.ts
 
   const handleLogout = useCallback(async () => {
     await signOut();
@@ -221,7 +217,7 @@ const Index = () => {
       const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
       return {
         total: totalTodaySeconds,
-        formatted: formatTimeSpent(totalTodaySeconds),
+        formatted: formatShortDuration(totalTodaySeconds),
       };
     },
     [getTaskTodayMinutes],
