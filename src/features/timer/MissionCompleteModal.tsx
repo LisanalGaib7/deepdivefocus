@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue } from "@/lib/lootSystem";
+import { formatMinutesSeconds } from "@/lib/formatTime";
 import PixelCreature from "@/components/common/PixelCreature";
 import PearlBadge from "@/components/common/PearlBadge";
 import { Anchor, Sparkles } from "lucide-react";
