@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Creature, getRarityColor } from "@/data/creatures";
 import { getPearlValue } from "@/lib/lootSystem";
+import { formatMinutesSeconds } from "@/lib/formatTime";
 import PixelCreature from "@/components/common/PixelCreature";
 import PearlBadge from "@/components/common/PearlBadge";
 import { Anchor, Sparkles } from "lucide-react";
@@ -33,11 +34,7 @@ export const MissionCompleteModal = ({
 }: MissionCompleteModalProps) => {
   const pearls = creature ? getPearlValue(creature.rarity) : 0;
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-  };
+  // formatMinutesSeconds imported from @/lib/formatTime
 
   return (
     <AlertDialog open={open}>
@@ -81,7 +78,7 @@ export const MissionCompleteModal = ({
               DIVE TIME
             </p>
             <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
-              {formatDuration(sessionDuration)}
+              {formatMinutesSeconds(sessionDuration)}
             </p>
           </div>
         </div>

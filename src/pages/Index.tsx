@@ -3,6 +3,7 @@ import { Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { hapticsWarning } from "@/lib/haptics";
+import { formatShortDuration } from "@/lib/formatTime";
 import { supabase } from "@/integrations/supabase/client";
 
 
@@ -196,11 +197,7 @@ const Index = () => {
   // Task handlers extracted to useTaskHandlers.
 
 
-  const formatTimeSpent = (seconds: number) => {
-    if (seconds < 60) return `${seconds}s`;
-    const mins = Math.floor(seconds / 60);
-    return `${mins}m`;
-  };
+  // formatShortDuration lives in src/lib/formatTime.ts
 
   const handleLogout = useCallback(async () => {
     await signOut();
@@ -221,7 +218,7 @@ const Index = () => {
       const totalTodaySeconds = (dbTodayMins * 60) + sessionSeconds;
       return {
         total: totalTodaySeconds,
-        formatted: formatTimeSpent(totalTodaySeconds),
+        formatted: formatShortDuration(totalTodaySeconds),
       };
     },
     [getTaskTodayMinutes],
