@@ -264,13 +264,13 @@ export default function SortableTaskList({
             isSelected={selectedTaskId === activeTask.id}
             isEditing={false}
             editingText=""
-            onSelect={() => {}}
-            onToggleComplete={() => {}}
-            onStartEdit={() => {}}
-            onSaveEdit={() => {}}
-            onEditKeyDown={() => {}}
-            onEditTextChange={() => {}}
-            onDelete={() => {}}
+            onSelect={noop}
+            onToggleComplete={noop}
+            onStartEdit={noop}
+            onSaveEdit={noop}
+            onEditKeyDown={noop}
+            onEditTextChange={noop}
+            onDelete={noop}
             getTimeDisplay={getTimeDisplay}
             isDragOverlay
           />
