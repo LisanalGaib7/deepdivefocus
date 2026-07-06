@@ -194,30 +194,8 @@ interface CreatureCardProps {
 }
 
 const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
-  const styles = getRarityStyles(creature.rarity, unlocked);
+  const styles = getRarityStyle(creature.rarity, unlocked);
   const pixelType = creature.id;
-
-  // Rarity badge color
-  const getBadgeClasses = () => {
-    if (!unlocked) return 'border-slate-800 text-slate-600 bg-slate-900/50';
-    switch (creature.rarity) {
-      case 'Legendary': return 'border-amber-500/60 text-amber-400 bg-amber-500/10';
-      case 'Epic': return 'border-purple-500/60 text-purple-400 bg-purple-500/10';
-      case 'Rare': return 'border-blue-500/60 text-blue-400 bg-blue-500/10';
-      case 'Uncommon': return 'border-emerald-500/60 text-emerald-400 bg-emerald-500/10';
-      default: return 'border-slate-600 text-slate-400 bg-slate-800/50';
-    }
-  };
-
-  const getTraitClasses = () => {
-    switch (creature.rarity) {
-      case 'Legendary': return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
-      case 'Epic': return 'bg-purple-500/20 text-purple-300 border border-purple-500/30';
-      case 'Rare': return 'bg-blue-500/20 text-blue-300 border border-blue-500/30';
-      case 'Uncommon': return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
-      default: return 'bg-slate-700/50 text-slate-400 border border-slate-600/30';
-    }
-  };
 
   return (
     <div
@@ -243,25 +221,14 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
       <div className={`space-y-3 ${!unlocked ? 'opacity-20 blur-sm' : ''}`}>
         {/* PixelCreature SVG in circular frame */}
         <div className="flex justify-center">
-          <div className={`rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
-            style={unlocked ? {
-              boxShadow: creature.rarity === 'Legendary'
-                ? '0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 10px rgba(245, 158, 11, 0.2)'
-                : creature.rarity === 'Epic'
-                  ? '0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 10px rgba(168, 85, 247, 0.2)'
-                  : creature.rarity === 'Rare'
-                    ? '0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(59, 130, 246, 0.2)'
-                    : '0 0 10px rgba(100, 116, 139, 0.2)',
-              borderColor: creature.rarity === 'Legendary' ? 'rgba(245, 158, 11, 0.5)'
-                : creature.rarity === 'Epic' ? 'rgba(168, 85, 247, 0.5)'
-                : creature.rarity === 'Rare' ? 'rgba(59, 130, 246, 0.5)'
-                : creature.rarity === 'Uncommon' ? 'rgba(16, 185, 129, 0.5)'
-                : undefined,
-            } : {}}
+          <div
+            className={`rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
+            style={unlocked ? { boxShadow: styles.frameShadow, borderColor: styles.frameBorderColor } : {}}
           >
             <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' ? 'w-20 h-20' : 'w-16 h-16'} />
           </div>
         </div>
+
 
         {/* Name */}
         <h3 className={`text-sm font-bold text-center font-orbitron uppercase tracking-wider ${styles.textColor}`}>
