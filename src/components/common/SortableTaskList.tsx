@@ -23,6 +23,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LocalTask } from '@/hooks/useTasks';
 
+const noop = () => {};
+
 interface SortableTaskItemProps {
   task: LocalTask;
   isSelected: boolean;
@@ -264,13 +266,13 @@ export default function SortableTaskList({
             isSelected={selectedTaskId === activeTask.id}
             isEditing={false}
             editingText=""
-            onSelect={() => {}}
-            onToggleComplete={() => {}}
-            onStartEdit={() => {}}
-            onSaveEdit={() => {}}
-            onEditKeyDown={() => {}}
-            onEditTextChange={() => {}}
-            onDelete={() => {}}
+            onSelect={noop}
+            onToggleComplete={noop}
+            onStartEdit={noop}
+            onSaveEdit={noop}
+            onEditKeyDown={noop}
+            onEditTextChange={noop}
+            onDelete={noop}
             getTimeDisplay={getTimeDisplay}
             isDragOverlay
           />
