@@ -237,7 +237,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
 
         {/* Rarity badge + Pearls */}
         <div className="flex justify-center items-center gap-2">
-          <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono tracking-widest ${getBadgeClasses()}`}>
+          <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono tracking-widest ${styles.badge}`}>
             {creature.rarity.toUpperCase()}
           </span>
           {unlocked && (
@@ -252,7 +252,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
         {unlocked && creature.traits.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1 pt-2 border-t border-slate-800/50">
             {creature.traits.map((trait, index) => (
-              <span key={index} className={`text-[9px] px-1.5 py-0.5 rounded font-mono tracking-wide ${getTraitClasses()}`}>
+              <span key={index} className={`text-[9px] px-1.5 py-0.5 rounded font-mono tracking-wide ${styles.trait}`}>
                 {trait}
               </span>
             ))}
