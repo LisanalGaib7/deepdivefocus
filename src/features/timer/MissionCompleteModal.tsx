@@ -78,7 +78,7 @@ export const MissionCompleteModal = ({
               DIVE TIME
             </p>
             <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
-              {formatDuration(sessionDuration)}
+              {formatMinutesSeconds(sessionDuration)}
             </p>
           </div>
         </div>
