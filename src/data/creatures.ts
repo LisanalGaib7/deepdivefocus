@@ -136,6 +136,15 @@ export const CREATURES: Creature[] = [
     traits: ["Translucent", "Ethereal"],
   },
   {
+    id: "blue_ringed_octopus",
+    name: "Blue-Ringed Octopus",
+    minDepth: 350,
+    rarity: "Rare",
+    description: "UNIT.BR_OCTOPUS // NEUROTOXIN_LETHAL // RINGS_LUMINOUS",
+    icon: "CircleDot",
+    traits: ["Venomous", "Luminous"],
+  },
+  {
     id: "manta",
     name: "Shadow Manta Ray",
     minDepth: 400,
