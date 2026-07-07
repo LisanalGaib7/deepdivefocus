@@ -678,7 +678,7 @@ const getCreatureAnimation = (type: string): string => {
     case 'turtle': return 'animate-creature-glide';
     case 'nautilus': return 'animate-creature-float';
     case 'octopus': return 'animate-creature-pulse';
-    case 'mantis_shrimp': return 'animate-creature-swim';
+    case 'sea_angel': return 'animate-creature-float';
     case 'manta': return 'animate-creature-wingflap';
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';
