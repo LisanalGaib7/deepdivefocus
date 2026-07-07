@@ -45,6 +45,15 @@ export const CREATURES: Creature[] = [
     traits: ["Shell", "Defensive"],
   },
   {
+    id: "sea_urchin",
+    name: "Sea Urchin",
+    minDepth: 40,
+    rarity: "Common",
+    description: "UNIT.URCHIN // SPINES_RADIAL // CONTACT_HAZARD",
+    icon: "Sparkle",
+    traits: ["Spiny", "Radial"],
+  },
+  {
     id: "starfish",
     name: "Crimson Starfish",
     minDepth: 50,
