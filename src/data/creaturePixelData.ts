@@ -552,6 +552,63 @@ const seaAngel = (): GridData => ({
   glowColor: "#f5d8ff",
 });
 
+// Sea Urchin — radial spike silhouette with dark spherical body.
+const seaUrchin = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0],
+    [0,0,2,0,0,0,0,2,2,0,0,0,0,2,0,0],
+    [0,0,0,2,0,0,2,2,2,2,0,0,2,0,0,0],
+    [0,2,0,0,2,0,2,2,2,2,0,2,0,0,2,0],
+    [0,0,2,0,0,2,1,1,1,1,2,0,0,2,0,0],
+    [0,0,0,2,2,1,1,1,1,1,1,2,2,0,0,0],
+    [2,2,2,2,1,1,1,3,3,1,1,1,2,2,2,2],
+    [2,2,2,2,1,1,1,3,3,1,1,1,2,2,2,2],
+    [0,0,0,2,2,1,1,1,1,1,1,2,2,0,0,0],
+    [0,0,2,0,0,2,1,1,1,1,2,0,0,2,0,0],
+    [0,2,0,0,2,0,2,2,2,2,0,2,0,0,2,0],
+    [0,0,0,2,0,0,2,2,2,2,0,0,2,0,0,0],
+    [0,0,2,0,0,0,0,2,2,0,0,0,0,2,0,0],
+    [0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: {
+    1: "#4a1a5c", // body
+    2: "#2a0a3c", // spikes
+    3: "#ff88cc", // mouth highlight
+  },
+  glowColor: "#8844aa",
+});
+
+// Blue-Ringed Octopus — yellow body with glowing blue neurotoxin rings.
+const blueRingedOctopus = (): GridData => ({
+  grid: [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,2,2,1,1,2,2,1,1,0,0,0],
+    [0,0,0,1,2,3,2,1,1,2,3,2,1,0,0,0],
+    [0,0,0,1,1,2,2,1,1,2,2,1,1,0,0,0],
+    [0,0,0,1,1,1,4,1,1,4,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,2,1,1,1,1,1,1,2,1,0,0,0],
+    [0,0,1,2,3,2,1,2,2,1,2,3,2,1,0,0],
+    [0,1,1,2,2,1,1,1,1,1,1,2,2,1,1,0],
+    [0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0],
+    [1,0,0,0,1,0,1,0,0,1,0,1,0,0,0,1],
+    [0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ],
+  colorMap: {
+    1: "#f4c430", // yellow body
+    2: "#00aaff", // blue ring
+    3: "#0044aa", // ring center
+    4: "#1a1a2e", // eyes
+  },
+  glowColor: "#00aaff",
+});
+
 const barreleye = (): GridData => ({
   size: 32,
   grid: [
@@ -651,6 +708,8 @@ const getCreatureData = (type: string): GridData => {
     case 'nautilus': return nautilus();
     case 'octopus': return octopus();
     case 'sea_angel': return seaAngel();
+    case 'sea_urchin': return seaUrchin();
+    case 'blue_ringed_octopus': return blueRingedOctopus();
     case 'manta': return mantaRay();
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
@@ -679,6 +738,8 @@ const getCreatureAnimation = (type: string): string => {
     case 'nautilus': return 'animate-creature-float';
     case 'octopus': return 'animate-creature-pulse';
     case 'sea_angel': return 'animate-creature-float';
+    case 'sea_urchin': return 'animate-creature-breathe';
+    case 'blue_ringed_octopus': return 'animate-creature-pulse';
     case 'manta': return 'animate-creature-wingflap';
     case 'anglerfish': return 'animate-creature-lure';
     case 'giant_isopod': return 'animate-creature-shuffle';

@@ -45,6 +45,15 @@ export const CREATURES: Creature[] = [
     traits: ["Shell", "Defensive"],
   },
   {
+    id: "sea_urchin",
+    name: "Sea Urchin",
+    minDepth: 40,
+    rarity: "Common",
+    description: "UNIT.URCHIN // SPINES_RADIAL // CONTACT_HAZARD",
+    icon: "Sparkle",
+    traits: ["Spiny", "Radial"],
+  },
+  {
     id: "starfish",
     name: "Crimson Starfish",
     minDepth: 50,
@@ -125,6 +134,15 @@ export const CREATURES: Creature[] = [
     description: "UNIT.SEA_ANGEL // TRANSLUCENT_BODY // CORE_LUMINOUS",
     icon: "Sparkles",
     traits: ["Translucent", "Ethereal"],
+  },
+  {
+    id: "blue_ringed_octopus",
+    name: "Blue-Ringed Octopus",
+    minDepth: 350,
+    rarity: "Rare",
+    description: "UNIT.BR_OCTOPUS // NEUROTOXIN_LETHAL // RINGS_LUMINOUS",
+    icon: "CircleDot",
+    traits: ["Venomous", "Luminous"],
   },
   {
     id: "manta",
