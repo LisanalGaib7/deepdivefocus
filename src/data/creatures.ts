@@ -118,13 +118,13 @@ export const CREATURES: Creature[] = [
     traits: ["Intelligent", "Camouflage"],
   },
   {
-    id: "mantis_shrimp",
-    name: "Mantis Shrimp",
+    id: "sea_angel",
+    name: "Sea Angel",
     minDepth: 320,
     rarity: "Rare",
-    description: "UNIT.MANTIS_SHRIMP // PUNCH_VELOCITY_MAX // SPECTRUM_FULL",
-    icon: "Bug",
-    traits: ["Striker", "Colorful"],
+    description: "UNIT.SEA_ANGEL // TRANSLUCENT_BODY // CORE_LUMINOUS",
+    icon: "Sparkles",
+    traits: ["Translucent", "Ethereal"],
   },
   {
     id: "manta",
