@@ -650,7 +650,7 @@ const getCreatureData = (type: string): GridData => {
     case 'turtle': return turtle();
     case 'nautilus': return nautilus();
     case 'octopus': return octopus();
-    case 'mantis_shrimp': return mantisShrimp();
+    case 'sea_angel': return seaAngel();
     case 'manta': return mantaRay();
     case 'anglerfish': return anglerfish();
     case 'giant_isopod': return giantIsopod();
