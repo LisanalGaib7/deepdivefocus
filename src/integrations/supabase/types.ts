@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          actor_user_id: string | null
+          created_at: string
+          details: Json
+          event_type: string
+          id: string
+          target_user_id: string | null
+        }
+        Insert: {
+          actor_user_id?: string | null
+          created_at?: string
+          details?: Json
+          event_type: string
+          id?: string
+          target_user_id?: string | null
+        }
+        Update: {
+          actor_user_id?: string | null
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       focus_sessions: {
         Row: {
           created_at: string
@@ -224,6 +251,15 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_user_pro: { Args: { _user_id: string }; Returns: boolean }
+      log_audit_event: {
+        Args: {
+          p_actor: string
+          p_details: Json
+          p_event_type: string
+          p_target: string
+        }
+        Returns: undefined
+      }
       spend_pearls: { Args: { p_amount: number }; Returns: Json }
     }
     Enums: {
