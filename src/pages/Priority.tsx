@@ -172,7 +172,7 @@ const Priority = ({
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-1 pt-4">
-          <h1 className="text-4xl font-bold tracking-widest text-primary font-orbitron uppercase drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)]">
+          <h1 className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)]">
             PRIORITY
           </h1>
         </div>

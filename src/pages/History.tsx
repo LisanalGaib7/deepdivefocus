@@ -177,7 +177,7 @@ const History = () => {
         {/* Header */}
         <div className="text-center">
           <h1 
-            className="text-4xl font-bold tracking-widest text-primary font-orbitron uppercase"
+            className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase"
             style={{ textShadow: `0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.3)` }}
           >
             ANALYTICS
@@ -197,7 +197,7 @@ const History = () => {
               <div className="text-center space-y-4 p-6">
                 <Lock className="w-10 h-10 mx-auto text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.6)]" />
                 <div className="space-y-1">
-                  <h3 className="font-orbitron text-xl font-bold text-primary uppercase tracking-widest">
+                  <h3 className="font-robotic text-xl font-bold text-primary uppercase tracking-widest">
                     DEEP DATA LOCKED
                   </h3>
                   <p className="text-sm text-muted-foreground font-mono max-w-xs mx-auto">
@@ -206,7 +206,7 @@ const History = () => {
                 </div>
                 <Button
                   onClick={() => setShowPricing(true)}
-                  className="font-orbitron uppercase tracking-widest mt-2 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all"
+                  className="font-robotic uppercase tracking-widest mt-2 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all"
                 >
                   Unlock Full Journey
                 </Button>

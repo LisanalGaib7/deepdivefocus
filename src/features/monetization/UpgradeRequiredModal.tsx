@@ -36,7 +36,7 @@ export const UpgradeRequiredModal = ({ open, onClose, onOpenPricing }: UpgradeRe
           {/* Text */}
           <div className="text-center space-y-2">
             <h2
-              className="text-lg font-bold tracking-[0.2em] text-yellow-400 font-orbitron uppercase"
+              className="text-lg font-bold tracking-[0.2em] text-yellow-400 font-robotic uppercase"
               style={{ textShadow: '0 0 20px rgba(234,179,8,0.6)' }}
             >
               REACTOR LIMIT REACHED
@@ -55,7 +55,7 @@ export const UpgradeRequiredModal = ({ open, onClose, onOpenPricing }: UpgradeRe
           <div className="space-y-2">
             <Button
               onClick={() => { onClose(); onOpenPricing(); }}
-              className="w-full h-12 font-orbitron tracking-widest text-sm uppercase bg-yellow-500/20 border border-yellow-500/60 text-yellow-400 hover:bg-yellow-500/30 hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all duration-300"
+              className="w-full h-12 font-robotic tracking-widest text-sm uppercase bg-yellow-500/20 border border-yellow-500/60 text-yellow-400 hover:bg-yellow-500/30 hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all duration-300"
             >
               <Zap className="h-4 w-4 mr-2" />
               UPGRADE REACTOR

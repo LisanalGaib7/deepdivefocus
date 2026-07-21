@@ -84,7 +84,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               </div>
             </div>
             <h2
-              className="text-2xl font-extrabold tracking-[0.3em] font-orbitron text-primary uppercase"
+              className="text-2xl font-extrabold tracking-[0.3em] font-robotic text-primary uppercase"
               style={{ textShadow: `0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary)/0.3)` }}
             >
               ENGINEERING BAY
@@ -111,7 +111,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             >
               <div>
                 <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
-                <p className="text-xl font-extrabold font-orbitron text-white/70 tracking-wider">FREE</p>
+                <p className="text-xl font-extrabold font-robotic text-white/70 tracking-wider">FREE</p>
               </div>
               <div className="h-px bg-white/10" />
               <ul className="space-y-2.5">
@@ -142,7 +142,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   <Crown className="h-3 w-3 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.9)]" />
                   <p className="text-[10px] text-yellow-400 font-mono tracking-widest uppercase font-semibold">Deep Dive Pro</p>
                 </div>
-                <p className="text-xl font-extrabold font-orbitron text-yellow-400 tracking-wider drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
+                <p className="text-xl font-extrabold font-robotic text-yellow-400 tracking-wider drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO
                 </p>
               </div>
@@ -196,7 +196,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-orbitron font-black text-white/80 leading-none">
+                  <p className="font-robotic font-black text-white/80 leading-none">
                     <span className="text-sm opacity-60">$</span>
                     <span className="text-2xl">2.99</span>
                   </p>
@@ -243,7 +243,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-orbitron font-black text-yellow-400 leading-none">
+                  <p className="font-robotic font-black text-yellow-400 leading-none">
                     <span className="text-sm opacity-60">$</span>
                     <span className="text-2xl">19.99</span>
                   </p>
@@ -299,7 +299,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-orbitron font-black text-amber-300 leading-none" style={{ filter: 'drop-shadow(0 0 8px rgba(251,191,36,0.5))' }}>
+                  <p className="font-robotic font-black text-amber-300 leading-none" style={{ filter: 'drop-shadow(0 0 8px rgba(251,191,36,0.5))' }}>
                     <span className="text-sm opacity-60">$</span>
                     <span className="text-[28px]">39.99</span>
                   </p>
@@ -321,14 +321,14 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 }}
               >
                 <Crown className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
-                <span className="font-orbitron text-yellow-400 tracking-widest text-sm uppercase drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
+                <span className="font-robotic text-yellow-400 tracking-widest text-sm uppercase drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">
                   PRO ACTIVE
                 </span>
               </div>
             ) : (
               <Button
                 onClick={onActivatePro}
-                className="w-full h-14 font-orbitron tracking-widest text-base uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
+                className="w-full h-14 font-robotic tracking-widest text-base uppercase rounded-2xl border-2 border-yellow-500/80 text-yellow-300 hover:text-yellow-200 transition-all duration-300"
                 style={{
                   background: selectedPlan === 'lifetime'
                     ? 'linear-gradient(135deg, rgba(251,191,36,0.35), rgba(234,179,8,0.15))'
