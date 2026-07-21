@@ -195,14 +195,14 @@ const Priority = ({
         {/* Bottom: full list */}
         <section className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <SectionTitle>전체 리스트</SectionTitle>
+            <SectionTitle>All Tasks</SectionTitle>
             {sortMode === "manual" && (
               <button
                 type="button"
                 onClick={() => setSortMode("priority")}
                 className="text-[10px] font-mono text-primary/80 hover:text-primary uppercase tracking-widest"
               >
-                ↺ 우선순위순으로
+                ↺ Sort by priority
               </button>
             )}
           </div>
