@@ -188,6 +188,8 @@ All colors MUST be HSL.
 
     --gradient-start: 0 0% 85%;
     --gradient-end: 0 0% 60%;
+
+    --hud-glow: 0 0% 95%;
   }
 }
 
