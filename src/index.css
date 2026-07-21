@@ -197,6 +197,39 @@ All colors MUST be HSL.
   .hud-glow-title {
     text-shadow: 0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.4);
   }
+
+  /* ===== Unified Page System ===== */
+  .page-shell {
+    @apply min-h-screen bg-background text-foreground px-4 pt-6 pb-28;
+  }
+  .page-shell-inner {
+    @apply max-w-2xl mx-auto space-y-6;
+  }
+  .page-header {
+    @apply text-3xl font-robotic font-bold uppercase tracking-[0.2em] text-primary;
+    text-shadow: 0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.4);
+  }
+  .page-subtitle {
+    @apply mt-1 text-xs font-mono tracking-widest text-muted-foreground uppercase;
+  }
+  .section-label {
+    @apply text-[11px] uppercase tracking-widest text-muted-foreground font-robotic font-bold;
+  }
+  .readout-xl {
+    @apply font-mono tabular-nums text-4xl font-bold text-primary;
+  }
+  .readout-md {
+    @apply font-mono tabular-nums text-2xl font-semibold text-primary;
+  }
+  .readout-unit {
+    @apply font-mono text-xl font-semibold text-primary/60 ml-1;
+  }
+  .state-loading {
+    @apply animate-pulse text-primary font-robotic tracking-widest text-sm uppercase;
+  }
+  .state-empty {
+    @apply text-sm text-muted-foreground text-center py-6 font-mono;
+  }
 }
 
 
