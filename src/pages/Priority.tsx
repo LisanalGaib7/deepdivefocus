@@ -104,7 +104,7 @@ const Priority = ({
     if (allCompleted) {
       return (
         <p className="text-sm text-primary text-center py-6 font-semibold">
-          All tasks completed for today 🎉
+          All tasks completed for today
         </p>
       );
     }
@@ -175,15 +175,9 @@ const Priority = ({
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-1 pt-4">
-          <h1
-            className="text-3xl md:text-4xl font-extrabold tracking-widest uppercase text-primary drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)]"
-            style={{ fontFamily: "Orbitron, sans-serif" }}
-          >
-            Priority
+          <h1 className="text-4xl font-bold tracking-widest text-primary font-orbitron uppercase drop-shadow-[0_0_12px_hsl(var(--primary)/0.5)]">
+            PRIORITY
           </h1>
-          <p className="text-foreground/60 text-sm">
-            Rank what matters, dive in order
-          </p>
         </div>
 
         {/* Top: Now Doing */}
