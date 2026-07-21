@@ -9,43 +9,48 @@ All colors MUST be HSL.
 @layer base {
   :root,
   [data-theme="ocean"] {
-    /* Deep Ocean Theme - Premium Dark */
-    --background: 0 0% 2%;
-    --foreground: 0 0% 98%;
+    /* Deep Ocean Theme - Oceanic Bento Glass */
+    --background: 210 80% 5%;
+    --foreground: 200 30% 96%;
 
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
+    --card: 205 60% 8%;
+    --card-foreground: 200 30% 96%;
 
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 205 60% 8%;
+    --popover-foreground: 200 30% 96%;
 
-    /* Electric Blue to Deep Blue */
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
-    --primary-deep: 217 91% 60%;
+    /* Cyberpunk cyan primary — the HUD accent */
+    --primary: 185 100% 55%;
+    --primary-foreground: 210 80% 5%;
+    --primary-deep: 199 89% 48%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 205 40% 14%;
+    --secondary-foreground: 200 30% 96%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 72%;
+    --muted: 205 40% 14%;
+    --muted-foreground: 200 15% 72%;
 
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 185 100% 55%;
+    --accent-foreground: 210 80% 5%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 12%;
-    --ring: 199 89% 48%;
+    --border: 200 30% 20%;
+    --input: 205 40% 12%;
+    --ring: 185 100% 55%;
 
     --radius: 1rem;
 
     /* Custom gradients */
-    --gradient-start: 199 89% 48%;
-    --gradient-end: 217 91% 60%;
+    --gradient-start: 185 100% 55%;
+    --gradient-end: 199 89% 48%;
+
+    /* Deep-sea page gradient (top → bottom) */
+    --sea-top: 210 80% 5%;
+    --sea-mid: 205 70% 9%;
+    --sea-bottom: 190 55% 14%;
 
     /* HUD Colors */
     --hud-cyan: 185 100% 50%;
