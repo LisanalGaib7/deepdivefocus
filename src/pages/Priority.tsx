@@ -227,7 +227,7 @@ const Priority = ({
                   }`}
                   style={{ fontFamily: "Orbitron, sans-serif" }}
                 >
-                  {m === "priority" ? "우선순위순" : "직접 정렬"}
+                  {m === "priority" ? "By Priority" : "Manual Order"}
                 </button>
               );
             })}
