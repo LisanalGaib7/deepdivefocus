@@ -203,7 +203,47 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
      setTasks(prev =>
        prev.map(t => (t.id === taskId ? { ...t, ...updates } : t))
      );
-   }, [user, isGuestMode]);
+    }, [user, isGuestMode]);
+
+    // Update priority scoring fields (urgency, impact, effortMinutes)
+    const updateTaskScores = useCallback(async (
+      taskId: string,
+      updates: { urgency?: number | null; impact?: number | null; effortMinutes?: number | null }
+    ) => {
+      // Optimistic local update first
+      setTasks(prev =>
+        prev.map(t => (t.id === taskId ? { ...t, ...updates } : t))
+      );
+
+      if (!user || isGuestMode) {
+        const parsed = readGuestTasks();
+        if (parsed.length > 0) {
+          const updated = parsed.map(t =>
+            t.id === taskId ? { ...t, ...updates } : t
+          );
+          writeGuestTasks(updated);
+        }
+        return;
+      }
+
+      const dbUpdates: Partial<Task> = {};
+      if (updates.urgency !== undefined) dbUpdates.urgency = updates.urgency;
+      if (updates.impact !== undefined) dbUpdates.impact = updates.impact;
+      if (updates.effortMinutes !== undefined) dbUpdates.effort_minutes = updates.effortMinutes;
+
+      const { error } = await supabase
+        .from('tasks')
+        .update(dbUpdates)
+        .eq('id', taskId)
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error updating task scores:', error);
+        toast.error('Failed to update priority');
+      }
+    }, [user, isGuestMode]);
+
+
  
    // Delete a task
    const deleteTask = useCallback(async (taskId: string) => {
