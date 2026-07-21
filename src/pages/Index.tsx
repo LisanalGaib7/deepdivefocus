@@ -8,7 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 
 // Common components
-import BottomNav from "@/components/common/BottomNav";
+import BottomNav, { type BottomTab } from "@/components/common/BottomNav";
+
 
 // Feature components
 import { EngineeringBayModal } from "@/features/hangar";
@@ -30,6 +31,8 @@ import MissionObjectivePanel from "@/features/dive/MissionObjectivePanel";
 // Pages
 import History from "@/pages/History";
 import Collection from "@/pages/Collection";
+import Priority from "@/pages/Priority";
+
 
 // Hooks & Data
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -39,6 +42,9 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
+import { useSortMode } from "@/hooks/useSortMode";
+import { sortByPriority, getPriorityScore } from "@/lib/priority";
+
 import { getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
@@ -63,16 +69,19 @@ const Index = () => {
     tasks,
     addTask,
     updateTask,
+    updateTaskScores,
     deleteTask,
     incrementTimeSpent,
     saveTimeSpent,
     reorderTasks,
   } = useTasks();
+  const { sortMode, setSortMode } = useSortMode();
+
 
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
-  const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
+  const [activeTab, setActiveTab] = useState<BottomTab>("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showEngineeringBay, setShowEngineeringBay] = useState(false);
   const [showUpgradeRequired, setShowUpgradeRequired] = useState(false);
@@ -271,13 +280,52 @@ const Index = () => {
     toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 });
   }, [activatePro]);
 
+  // Ordered task list respecting sortMode. In 'priority' mode we surface
+  // scored uncompleted first, then unscored, then completed.
+  const displayedTasks = (() => {
+    if (sortMode === "manual") return tasks;
+    const uncompleted = tasks.filter((t) => !t.isCompleted);
+    const completed = tasks.filter((t) => t.isCompleted);
+    const scored = uncompleted.filter((t) => getPriorityScore(t) != null);
+    const unscored = uncompleted.filter((t) => getPriorityScore(t) == null);
+    return [...sortByPriority(scored), ...unscored, ...completed];
+  })();
+
+  // Reorder inside Focus tab: dragging always flips sort mode to manual.
+  const handleFocusReorder = useCallback(
+    (reordered: LocalTask[]) => {
+      if (sortMode !== "manual") setSortMode("manual");
+      reorderTasks(reordered);
+    },
+    [sortMode, setSortMode, reorderTasks]
+  );
+
+  // Priority tab → Focus tab dive handoff.
+  const handleSelectAndDive = useCallback(
+    (taskId: string) => {
+      taskHandlers.handleSelectTask(taskId);
+      setActiveTab("focus");
+    },
+    [taskHandlers]
+  );
+
   return (
     <>
       {activeTab === "history" ? (
         <History />
       ) : activeTab === "collection" ? (
         <Collection key={completion.collectionRefreshKey} />
+      ) : activeTab === "priority" ? (
+        <Priority
+          tasks={tasks}
+          onReorder={handleFocusReorder}
+          onToggleComplete={taskHandlers.handleToggleComplete}
+          onDelete={taskHandlers.handleDeleteTask}
+          onUpdateScores={updateTaskScores}
+          onSelectAndDive={handleSelectAndDive}
+        />
       ) : (
+
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={timer.isDiveTransition} />
@@ -367,7 +415,7 @@ const Index = () => {
 
         {!isRunning && (
           <MissionObjectivePanel
-            tasks={tasks}
+            tasks={displayedTasks}
             selectedTaskId={selectedTaskId}
             editingTaskId={taskHandlers.editingTaskId}
             editingText={taskHandlers.editingText}
@@ -383,7 +431,8 @@ const Index = () => {
             onEditKeyDown={taskHandlers.handleEditKeyDown}
             onEditTextChange={taskHandlers.setEditingText}
             onDelete={taskHandlers.handleDeleteTask}
-            onReorder={reorderTasks}
+            onReorder={handleFocusReorder}
+
             getTimeDisplay={getTimeDisplay}
           />
         )}

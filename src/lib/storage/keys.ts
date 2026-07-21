@@ -12,6 +12,8 @@ export const STORAGE_KEYS = {
   engineLevel: "deepdive_engine_level",
   hullLevel: "deepdive_hull_level",
   pendingRewards: "deepdive_pending_rewards",
+  sortMode: "deepdive_sort_mode",
 } as const;
+
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
