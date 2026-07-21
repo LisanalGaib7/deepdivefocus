@@ -24,9 +24,9 @@ interface PriorityProps {
 
 const formatEffort = (mins: number | null) => {
   if (mins == null) return null;
-  if (mins < 60) return `${mins}분`;
-  if (mins === 60) return "1시간";
-  return "2시간+";
+  if (mins < 60) return `${mins}m`;
+  if (mins === 60) return "1h";
+  return "2h+";
 };
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -97,21 +97,21 @@ const Priority = ({
     if (tasks.length === 0) {
       return (
         <p className="text-sm text-muted-foreground text-center py-6">
-          Focus 탭에서 태스크를 추가하세요
+          Add tasks from the Focus tab
         </p>
       );
     }
     if (allCompleted) {
       return (
         <p className="text-sm text-primary text-center py-6 font-semibold">
-          오늘 할 일을 모두 완료했어요 🎉
+          All tasks completed for today 🎉
         </p>
       );
     }
     if (!hasScored) {
       return (
         <p className="text-sm text-muted-foreground text-center py-6">
-          점수를 매기면 여기에 우선순위가 표시됩니다
+          Score your tasks to see priorities here
         </p>
       );
     }
@@ -161,7 +161,7 @@ const Priority = ({
                 style={{ fontFamily: "Orbitron, sans-serif" }}
               >
                 <Rocket className="h-3.5 w-3.5 mr-1" />
-                다이브
+                Dive
               </Button>
             </div>
           );
@@ -188,21 +188,21 @@ const Priority = ({
 
         {/* Top: Now Doing */}
         <section className="rounded-2xl border border-border bg-card/50 p-4 space-y-3">
-          <SectionTitle>지금 할 일</SectionTitle>
+          <SectionTitle>Now Doing</SectionTitle>
           {renderTop()}
         </section>
 
         {/* Bottom: full list */}
         <section className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <SectionTitle>전체 리스트</SectionTitle>
+            <SectionTitle>All Tasks</SectionTitle>
             {sortMode === "manual" && (
               <button
                 type="button"
                 onClick={() => setSortMode("priority")}
                 className="text-[10px] font-mono text-primary/80 hover:text-primary uppercase tracking-widest"
               >
-                ↺ 우선순위순으로
+                ↺ Sort by priority
               </button>
             )}
           </div>
@@ -227,7 +227,7 @@ const Priority = ({
                   }`}
                   style={{ fontFamily: "Orbitron, sans-serif" }}
                 >
-                  {m === "priority" ? "우선순위순" : "직접 정렬"}
+                  {m === "priority" ? "By Priority" : "Manual Order"}
                 </button>
               );
             })}
@@ -235,7 +235,7 @@ const Priority = ({
 
           {displayedTasks.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              태스크가 없습니다
+              No tasks yet
             </p>
           ) : (
             <div className="relative">
@@ -313,10 +313,10 @@ function ListWithDividers({
   const sections: { label: string | null; slice: LocalTask[]; startIdx: number }[] = [];
   const boundaries = [
     { idx: 0, label: null },
-    ...(unscoredStartIndex > 0 ? [{ idx: unscoredStartIndex, label: "미분류" }] : []),
+    ...(unscoredStartIndex > 0 ? [{ idx: unscoredStartIndex, label: "Unscored" }] : []),
     ...(completedStartIndex > 0 &&
     completedStartIndex !== unscoredStartIndex
-      ? [{ idx: completedStartIndex, label: "완료" }]
+      ? [{ idx: completedStartIndex, label: "Completed" }]
       : []),
   ];
   for (let i = 0; i < boundaries.length; i++) {
