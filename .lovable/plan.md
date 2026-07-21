@@ -1,80 +1,116 @@
-# Nautilus 32×32 재디자인 — 실제 사진 레퍼런스 반영
+# Design Review & System Unification
 
-첨부 사진을 기반으로 더 사실적이고 우아한 앵무조개로 재해석합니다. `src/components/common/PixelCreature.tsx`의 `nautilus()` grid만 교체.
+30년차 UX 방법론 요약: **먼저 시스템을 정하고, 그 다음 페이지를 시스템에 맞춘다.** 지금 앱은 페이지별로 각자 결정을 내려서 어긋난 상태 — Focus는 gradient-ocean text에 sm→6xl 반응형, 나머지 탭은 `text-4xl hud-glow-title` 고정, Auth만 `tracking-[0.3em]` 등. 아래는 리뷰 결과와 처방입니다.
 
-## 사진에서 읽어낸 핵심 특징
+## 진단 (파일:라인으로 확인된 것만)
 
-1. **껍질 방향**: 나선이 **우측 상단**에서 시작해 시계방향으로 감김. 입구는 **좌측**을 향함 (현재 디자인과 반대 방향)
-2. **줄무늬 패턴**: 껍질 외곽에서 중심으로 향하는 **방사형 갈색 스트라이프**. 외곽일수록 진하고 두꺼움, 중심으로 갈수록 가늘어지고 흐려짐. 균일하지 않고 자연스러운 불규칙성
-3. **컬러 그라데이션**:
-   - 껍질 상단(나선 안쪽): 따뜻한 **베이지/탠 톤** (`#d8b890`)
-   - 껍질 하단/입구 주변: 밝은 **크림/아이보리** (`#f0e4d0`)
-   - 스트라이프: 진한 갈색~다크브라운 (`#8a4a2a`, `#5a2818`)
-4. **눈**: 입구 위쪽 살색 부위에 **작은 검은 점 1개** + 흰 하이라이트 → 매우 인상적인 포인트
-5. **두건(hood)**: 입구 위로 **부드러운 살색 덮개**가 둥글게 덮여있음 (점박이 무늬 살짝)
-6. **촉수**: 입구에서 **얇고 긴 실 같은 촉수가 다발**로 흘러나옴 (15+ 가닥, 부드러운 흰살색, 끝이 가늘게 흩날림). 짧고 통통한 게 아니라 **얇고 우아하게 흩어짐**
-7. **림 라인**: 껍질 가장자리 따라 어두운 윤곽선 한 줄
+**1) 헤더 타이포 불일치**
+- `Priority/History/Collection`: `text-4xl font-bold tracking-widest hud-glow-title` (일관)
+- `Auth`: `text-4xl md:text-5xl tracking-[0.3em]` — trackings값이 다름
+- `Index.tsx:350` Focus 화면 제목: `text-3xl..lg:text-6xl bg-gradient-ocean bg-clip-text` — 완전히 다른 브랜딩
+- `Index.tsx:410` dive 큰 수치: `text-4xl md:text-5xl drop-shadow-[...rgba(255,255,255,...)]` — 테마 무시 하드코딩 그림자
 
-## 재디자인 방향
+**2) 수치 판독값(숫자) 규격 없음**
+- History의 큰 시간 숫자는 `text-3xl md:text-4xl font-bold` + `text-primary/80` 접미사
+- Priority 순위 배지는 `h-9 w-9 font-robotic`
+- Focus dive 큰 숫자는 `text-4xl..5xl font-extrabold`
+- 셋 다 "메인 판독값"인데 크기·굵기·색이 다 다름. `font-mono`(JetBrains Mono) 등록해놓고 실제 숫자엔 `font-robotic`을 쓰는 곳도 섞여 있음.
 
-### 실루엣 (32×32)
-- 우측 2/3을 채우는 **둥근 나선 껍질** (중심이 우상단)
-- 좌측 1/3은 **입구 + 두건 + 촉수 다발**
-- 전체 컴팩트한 원형 컴포지션
+**3) 섹션 헤더/서브라벨 규격 없음**
+- Priority: `text-xs uppercase tracking-widest text-primary font-bold`
+- History: `text-xs uppercase tracking-widest text-muted-foreground`
+- Collection: 서브라벨 없음 (subtitle이 `font-mono`)
+- 같은 역할인데 색·굵기가 매번 다름.
 
-### ASCII 시안 (방향 잡기용)
-```text
-............########............
-.........##2222222222##.........   ← 외곽 굵은 다크브라운 스트라이프
-.......##5222111122225##........
-......#5221111ccccc11225#.......   ← 안쪽으로 갈수록 베이지(c) 톤
-.....#522111ccccccccc1122#......
-....#52211ccccc222cccc112#......   ← 방사형 스트라이프 곡선
-....#5211ccccc2222cccc112#......
-...#5211cccc22222222ccc11##.....   ← 중심부 어두운 나선
-...#521cccc22222oo222cccc15#....   ← 중심 나선점
-...#521ccc222oooooo222ccc1#.....
-...#521ccc22ooooooo2222cc1#.....
-....#21cccc22oooo2222ccc1#......
-....#211ccccc22222222ccc#.......
-.....#211cccccccc2222cc#........
-......#2211ccccccc222##.........
-.......##5221111122##...........
-........4#41111##...............   ← 입구 윤곽 (어두운)
-........34411177...............   ← 두건(hood) 살색 + 점박이(7)
-.......344417774................   ← 작은 눈(3) + 흰점(7)
-......3444 77777................
-.....34447 7777.................   ← 두건 점박이 무늬
-....3444................
-...44 4 4 4 4...................   ← 얇은 촉수 다발 시작
-..4 4  4  4  4..................
-.4   4  4  4  4.................   ← 길고 얇게 흩어짐
-4   4   4   4...................
-.   4    4......................
-.................................
-```
-(실제 grid는 Python으로 정밀 생성 — ASCII는 컴포지션 방향만)
+**4) 페이지 컨테이너 규격 없음**
+- Collection: `max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6` + radial gradient 배경 2겹
+- History: 자체 `px-4 py-8` (배경 없음)
+- Priority: 자체 padding
+- Auth: 자체 padding
+- pb-28로 하단 nav 여백 확보하는 곳/안 하는 곳 섞임 → 하단 잘림 잠재 버그.
 
-### 팔레트 확장
-기존 `1, 2, 3, 4` 유지 + 색 추가:
-- `1 #f0e4d0` 크림 (입구 주변/하단)
-- `2 #8a4a2a` 갈색 스트라이프
-- `3 #2a1810` 다크 (눈/입구 그림자/윤곽)
-- `4 #f5e8d4` 두건 살색
-- `5 #5a2818` 진한 다크브라운 (외곽 굵은 줄)
-- `6 #d8b890` 베이지 탠 (껍질 중간 톤)
-- `7 #ffffff` 흰색 (눈 하이라이트 + 두건 점박이)
+**5) 상태 문구(빈 상태·로딩) 스타일 제각각**
+- Loading: `animate-pulse text-primary font-robotic tracking-widest` (History/Collection/Admin은 통일, Auth·Index는 다름)
+- Empty: Priority는 3종 상태 문구가 각기 다른 폰트/색
 
-### 핵심 디테일
-- **방사형 스트라이프**: 5~7가닥, 외곽에서 중심으로 곡선 그리며 가늘어짐, 끝이 페이드
-- **눈**: 1픽셀 검정 + 1픽셀 흰 하이라이트
-- **두건 점박이**: 흰 픽셀 3~4개를 살색 부위에 산포
-- **촉수**: 10~12가닥의 얇은 흰살색 라인, 길이/각도 모두 다르게, 끝으로 갈수록 흩어짐 (해파리처럼 늘어지지는 않게 — 어느 정도 모여있되 자연스럽게 펴짐)
+**6) 하드코딩 잔재 (테마 미반응)**
+- `Index.tsx:410` `drop-shadow-[0_0_12px_rgba(255,255,255,0.15)]` — sage/rose에서도 흰빛 유지됨
+- `Index.tsx:350` `bg-gradient-ocean` — 다른 4개 테마와 무관한 이름/색
 
-## 기술 세부
-- Python 스크립트로 32×32 grid 정밀 생성 후 교체
-- `colorMap`에 `5, 6, 7` 추가
-- `size`, `glowColor`, switch case, 애니메이션 매핑 그대로
-- `/dev/creatures` 또는 Bestiary에서 즉시 확인
+**7) BottomNav 대비 콘텐츠 여백**
+- BottomNav는 `fixed bottom-0 pb-safe`, 카드가 nav 뒤로 겹치는 페이지가 있음 (일관된 `pb-28 pb-safe` 없음).
 
-이 방향으로 진행해도 될까요?
+---
+
+## 처방: 공용 디자인 시스템 확립 → 페이지 이관
+
+### A. 토큰/유틸리티 확정 (`src/index.css` + `tailwind.config.ts`)
+
+새 유틸리티 클래스 추가 (한 곳에서 정의, 페이지는 클래스만 씀):
+
+- `.page-shell` — `min-h-screen bg-background px-4 pt-6 pb-28 max-w-2xl mx-auto` (모든 탭 컨테이너 규격, pb-28로 BottomNav 안전)
+- `.page-header` — 페이지 h1 규격: `text-3xl font-robotic font-bold uppercase tracking-[0.2em] text-primary hud-glow-title`
+- `.page-subtitle` — h1 밑 서브라벨: `mt-1 text-xs font-mono tracking-widest text-muted-foreground uppercase`
+- `.section-label` — 카드/그룹 위 소제목: `text-[11px] uppercase tracking-widest text-muted-foreground font-robotic`
+- `.readout-xl` — 큰 수치 판독값: `font-mono tabular-nums text-4xl font-bold text-primary`
+- `.readout-md` — 중간 수치: `font-mono tabular-nums text-2xl font-semibold text-primary`
+- `.state-loading` — 로딩 텍스트 통일
+- `.state-empty` — 빈 상태 텍스트 통일
+
+숫자엔 무조건 `font-mono` + `tabular-nums` (판독값 정렬), 라벨엔 `font-robotic` — 역할 분리 확정.
+
+### B. 공통 페이지 헤더 컴포넌트
+
+`src/components/common/PageHeader.tsx` 신규 (props: `title`, `subtitle?`, `right?`) — Priority/History/Collection/Auth 모두 사용. h1 스타일 재발명 금지.
+
+### C. 페이지별 이관 (기능/데이터 로직 무변경)
+
+1. **Focus (`Index.tsx` 350줄대 히어로 + 410줄대 큰 수치)**
+   - `bg-gradient-ocean` 제목 → `.page-header` 규격으로 교체 (테마 대응됨)
+   - 하드코딩된 흰빛 `drop-shadow`, 반응형 6xl 제거 → `.readout-xl`
+
+2. **Priority (`src/pages/Priority.tsx`)**
+   - h1 → `<PageHeader>` 사용, 인라인 `text-4xl` 제거
+   - `SectionTitle` 컴포넌트를 `.section-label` 유틸리티로 대체
+   - 순위 배지 숫자 `font-robotic` → `font-mono tabular-nums`
+   - 3종 빈 상태 문구 → `.state-empty` 통일
+
+3. **History (`src/pages/History.tsx`)**
+   - h1 → `<PageHeader title="ANALYTICS" subtitle="Your focus journey">` 
+   - 큰 시간 숫자(141/156/160/169줄대) → `.readout-xl` + 접미사 h/m는 `text-xl text-primary/60` 정규화
+   - 섹션 소제목(224줄대) → `.section-label`
+   - 로딩(141) → `.state-loading`
+
+4. **Collection (`src/pages/Collection.tsx`)**
+   - 컨테이너를 `.page-shell`로 (radial gradient 배경 2겹은 유지하되 컨테이너 밖으로 분리)
+   - h1 → `<PageHeader>` 
+   - 서브라벨 "SPECIMENS CATALOGUED n/total" → `.page-subtitle` + 카운터는 `font-mono tabular-nums`
+   - 카드 내부: rarity badge/pearl 카운터는 이미 mono 사용 중 → 유지
+
+5. **Auth (`src/pages/Auth.tsx`)**
+   - h1 → `<PageHeader>` (tracking 0.3em → 0.2em로 시스템 값 사용)
+   - 로딩 상태 → `.state-loading`
+   - 폼 필드/버튼은 이번 스코프 밖 (요청: 카드·헤더 중심)
+
+6. **BottomNav 여백 안전화**
+   - 모든 페이지가 `.page-shell` 쓰면 `pb-28` 자동 확보 → 잘림 버그 원천 제거
+
+### D. 검증
+- 5개 테마(ocean/sage/rose/lavender/mono)에서 4개 탭 스크린샷 회귀 확인 — 하드코딩 흰빛/블루가 다른 테마에서도 정상 재염색되는지.
+- Playwright로 iPhone 393px + iPad 768px 두 뷰포트에서 잘림 없는지.
+
+---
+
+## 안 하는 것 (스코프 밖)
+- 정보구조/기능 변경 없음. 카피 문구, 데이터 계산, 라우팅, 컴포넌트 분해 그대로.
+- 차트 내부 스타일(Recharts), 픽셀 크리쳐, PricingModal/EngineeringBayModal 내부 — 별도 턴에서.
+- 다크→라이트 모드 전환. 계속 다크.
+
+## 산출물
+새 파일 2개: `PageHeader.tsx`, 유틸리티 클래스 블록 (index.css 추가). 수정 파일 5개: Index/Priority/History/Collection/Auth. 총 클래스 치환 중심의 저위험 변경.
+
+## Technical Details
+- 유틸 클래스는 `@layer utilities`에 추가해 Tailwind purge 대상 포함.
+- `font-mono`는 이미 `tailwind.config.ts`에 JetBrains Mono로 등록됨(과거 턴). `tabular-nums`는 Tailwind 기본 유틸.
+- `PageHeader`는 순수 presentational, memo화 필요 없음.
+- 기존 `.hud-glow-title`는 그대로 재사용 (5개 테마 `--hud-glow` 이미 정의됨).

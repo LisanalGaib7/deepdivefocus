@@ -6,6 +6,7 @@ import { LocalTask } from "@/hooks/useTasks";
 import { getPriorityScore, sortByPriority } from "@/lib/priority";
 import { useSortMode } from "@/hooks/useSortMode";
 import { PriorityTaskList } from "@/features/priority/PriorityTaskList";
+import PageHeader from "@/components/common/PageHeader";
 
 type ScoreUpdate = {
   urgency?: number | null;
@@ -30,11 +31,7 @@ const formatEffort = (mins: number | null) => {
 };
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2
-    className="text-xs uppercase tracking-widest text-primary font-bold font-robotic"
-  >
-    {children}
-  </h2>
+  <h2 className="section-label">{children}</h2>
 );
 
 const Priority = ({
@@ -95,21 +92,21 @@ const Priority = ({
   const renderTop = () => {
     if (tasks.length === 0) {
       return (
-        <p className="text-sm text-muted-foreground text-center py-6">
+        <p className="state-empty">
           Add tasks from the Focus tab
         </p>
       );
     }
     if (allCompleted) {
       return (
-        <p className="text-sm text-primary text-center py-6 font-semibold">
+        <p className="text-sm text-primary text-center py-6 font-mono font-semibold">
           All tasks completed for today
         </p>
       );
     }
     if (!hasScored) {
       return (
-        <p className="text-sm text-muted-foreground text-center py-6">
+        <p className="state-empty">
           Score your tasks to see priorities here
         </p>
       );
@@ -125,7 +122,7 @@ const Priority = ({
               className="flex items-center gap-3 p-3 rounded-xl border border-primary/30 bg-primary/5"
             >
               <div
-                className="h-9 w-9 rounded-full flex items-center justify-center bg-primary/20 text-primary font-bold shrink-0 tabular-nums font-robotic"
+                className="h-9 w-9 rounded-full flex items-center justify-center bg-primary/20 text-primary font-bold shrink-0 font-mono tabular-nums"
               >
                 {idx + 1}
               </div>
@@ -168,14 +165,11 @@ const Priority = ({
   };
 
   return (
-    <div className="min-h-screen px-4 py-8 pb-28">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="page-shell">
+      <div className="page-shell-inner">
         {/* Header */}
-        <div className="text-center space-y-1 pt-4">
-          <h1 className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase hud-glow-title">
-            PRIORITY
-          </h1>
-        </div>
+        <PageHeader title="PRIORITY" />
+
 
         {/* Top: Now Doing */}
         <section className="rounded-2xl border border-border bg-card/50 p-4 space-y-3">
@@ -224,7 +218,7 @@ const Priority = ({
           </div>
 
           {displayedTasks.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="state-empty">
               No tasks yet
             </p>
           ) : (
