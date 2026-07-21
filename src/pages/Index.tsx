@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // Common components
 import BottomNav, { type BottomTab } from "@/components/common/BottomNav";
+import TabTransition from "@/components/common/TabTransition";
+import { useIdleWhileRunning } from "@/hooks/useIdleWhileRunning";
 
 
 // Feature components
@@ -20,7 +22,7 @@ import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
 import OxygenBar from "@/features/timer/OxygenBar";
 import EmergencyModal from "@/features/timer/EmergencyModal";
 import MissionCompleteModal from "@/features/timer/MissionCompleteModal";
-import DescentCeremony from "@/features/timer/DescentCeremony";
+import DiveIgnition from "@/features/timer/DiveIgnition";
 
 // Dive feature components (Phase 3 decomposition)
 import TopBar from "@/features/dive/TopBar";
@@ -310,8 +312,17 @@ const Index = () => {
     [taskHandlers]
   );
 
+  // Focus-mode chrome auto-fade. Deep-idle kicks after 4s of no input.
+  const isDeepIdle = useIdleWhileRunning(isRunning, 4000);
+  const chromeDimClass = isRunning
+    ? isDeepIdle
+      ? "focus-dim focus-dim-deep"
+      : "focus-dim"
+    : "";
+
   return (
     <>
+      <TabTransition activeKey={activeTab}>
       {activeTab === "history" ? (
         <History />
       ) : activeTab === "collection" ? (
@@ -331,17 +342,18 @@ const Index = () => {
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={timer.isDiveTransition} />
 
-          
-          <TopBar
-            showProBadge={monetizationUI.enabled && isPro}
-            onOpenPricing={handleOpenPricing}
-            isFullscreen={isFullscreen}
-            onToggleFullscreen={toggleFullscreen}
-            isSoundEnabled={isSoundEnabled}
-            onToggleSound={toggleSoundEnabled}
-            onOpenEngineeringBay={handleOpenEngineeringBay}
-            onLogout={handleLogout}
-          />
+          <div className={chromeDimClass}>
+            <TopBar
+              showProBadge={monetizationUI.enabled && isPro}
+              onOpenPricing={handleOpenPricing}
+              isFullscreen={isFullscreen}
+              onToggleFullscreen={toggleFullscreen}
+              isSoundEnabled={isSoundEnabled}
+              onToggleSound={toggleSoundEnabled}
+              onOpenEngineeringBay={handleOpenEngineeringBay}
+              onLogout={handleLogout}
+            />
+          </div>
 
 
           <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
@@ -357,18 +369,22 @@ const Index = () => {
 
         {/* Timer Circle - Submarine HUD Gauge */}
         <div className="flex flex-col items-center gap-6">
-          <DiveGauge
-            ref={timer.svgRef}
-            setDuration={timer.setDuration}
-            timeLeft={timer.timeLeft}
-            isRunning={isRunning}
-            isDragging={timer.isDragging}
-            displayProgress={timer.displayProgress}
-            depth={depth}
-            isAtMaxDepth={isAtMaxDepth}
-            onMouseDown={timer.handleMouseDown}
-            onTouchStart={timer.handleTouchStart}
-          />
+          <div className="relative">
+            <DiveGauge
+              ref={timer.svgRef}
+              setDuration={timer.setDuration}
+              timeLeft={timer.timeLeft}
+              isRunning={isRunning}
+              isDragging={timer.isDragging}
+              displayProgress={timer.displayProgress}
+              depth={depth}
+              isAtMaxDepth={isAtMaxDepth}
+              onMouseDown={timer.handleMouseDown}
+              onTouchStart={timer.handleTouchStart}
+            />
+            {/* Dive-start hairline sweep (instrument-panel cue) */}
+            <DiveIgnition active={timer.isDiveTransition && isRunning} />
+          </div>
 
 
           
@@ -438,22 +454,27 @@ const Index = () => {
           />
         )}
 
-        <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
+        <div className={chromeDimClass}>
+          <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
+        </div>
 
-        <AmbientSoundMixer
-          sounds={sounds}
-          toggleSound={toggleSound}
-          activeSoundsCount={activeSoundsCount}
-        />
+        <div className={chromeDimClass}>
+          <AmbientSoundMixer
+            sounds={sounds}
+            toggleSound={toggleSound}
+            activeSoundsCount={activeSoundsCount}
+          />
+        </div>
 
           </div>
         </div>
       )}
+      </TabTransition>
 
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} dimmed={isRunning && activeTab === "focus"} />
 
-      {/* Descent Ceremony — pressure collapse ritual at dive start */}
-      <DescentCeremony active={timer.isDiveTransition && isRunning} targetDepth={Math.max(depth, 120)} />
+
+      
 
       {/* Fullscreen Immersion Flash */}
       {showOverlay && (

@@ -7,6 +7,8 @@ export type BottomTab = "focus" | "priority" | "history" | "collection";
 interface BottomNavProps {
   activeTab: BottomTab;
   onTabChange: (tab: BottomTab) => void;
+  /** When true, nav dims to blend into focus-mode immersion. Hover/focus restores it. */
+  dimmed?: boolean;
 }
 
 const TABS: { id: BottomTab; label: string; icon: LucideIcon }[] = [
@@ -16,14 +18,14 @@ const TABS: { id: BottomTab; label: string; icon: LucideIcon }[] = [
   { id: "collection", label: "Collection", icon: Fish },
 ];
 
-const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
+const BottomNav = ({ activeTab, onTabChange, dimmed = false }: BottomNavProps) => {
   const { currentTheme } = useTheme();
   const primaryColor = getThemePrimaryHsl(currentTheme);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
+    <nav className={`fixed bottom-0 left-0 right-0 z-50 pb-safe ${dimmed ? "focus-dim" : ""}`}>
       <div className="max-w-md mx-auto px-4 pb-4">
-        <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-1 shadow-lg">
+        <div className={`bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-1 shadow-lg ${dimmed ? "bg-card/40" : ""}`}>
           {TABS.map(({ id, label, icon: Icon }) => {
             const active = activeTab === id;
             return (
