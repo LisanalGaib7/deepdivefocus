@@ -20,6 +20,7 @@ import DeepSeaAmbience from "@/features/timer/DeepSeaAmbience";
 import OxygenBar from "@/features/timer/OxygenBar";
 import EmergencyModal from "@/features/timer/EmergencyModal";
 import MissionCompleteModal from "@/features/timer/MissionCompleteModal";
+import DescentCeremony from "@/features/timer/DescentCeremony";
 
 // Dive feature components (Phase 3 decomposition)
 import TopBar from "@/features/dive/TopBar";
