@@ -235,7 +235,7 @@ const Priority = ({
 
           {displayedTasks.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              태스크가 없습니다
+              No tasks yet
             </p>
           ) : (
             <div className="relative">
