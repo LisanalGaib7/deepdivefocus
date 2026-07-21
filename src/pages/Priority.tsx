@@ -97,21 +97,21 @@ const Priority = ({
     if (tasks.length === 0) {
       return (
         <p className="text-sm text-muted-foreground text-center py-6">
-          Focus 탭에서 태스크를 추가하세요
+          Add tasks from the Focus tab
         </p>
       );
     }
     if (allCompleted) {
       return (
         <p className="text-sm text-primary text-center py-6 font-semibold">
-          오늘 할 일을 모두 완료했어요 🎉
+          All tasks completed for today 🎉
         </p>
       );
     }
     if (!hasScored) {
       return (
         <p className="text-sm text-muted-foreground text-center py-6">
-          점수를 매기면 여기에 우선순위가 표시됩니다
+          Score your tasks to see priorities here
         </p>
       );
     }
