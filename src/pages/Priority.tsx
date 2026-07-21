@@ -31,8 +31,7 @@ const formatEffort = (mins: number | null) => {
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <h2
-    className="text-xs uppercase tracking-widest text-primary font-bold"
-    style={{ fontFamily: "Orbitron, sans-serif" }}
+    className="text-xs uppercase tracking-widest text-primary font-bold font-robotic"
   >
     {children}
   </h2>
@@ -126,8 +125,7 @@ const Priority = ({
               className="flex items-center gap-3 p-3 rounded-xl border border-primary/30 bg-primary/5"
             >
               <div
-                className="h-9 w-9 rounded-full flex items-center justify-center bg-primary/20 text-primary font-bold shrink-0 tabular-nums"
-                style={{ fontFamily: "Orbitron, sans-serif" }}
+                className="h-9 w-9 rounded-full flex items-center justify-center bg-primary/20 text-primary font-bold shrink-0 tabular-nums font-robotic"
               >
                 {idx + 1}
               </div>
@@ -157,8 +155,7 @@ const Priority = ({
               <Button
                 size="sm"
                 onClick={() => onSelectAndDive(task.id)}
-                className="h-10 px-3 text-[11px] uppercase tracking-widest font-bold shrink-0"
-                style={{ fontFamily: "Orbitron, sans-serif" }}
+                className="h-10 px-3 text-[11px] uppercase tracking-widest font-bold shrink-0 font-robotic"
               >
                 <Rocket className="h-3.5 w-3.5 mr-1" />
                 Dive
@@ -214,12 +211,11 @@ const Priority = ({
                   role="tab"
                   aria-selected={active}
                   onClick={() => setSortMode(m)}
-                  className={`min-h-10 rounded-md text-[11px] uppercase tracking-widest font-bold transition-colors ${
+                  className={`min-h-10 rounded-md text-[11px] uppercase tracking-widest font-bold transition-colors font-robotic ${
                     active
                       ? "bg-primary/20 text-primary shadow-[0_0_8px_hsl(var(--primary)/0.35)]"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
-                  style={{ fontFamily: "Orbitron, sans-serif" }}
                 >
                   {m === "priority" ? "By Priority" : "Manual Order"}
                 </button>
@@ -270,8 +266,7 @@ const Divider = ({ label }: { label: string }) => (
   <div className="flex items-center gap-3 pt-2 pb-1">
     <div className="h-px flex-1 bg-border" />
     <span
-      className="text-[10px] uppercase tracking-widest text-muted-foreground/70"
-      style={{ fontFamily: "Orbitron, sans-serif" }}
+      className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-robotic"
     >
       {label}
     </span>
