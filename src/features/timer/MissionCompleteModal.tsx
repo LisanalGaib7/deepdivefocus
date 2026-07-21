@@ -13,6 +13,7 @@ import { formatMinutesSeconds } from "@/lib/formatTime";
 import PixelCreature from "@/components/common/PixelCreature";
 import PearlBadge from "@/components/common/PearlBadge";
 import { Anchor, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface MissionCompleteModalProps {
   open: boolean;
@@ -22,6 +23,35 @@ interface MissionCompleteModalProps {
   sessionDuration: number;
   /** True if this is the user's first time unlocking this creature. */
   isNewDiscovery?: boolean;
+}
+
+/** Small pearl count-up (0 → target over ~450ms). Respects reduced motion. */
+function useCountUp(target: number, active: boolean, durationMs = 450) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!active) {
+      setValue(0);
+      return;
+    }
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced || target === 0) {
+      setValue(target);
+      return;
+    }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / durationMs);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, active, durationMs]);
+  return value;
 }
 
 export const MissionCompleteModal = ({
@@ -34,7 +64,19 @@ export const MissionCompleteModal = ({
 }: MissionCompleteModalProps) => {
   const pearls = creature ? getPearlValue(creature.rarity) : 0;
 
-  // formatMinutesSeconds imported from @/lib/formatTime
+  // Pearl count-up starts ~700ms after open (stage-delay-3).
+  const [countUpActive, setCountUpActive] = useState(false);
+  useEffect(() => {
+    if (open) {
+      const t = setTimeout(() => setCountUpActive(true), 700);
+      return () => {
+        clearTimeout(t);
+        setCountUpActive(false);
+      };
+    }
+    setCountUpActive(false);
+  }, [open]);
+  const animatedPearls = useCountUp(pearls, countUpActive);
 
   return (
     <AlertDialog open={open}>
@@ -44,7 +86,7 @@ export const MissionCompleteModal = ({
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         </div>
 
-        <AlertDialogHeader className="relative space-y-2">
+        <AlertDialogHeader className="relative space-y-2 stage-reveal">
           <div className="flex items-center justify-center mb-2">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
@@ -65,11 +107,11 @@ export const MissionCompleteModal = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        {/* Creature Reward Section — sonar-scanned reveal */}
+        {/* Creature Reward Section — staged sonar reveal */}
         {creature && (
           <div className="relative flex flex-col items-center my-4">
-            {/* Expanding sonar ping */}
-            <div className="relative">
+            {/* Expanding sonar ping + creature zoom-in */}
+            <div className="relative stage-reveal-zoom stage-delay-1">
               <div
                 className="absolute inset-0 rounded-full border border-primary/50 pointer-events-none"
                 style={{ animation: "sonar 3s cubic-bezier(0.215,0.61,0.355,1) infinite" }}
@@ -88,14 +130,14 @@ export const MissionCompleteModal = ({
             </div>
 
             <h3
-              className={`mt-6 text-2xl font-robotic font-bold tracking-wide ${getRarityColor(
+              className={`mt-6 text-2xl font-robotic font-bold tracking-wide stage-reveal stage-delay-2 ${getRarityColor(
                 creature.rarity
               )} drop-shadow-[0_0_10px_hsl(var(--primary))]`}
             >
               {creature.name}
             </h3>
             <p
-              className={`text-[10px] font-robotic tracking-[0.3em] uppercase mt-1 ${
+              className={`text-[10px] font-robotic tracking-[0.3em] uppercase mt-1 stage-reveal stage-delay-2 ${
                 creature.rarity === "Common"
                   ? "text-gray-400"
                   : creature.rarity === "Rare"
@@ -106,13 +148,15 @@ export const MissionCompleteModal = ({
               {creature.rarity}
             </p>
 
-            <PearlBadge amount={pearls} variant="reward" className="mt-3" />
+            <div className="stage-reveal stage-delay-3 mt-3">
+              <PearlBadge amount={animatedPearls} variant="reward" />
+            </div>
           </div>
         )}
 
         {/* Session log — glass panel with left neon accent */}
         <div
-          className="p-4 border-l-2 border-primary rounded-r-md"
+          className="p-4 border-l-2 border-primary rounded-r-md stage-reveal stage-delay-3"
           style={{
             background:
               "linear-gradient(180deg, hsl(var(--primary) / 0.06) 0%, transparent 100%)",
@@ -139,7 +183,7 @@ export const MissionCompleteModal = ({
           </div>
         </div>
 
-        <AlertDialogFooter className="mt-4 mb-2">
+        <AlertDialogFooter className="mt-4 mb-2 stage-reveal stage-delay-4">
           <Button
             onClick={onClose}
             variant="outline"
