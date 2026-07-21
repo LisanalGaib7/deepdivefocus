@@ -437,9 +437,7 @@ const Index = () => {
           </div>
         )}
 
-        <div className="glass-tile p-5">
-          <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
-        </div>
+        <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
 
         <div className="glass-tile p-5">
           <AmbientSoundMixer
