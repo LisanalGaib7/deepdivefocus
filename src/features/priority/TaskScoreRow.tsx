@@ -17,27 +17,27 @@ interface TaskScoreRowProps {
 }
 
 const URGENCY_OPTIONS: { value: number; label: string }[] = [
-  { value: 1, label: "언제든" },
-  { value: 2, label: "이번주" },
-  { value: 3, label: "며칠내" },
-  { value: 4, label: "오늘중" },
-  { value: 5, label: "지금당장" },
+  { value: 1, label: "Anytime" },
+  { value: 2, label: "This week" },
+  { value: 3, label: "Few days" },
+  { value: 4, label: "Today" },
+  { value: 5, label: "Right now" },
 ];
 
 const IMPACT_OPTIONS: { value: number; label: string }[] = [
-  { value: 1, label: "사소함" },
-  { value: 2, label: "조금" },
-  { value: 3, label: "보통" },
-  { value: 4, label: "큼" },
-  { value: 5, label: "결정적" },
+  { value: 1, label: "Trivial" },
+  { value: 2, label: "Minor" },
+  { value: 3, label: "Normal" },
+  { value: 4, label: "Major" },
+  { value: 5, label: "Critical" },
 ];
 
 const EFFORT_OPTIONS: { value: number; label: string }[] = [
-  { value: 5, label: "5분" },
-  { value: 15, label: "15분" },
-  { value: 30, label: "30분" },
-  { value: 60, label: "1시간" },
-  { value: 120, label: "2시간+" },
+  { value: 5, label: "5m" },
+  { value: 15, label: "15m" },
+  { value: 30, label: "30m" },
+  { value: 60, label: "1h" },
+  { value: 120, label: "2h+" },
 ];
 
 interface SegmentGroupProps {
