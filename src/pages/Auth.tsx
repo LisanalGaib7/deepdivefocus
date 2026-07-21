@@ -104,7 +104,7 @@ const Auth = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-card flex items-center justify-center">
         <div className="animate-pulse text-primary font-robotic">INITIALIZING SYSTEMS...</div>
       </div>
     );
