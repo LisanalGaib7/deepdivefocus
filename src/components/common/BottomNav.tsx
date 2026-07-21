@@ -11,9 +11,9 @@ interface BottomNavProps {
 
 const TABS: { id: BottomTab; label: string; icon: LucideIcon }[] = [
   { id: "focus", label: "Focus", icon: Timer },
+  { id: "priority", label: "Priority", icon: Flag },
   { id: "history", label: "History", icon: BarChart3 },
   { id: "collection", label: "Collection", icon: Fish },
-  { id: "priority", label: "Priority", icon: Flag },
 ];
 
 const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
