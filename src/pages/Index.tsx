@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // Common components
 import BottomNav, { type BottomTab } from "@/components/common/BottomNav";
+import TabTransition from "@/components/common/TabTransition";
+import { useIdleWhileRunning } from "@/hooks/useIdleWhileRunning";
 
 
 // Feature components
@@ -452,8 +454,7 @@ const Index = () => {
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Descent Ceremony — pressure collapse ritual at dive start */}
-      <DescentCeremony active={timer.isDiveTransition && isRunning} targetDepth={Math.max(depth, 120)} />
+      
 
       {/* Fullscreen Immersion Flash */}
       {showOverlay && (
