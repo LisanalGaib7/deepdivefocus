@@ -30,11 +30,7 @@ const formatEffort = (mins: number | null) => {
 };
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2
-    className="text-xs uppercase tracking-widest text-primary font-bold font-robotic"
-  >
-    {children}
-  </h2>
+  <h2 className="section-label">{children}</h2>
 );
 
 const Priority = ({
