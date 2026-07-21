@@ -189,7 +189,7 @@ interface CreatureCardProps {
 }
 
 
-const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
+const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
   const styles = getRarityStyle(creature.rarity, unlocked);
   const pixelType = creature.id;
 
