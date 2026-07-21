@@ -347,10 +347,10 @@ const Index = () => {
         {/* Header - hidden in focus mode */}
         {!isRunning && (
           <div className="text-center space-y-1 pt-8 md:pt-0 px-12 md:px-0">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-ocean bg-clip-text text-transparent">
+            <h1 className="page-header">
               DEEP DIVE
             </h1>
-            <p className="text-foreground/60 text-sm sm:text-base font-medium">Deep work without distractions</p>
+            <p className="page-subtitle">Deep work without distractions</p>
           </div>
         )}
 
@@ -407,7 +407,7 @@ const Index = () => {
         {/* Focus Mode: Show only selected task when running */}
         {isRunning && selectedTask && !selectedTask.isCompleted && (
           <div className="text-center animate-fade-in mt-2">
-            <p className="text-4xl md:text-5xl font-extrabold text-foreground/90 drop-shadow-[0_0_12px_rgba(255,255,255,0.15)] tracking-wide">
+            <p className="text-4xl md:text-5xl font-extrabold text-primary tracking-wide" style={{ textShadow: '0 0 20px hsl(var(--primary) / 0.35)' }}>
               {selectedTask.text}
             </p>
           </div>

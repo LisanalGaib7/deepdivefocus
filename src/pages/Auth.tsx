@@ -105,7 +105,7 @@ const Auth = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-card flex items-center justify-center">
-        <div className="animate-pulse text-primary font-robotic">INITIALIZING SYSTEMS...</div>
+        <div className="state-loading">INITIALIZING SYSTEMS...</div>
       </div>
     );
   }
@@ -153,12 +153,10 @@ const Auth = () => {
           </div>
 
           <div className="text-center space-y-2">
-            <h1 
-              className="text-4xl md:text-5xl font-robotic font-bold tracking-[0.3em] text-primary hud-glow-title"
-            >
+            <h1 className="page-header text-4xl">
               DEEP DIVE
             </h1>
-            <p className="font-robotic text-sm tracking-widest text-primary">
+            <p className="page-subtitle text-primary">
               {isSignUp ? 'CREW REGISTRATION' : 'PILOT AUTHENTICATION'}
             </p>
           </div>

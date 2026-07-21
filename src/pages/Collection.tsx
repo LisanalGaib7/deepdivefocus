@@ -5,6 +5,7 @@ import { getPearlValue } from "@/lib/lootSystem";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useUserCreatures } from "@/hooks/useUserCreatures";
 import PixelCreature from "@/components/common/PixelCreature";
+import PageHeader from "@/components/common/PageHeader";
 
 const UNLOCK_ALL_FOR_TESTING = false;
 
@@ -121,8 +122,8 @@ const Collection = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 flex items-center justify-center">
-        <div className="animate-pulse text-primary font-robotic tracking-widest">
+      <div className="page-shell flex items-center justify-center">
+        <div className="state-loading">
           SCANNING SPECIMENS...
         </div>
       </div>
@@ -130,7 +131,7 @@ const Collection = () => {
   }
 
   return (
-    <div className="h-screen bg-background text-foreground overflow-y-auto relative">
+    <div className="page-shell relative overflow-y-auto h-screen">
       {/* Deep sea radial gradient background */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -145,28 +146,29 @@ const Collection = () => {
         }}
       />
 
-      <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6 relative z-10">
+      <div className="page-shell-inner relative z-10">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 
-            className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase hud-glow-title"
-          >
-            BESTIARY
-          </h1>
-          <p className="text-muted-foreground text-sm font-mono tracking-wider">
-            SPECIMENS CATALOGUED: <span className="text-primary">{collectedCount}</span>/{totalCount}
-          </p>
-          {/* Progress bar */}
-          <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden mt-4 border border-slate-800">
-            <div 
-              className="h-full bg-gradient-to-r from-primary-deep to-primary transition-all duration-500"
-              style={{ 
-                width: `${(collectedCount / totalCount) * 100}%`,
-                boxShadow: `0 0 15px hsl(var(--primary) / 0.6)`
-              }}
-            />
-          </div>
+        <PageHeader
+          title="BESTIARY"
+          subtitle={
+            <>
+              SPECIMENS CATALOGUED:{" "}
+              <span className="text-primary font-mono tabular-nums">{collectedCount}</span>
+              /{totalCount}
+            </>
+          }
+        />
+        {/* Progress bar */}
+        <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div 
+            className="h-full bg-gradient-to-r from-primary-deep to-primary transition-all duration-500"
+            style={{ 
+              width: `${(collectedCount / totalCount) * 100}%`,
+              boxShadow: `0 0 15px hsl(var(--primary) / 0.6)`
+            }}
+          />
         </div>
+
 
         {/* Creature Grid */}
         <div className="grid grid-cols-2 gap-4">

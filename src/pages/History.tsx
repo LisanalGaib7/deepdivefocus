@@ -11,6 +11,7 @@ import TimeRangeSelector from "@/components/common/TimeRangeSelector";
 import { useProStatus } from "@/hooks/useProStatus";
 import { PricingModal } from "@/features/monetization";
 import { useHistoryRangeLock, useMonetizationUI } from "@/features/monetization/gating";
+import PageHeader from "@/components/common/PageHeader";
 
 
 
@@ -137,8 +138,8 @@ const History = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground px-4 py-8 pb-28 flex items-center justify-center">
-        <div className="animate-pulse text-primary font-robotic tracking-widest">
+      <div className="page-shell flex items-center justify-center">
+        <div className="state-loading">
           LOADING DIVE LOGS...
         </div>
       </div>
@@ -153,11 +154,11 @@ const History = () => {
       return (
         <span className="inline-flex items-baseline">
           <span>{hours}</span>
-          <span className="text-3xl md:text-4xl ml-1 text-primary/80 font-bold">h</span>
+          <span className="readout-unit">h</span>
           {mins > 0 && (
             <>
               <span className="ml-2">{mins}</span>
-              <span className="text-3xl md:text-4xl ml-1 text-primary/80 font-bold">m</span>
+              <span className="readout-unit">m</span>
             </>
           )}
         </span>
@@ -166,22 +167,17 @@ const History = () => {
     return (
       <span className="inline-flex items-baseline">
         <span>{minutes}</span>
-        <span className="text-3xl md:text-4xl ml-1 text-primary/80 font-bold">m</span>
+        <span className="readout-unit">m</span>
       </span>
     );
   };
 
   return (
-    <div className="h-screen bg-background text-foreground overflow-y-auto">
-      <div className="max-w-2xl mx-auto px-4 py-8 pb-28 space-y-6">
+    <div className="page-shell h-screen overflow-y-auto">
+      <div className="page-shell-inner">
         {/* Header */}
-        <div className="text-center">
-          <h1 
-            className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase hud-glow-title"
-          >
-            ANALYTICS
-          </h1>
-        </div>
+        <PageHeader title="ANALYTICS" subtitle="Your focus journey" />
+
 
         {/* FIXED: Yearly Depth Log - Always shows full year regardless of filter */}
         <YearlyDepthLog sessions={allFormattedSessions} />
