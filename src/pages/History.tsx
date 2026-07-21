@@ -176,7 +176,7 @@ const History = () => {
     <div className="page-shell h-screen overflow-y-auto">
       <div className="page-shell-inner">
         {/* Header */}
-        <PageHeader title="ANALYTICS" subtitle="Your focus journey" />
+        <PageHeader title="ANALYTICS" />
 
 
         {/* FIXED: Yearly Depth Log - Always shows full year regardless of filter */}
@@ -209,35 +209,33 @@ const History = () => {
             </div>
           )}
 
-          <div className={rangeLocked ? "opacity-30 pointer-events-none select-none blur-sm transition-all" : "transition-all"}>
+          <div className={rangeLocked ? "opacity-30 pointer-events-none select-none blur-sm transition-all space-y-4" : "transition-all space-y-4"}>
 
-            {/* ===== BENTO GRID STATS ===== */}
-        <div className="space-y-3">
-          {/* Hero Card - Full Width with Tight Grouping */}
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-primary/30">
-            {/* Header Row: Label + Date Badge (Flex Aligned) */}
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">
-                Total Focus Time
-              </p>
-              {getDateRangeText(timeRange) && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
-                  <Calendar className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {getDateRangeText(timeRange)}
-                  </span>
-                </div>
-              )}
+            {/* Hero Card - Full Width */}
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-primary/30">
+              {/* Header Row: Label + Date Badge (Flex Aligned) */}
+              <div className="flex justify-between items-center mb-2">
+                <p className="section-label">
+                  Total Focus Time
+                </p>
+                {getDateRangeText(timeRange) && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/50 border border-border/30 backdrop-blur-sm">
+                    <Calendar className="w-3 h-3 text-muted-foreground" />
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {getDateRangeText(timeRange)}
+                    </span>
+                  </div>
+                )}
+              </div>
+              
+              {/* Big Number with Styled Unit */}
+              <div className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
+                {formatHeroTime(filteredStats.totalMinutes)}
+              </div>
             </div>
-            
-            {/* Big Number with Styled Unit */}
-            <div className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
-              {formatHeroTime(filteredStats.totalMinutes)}
-            </div>
-          </div>
 
-          {/* Sub Cards - 2 Columns with Tight Grouping */}
-          <div className="grid grid-cols-2 gap-3">
+            {/* Sub Cards - 2 Columns */}
+            <div className="grid grid-cols-2 gap-4">
             {/* Total Sessions */}
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
               <div className="flex flex-col gap-1">
@@ -263,12 +261,13 @@ const History = () => {
               </div>
             </div>
           </div>
-        </div>
+
+
 
         {/* ===== CHART SECTION ===== */}
         {/* Weekly Bar Chart */}
         <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
-          <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Weekly Focus</h2>
+          <h2 className="section-label mb-4">Weekly Focus</h2>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart 
               data={weeklyData} 
@@ -356,7 +355,7 @@ const History = () => {
         {/* Task Breakdown Donut Chart */}
         {taskBreakdown.length > 0 && (
           <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
-            <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Task Breakdown</h2>
+            <h2 className="section-label mb-4">Task Breakdown</h2>
             <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
               <ResponsiveContainer width="100%" height={160} className="md:w-1/2">
                 <PieChart>
