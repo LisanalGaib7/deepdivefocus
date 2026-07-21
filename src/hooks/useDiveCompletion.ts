@@ -167,7 +167,12 @@ export function useDiveCompletion(deps: {
       setIsNewDiscovery(false); // will be set asynchronously below
 
       hapticsSuccess();
-      setShowMissionCompleteModal(true);
+      // "Surface" cue delay before the modal opens — lets ambience settle.
+      const prefersReduced =
+        typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      const surfaceDelay = prefersReduced ? 0 : 500;
+      setTimeout(() => setShowMissionCompleteModal(true), surfaceDelay);
 
       const basePearls = Math.floor(currentDepth / 10);
       const creatureBonus = creature ? getPearlValue(creature.rarity) : 0;
