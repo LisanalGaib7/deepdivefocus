@@ -154,6 +154,8 @@ All colors MUST be HSL.
 
     --gradient-start: 270 67% 77%;
     --gradient-end: 265 75% 60%;
+
+    --hud-glow: 270 80% 85%;
   }
 
   /* Mono Theme (Black & White) */
