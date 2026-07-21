@@ -13,6 +13,9 @@ export interface Task {
   time_spent_seconds: number;
   last_active_date: string | null;
   sort_order: number | null;
+  urgency: number | null;
+  impact: number | null;
+  effort_minutes: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -25,7 +28,11 @@ export interface LocalTask {
   timeSpentInSeconds: number;
   lastActiveDate: string;
   sortOrder: number;
+  urgency: number | null;
+  impact: number | null;
+  effortMinutes: number | null;
 }
+
 
 const readGuestTasks = (): LocalTask[] => readJSON<LocalTask[]>(STORAGE_KEYS.tasks, []);
 const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, tasks);
@@ -49,31 +56,36 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
     return {
       id: dbTask.id,
       text: dbTask.title,
-      isCompleted: dbTask.is_completed,
+      isCompleted: needsReset ? false : dbTask.is_completed,
       timeSpentInSeconds: needsReset ? 0 : dbTask.time_spent_seconds,
       lastActiveDate: needsReset ? today : (dbTask.last_active_date || today),
       sortOrder: dbTask.sort_order ?? 0,
+      urgency: dbTask.urgency,
+      impact: dbTask.impact,
+      effortMinutes: dbTask.effort_minutes,
     };
   };
+
  
    // Fetch tasks from database
    const fetchTasks = useCallback(async () => {
      if (!user || isGuestMode) {
         // Load from localStorage for guests, with daily reset
-        const parsed = readGuestTasks();
-        if (parsed.length > 0) {
-          const today = getTodayLocal();
-          const resetTasks = parsed.map(t =>
-            t.lastActiveDate !== today
-              ? { ...t, timeSpentInSeconds: 0, lastActiveDate: today }
-              : t
-          );
-          writeGuestTasks(resetTasks);
-          setTasks(resetTasks);
-        }
-        setLoading(false);
-        return;
-     }
+         const parsed = readGuestTasks();
+         if (parsed.length > 0) {
+           const today = getTodayLocal();
+           const resetTasks = parsed.map(t =>
+             t.lastActiveDate !== today
+               ? { ...t, timeSpentInSeconds: 0, isCompleted: false, lastActiveDate: today }
+               : t
+           );
+           writeGuestTasks(resetTasks);
+           setTasks(resetTasks);
+         }
+         setLoading(false);
+         return;
+      }
+
 
  
      const { data, error } = await supabase
@@ -96,7 +108,7 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
           if (dbTask.last_active_date !== today) {
             supabase
               .from('tasks')
-              .update({ time_spent_seconds: 0, last_active_date: today })
+              .update({ time_spent_seconds: 0, is_completed: false, last_active_date: today })
               .eq('id', dbTask.id)
               .eq('user_id', user!.id)
               .then();
@@ -112,14 +124,18 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
  
      if (!user || isGuestMode) {
        // Guest mode: local storage
-         const newTask: LocalTask = {
-           id: Date.now().toString(),
-           text: title.trim(),
-           isCompleted: false,
-           timeSpentInSeconds: 0,
-           lastActiveDate: getTodayLocal(),
-           sortOrder: tasks.length,
-         };
+          const newTask: LocalTask = {
+            id: Date.now().toString(),
+            text: title.trim(),
+            isCompleted: false,
+            timeSpentInSeconds: 0,
+            lastActiveDate: getTodayLocal(),
+            sortOrder: tasks.length,
+            urgency: null,
+            impact: null,
+            effortMinutes: null,
+          };
+
        setTasks(prev => {
          const updated = [...prev, newTask];
          writeGuestTasks(updated);
@@ -187,7 +203,47 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
      setTasks(prev =>
        prev.map(t => (t.id === taskId ? { ...t, ...updates } : t))
      );
-   }, [user, isGuestMode]);
+    }, [user, isGuestMode]);
+
+    // Update priority scoring fields (urgency, impact, effortMinutes)
+    const updateTaskScores = useCallback(async (
+      taskId: string,
+      updates: { urgency?: number | null; impact?: number | null; effortMinutes?: number | null }
+    ) => {
+      // Optimistic local update first
+      setTasks(prev =>
+        prev.map(t => (t.id === taskId ? { ...t, ...updates } : t))
+      );
+
+      if (!user || isGuestMode) {
+        const parsed = readGuestTasks();
+        if (parsed.length > 0) {
+          const updated = parsed.map(t =>
+            t.id === taskId ? { ...t, ...updates } : t
+          );
+          writeGuestTasks(updated);
+        }
+        return;
+      }
+
+      const dbUpdates: Partial<Task> = {};
+      if (updates.urgency !== undefined) dbUpdates.urgency = updates.urgency;
+      if (updates.impact !== undefined) dbUpdates.impact = updates.impact;
+      if (updates.effortMinutes !== undefined) dbUpdates.effort_minutes = updates.effortMinutes;
+
+      const { error } = await supabase
+        .from('tasks')
+        .update(dbUpdates)
+        .eq('id', taskId)
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error updating task scores:', error);
+        toast.error('Failed to update priority');
+      }
+    }, [user, isGuestMode]);
+
+
  
    // Delete a task
    const deleteTask = useCallback(async (taskId: string) => {
@@ -322,6 +378,8 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
       loading,
       addTask,
       updateTask,
+      updateTaskScores,
+
       deleteTask,
       incrementTimeSpent,
       saveTimeSpent,
