@@ -135,13 +135,13 @@ const Collection = () => {
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 50% 30%, ${themeColors.glowRgba.replace('0.3', '0.15')} 0%, rgba(0, 0, 0, 0) 60%)`,
+          background: `radial-gradient(ellipse at 50% 30%, hsl(var(--primary) / 0.15) 0%, rgba(0, 0, 0, 0) 60%)`,
         }}
       />
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 50% 100%, ${themeColors.glowRgba.replace('0.3', '0.2')} 0%, rgba(0, 0, 0, 0) 50%)`,
+          background: `radial-gradient(ellipse at 50% 100%, hsl(var(--primary) / 0.2) 0%, rgba(0, 0, 0, 0) 50%)`,
         }}
       />
 
@@ -149,20 +149,20 @@ const Collection = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 
-            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-robotic uppercase hud-glow-title`}
+            className="text-4xl font-bold tracking-widest text-primary font-robotic uppercase hud-glow-title"
           >
             BESTIARY
           </h1>
           <p className="text-muted-foreground text-sm font-mono tracking-wider">
-            SPECIMENS CATALOGUED: <span className={themeColors.text}>{collectedCount}</span>/{totalCount}
+            SPECIMENS CATALOGUED: <span className="text-primary">{collectedCount}</span>/{totalCount}
           </p>
           {/* Progress bar */}
           <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden mt-4 border border-slate-800">
             <div 
-              className={`h-full bg-gradient-to-r ${themeColors.gradient} transition-all duration-500`}
+              className="h-full bg-gradient-to-r from-primary-deep to-primary transition-all duration-500"
               style={{ 
                 width: `${(collectedCount / totalCount) * 100}%`,
-                boxShadow: `0 0 15px ${themeColors.glowRgba.replace('0.3', '0.6')}`
+                boxShadow: `0 0 15px hsl(var(--primary) / 0.6)`
               }}
             />
           </div>
@@ -175,7 +175,6 @@ const Collection = () => {
               key={creature.id} 
               creature={creature} 
               unlocked={isCollected(creature.id)}
-              themeColors={themeColors}
             />
           ))}
         </div>
@@ -187,8 +186,8 @@ const Collection = () => {
 interface CreatureCardProps {
   creature: Creature;
   unlocked: boolean;
-  themeColors: ThemeColorTokens;
 }
+
 
 const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) => {
   const styles = getRarityStyle(creature.rarity, unlocked);
