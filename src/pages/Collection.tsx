@@ -4,15 +4,16 @@ import { CREATURES, Creature } from "@/data/creatures";
 import { getPearlValue } from "@/lib/lootSystem";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useUserCreatures } from "@/hooks/useUserCreatures";
-import { useTheme } from "@/hooks/useTheme";
-import { getThemeColors, type ThemeColorTokens } from "@/theme/themeColors";
 import PixelCreature from "@/components/common/PixelCreature";
 
 const UNLOCK_ALL_FOR_TESTING = false;
 
-// Theme color mapping lives in src/theme/themeColors.ts (shared).
+// Colors flow from CSS variables (--primary / --primary-deep) defined per-theme
+// in src/index.css. Use Tailwind classes like `text-primary`, `border-primary`,
+// `from-primary to-primary-deep`, or `hsl(var(--primary) / <alpha>)` inline.
 // Note: creature IDs are used directly as PixelCreature `type` props.
 // If a divergence is ever needed, map it inside creaturePixelData.ts.
+
 
 // Single source of truth for rarity-driven styling in the Bestiary.
 interface RarityStyle {
