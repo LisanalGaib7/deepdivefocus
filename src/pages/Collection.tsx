@@ -256,7 +256,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
         )}
 
         {/* Depth requirement */}
-        <p className={`text-[10px] font-mono text-center tracking-wider ${unlocked ? themeColors.depthText : 'text-slate-700'}`}>
+        <p className={`text-[10px] font-mono text-center tracking-wider ${unlocked ? 'text-primary/70' : 'text-slate-700'}`}>
           MIN DEPTH: {creature.minDepth}m
         </p>
       </div>
