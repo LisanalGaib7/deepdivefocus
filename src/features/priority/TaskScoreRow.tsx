@@ -126,7 +126,7 @@ export const TaskScoreRow = ({ task, onChange, className }: TaskScoreRowProps) =
                 variant="outline"
                 className="text-[9px] uppercase tracking-widest border-border/60 text-muted-foreground"
               >
-                미분류
+                Unscored
               </Badge>
             </>
           ) : (
