@@ -86,6 +86,8 @@ All colors MUST be HSL.
 
     --gradient-start: 142 69% 58%;
     --gradient-end: 142 55% 45%;
+
+    --hud-glow: 142 69% 70%;
   }
 
   /* Rose / Deep Crimson Theme – warm, eye-friendly red */
