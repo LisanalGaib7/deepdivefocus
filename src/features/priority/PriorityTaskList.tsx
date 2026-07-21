@@ -143,7 +143,7 @@ function PriorityRow({
             className="w-full h-11 text-xs uppercase tracking-widest font-bold"
             style={{ fontFamily: "Orbitron, sans-serif" }}
           >
-            다이브 시작
+            Start Dive
           </Button>
         </>
       )}
