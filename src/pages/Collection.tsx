@@ -149,10 +149,7 @@ const Collection = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 
-            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-robotic uppercase`}
-            style={{ 
-              textShadow: `0 0 30px ${themeColors.glow}, 0 0 60px ${themeColors.glowRgba}` 
-            }}
+            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-robotic uppercase hud-glow-title`}
           >
             BESTIARY
           </h1>
