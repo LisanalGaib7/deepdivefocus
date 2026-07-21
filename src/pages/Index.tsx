@@ -415,7 +415,7 @@ const Index = () => {
 
         {!isRunning && (
           <MissionObjectivePanel
-            tasks={tasks}
+            tasks={displayedTasks}
             selectedTaskId={selectedTaskId}
             editingTaskId={taskHandlers.editingTaskId}
             editingText={taskHandlers.editingText}
@@ -431,7 +431,8 @@ const Index = () => {
             onEditKeyDown={taskHandlers.handleEditKeyDown}
             onEditTextChange={taskHandlers.setEditingText}
             onDelete={taskHandlers.handleDeleteTask}
-            onReorder={reorderTasks}
+            onReorder={handleFocusReorder}
+
             getTimeDisplay={getTimeDisplay}
           />
         )}
