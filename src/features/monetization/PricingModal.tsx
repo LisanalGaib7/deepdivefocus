@@ -110,15 +110,15 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
               }}
             >
               <div>
-                <p className="text-[10px] text-white/50 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
+                <p className="text-[10px] text-white/70 font-mono tracking-widest uppercase mb-1 font-semibold">Standard</p>
                 <p className="text-xl font-extrabold font-robotic text-white/70 tracking-wider">FREE</p>
               </div>
               <div className="h-px bg-white/10" />
               <ul className="space-y-2.5">
                 {FREE_FEATURES.map(({ label }) => (
                   <li key={label} className="flex items-start gap-2">
-                    <Check className="h-3 w-3 text-white/35 mt-0.5 shrink-0" />
-                    <span className="text-[11px] text-white/50 font-mono leading-tight">{label}</span>
+                    <Check className="h-3 w-3 text-white/60 mt-0.5 shrink-0" />
+                    <span className="text-[11px] text-white/70 font-mono leading-tight">{label}</span>
                   </li>
                 ))}
               </ul>
@@ -151,7 +151,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                 {PRO_FEATURES.map(({ label, highlight }) => (
                   <li key={label} className="flex items-start gap-2">
                     <Check className={`h-3 w-3 mt-0.5 shrink-0 ${highlight ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(234,179,8,0.6)]' : 'text-white/40'}`} />
-                    <span className={`text-[11px] font-mono leading-tight ${highlight ? 'text-yellow-300 font-bold' : 'text-white/50'}`}>
+                    <span className={`text-[11px] font-mono leading-tight ${highlight ? 'text-yellow-300 font-bold' : 'text-white/70'}`}>
                       {label}
                     </span>
                   </li>
@@ -165,7 +165,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
 
           {/* Plan Selection */}
           <div className="space-y-5">
-            <p className="text-[10px] text-white/50 font-mono tracking-[0.4em] uppercase font-semibold text-center">
+            <p className="text-[10px] text-white/70 font-mono tracking-[0.4em] uppercase font-semibold text-center">
               Choose Your Reactor
             </p>
 
@@ -192,7 +192,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-white/70 font-mono tracking-wider uppercase font-bold">Monthly</p>
-                    <p className="text-[10px] text-white/35 font-mono mt-0.5">Cancel anytime</p>
+                    <p className="text-[10px] text-white/60 font-mono mt-0.5">Cancel anytime</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -200,7 +200,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <span className="text-sm opacity-60">$</span>
                     <span className="text-2xl">2.99</span>
                   </p>
-                  <p className="text-[9px] font-mono text-white/35 mt-0.5">/month</p>
+                  <p className="text-[9px] font-mono text-white/60 mt-0.5">/month</p>
                 </div>
               </button>
 
@@ -239,7 +239,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                   </div>
                   <div className="text-left">
                     <p className="text-xs text-yellow-400/90 font-mono tracking-wider uppercase font-bold">Yearly</p>
-                    <p className="text-[10px] text-yellow-400/40 font-mono mt-0.5">$1.67/mo · billed annually</p>
+                    <p className="text-[10px] text-yellow-400/70 font-mono mt-0.5">$1.67/mo · billed annually</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -247,7 +247,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
                     <span className="text-sm opacity-60">$</span>
                     <span className="text-2xl">19.99</span>
                   </p>
-                  <p className="text-[9px] font-mono text-yellow-400/40 mt-0.5">/year</p>
+                  <p className="text-[9px] font-mono text-yellow-400/70 mt-0.5">/year</p>
                 </div>
               </button>
 
@@ -367,7 +367,7 @@ export const PricingModal = ({ open, onClose, isPro, onActivatePro }: PricingMod
             <Button
               onClick={onClose}
               variant="ghost"
-              className="w-full h-12 font-mono text-sm font-semibold text-white/50 hover:text-white/70 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
+              className="w-full h-12 font-mono text-sm font-semibold text-white/70 hover:text-white/70 hover:bg-white/[0.06] tracking-widest border border-white/15 rounded-xl transition-all duration-200"
             >
               RETURN TO SURFACE
             </Button>
