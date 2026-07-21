@@ -161,7 +161,7 @@ const Priority = ({
                 style={{ fontFamily: "Orbitron, sans-serif" }}
               >
                 <Rocket className="h-3.5 w-3.5 mr-1" />
-                다이브
+                Dive
               </Button>
             </div>
           );
