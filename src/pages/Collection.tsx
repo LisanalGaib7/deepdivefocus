@@ -218,7 +218,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
         {/* PixelCreature SVG in circular frame */}
         <div className="flex justify-center">
           <div
-            className={`rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
+            className={`rounded-full overflow-hidden flex items-center justify-center bg-card/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
             style={unlocked ? { boxShadow: styles.frameShadow, borderColor: styles.frameBorderColor } : {}}
           >
             <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' ? 'w-20 h-20' : 'w-16 h-16'} />
