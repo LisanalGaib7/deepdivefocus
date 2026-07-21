@@ -452,6 +452,9 @@ const Index = () => {
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
+      {/* Descent Ceremony — pressure collapse ritual at dive start */}
+      <DescentCeremony active={timer.isDiveTransition && isRunning} targetDepth={Math.max(depth, 120)} />
+
       {/* Fullscreen Immersion Flash */}
       {showOverlay && (
         <div
