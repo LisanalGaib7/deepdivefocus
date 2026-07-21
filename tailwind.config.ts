@@ -14,8 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['DM Sans', 'Inter', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
         robotic: ['Orbitron', 'monospace'],
         mono: ['JetBrains Mono', 'monospace'],
       },

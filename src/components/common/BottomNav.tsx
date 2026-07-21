@@ -23,7 +23,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
       <div className="max-w-md mx-auto px-4 pb-4">
-        <div className="glass-tile !rounded-full p-1.5 flex items-center justify-center gap-1 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)]">
+        <div className="bg-card/80 backdrop-blur-xl border border-border rounded-2xl p-2 flex items-center justify-center gap-1 shadow-lg">
           {TABS.map(({ id, label, icon: Icon }) => {
             const active = activeTab === id;
             return (
@@ -33,8 +33,8 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                   hapticsLight();
                   onTabChange(id);
                 }}
-                className={`flex-1 flex flex-col items-center gap-0.5 py-2 px-2 rounded-full transition-all duration-300 ${
-                  active ? "bg-primary/10" : "hover:bg-white/5"
+                className={`flex-1 flex flex-col items-center gap-1 py-2 px-2 rounded-xl transition-all duration-300 ${
+                  active ? "bg-primary/10" : "hover:bg-muted"
                 }`}
                 style={{
                   color: active
@@ -50,7 +50,7 @@ const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
                       : "none",
                   }}
                 />
-                <span className="text-[10px] font-display font-semibold tracking-wide">{label}</span>
+                <span className="text-xs font-medium">{label}</span>
               </button>
             );
           })}
