@@ -195,8 +195,8 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
 
   return (
     <div
-      className={`relative rounded-xl border-2 p-4 transition-all duration-300 
-        bg-black/40 backdrop-blur-md
+      className={`relative rounded-2xl border-2 p-4 transition-all duration-300 
+        bg-card/40 backdrop-blur-md
         ${styles.border} ${styles.shadow}
         ${unlocked ? 'hover:scale-105 hover:border-opacity-100' : 'grayscale'}
       `}
