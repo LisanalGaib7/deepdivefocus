@@ -267,7 +267,7 @@ const History = () => {
         {/* ===== CHART SECTION ===== */}
         {/* Weekly Bar Chart */}
         <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
-          <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Weekly Focus</h2>
+          <h2 className="section-label mb-4">Weekly Focus</h2>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart 
               data={weeklyData} 
@@ -355,7 +355,7 @@ const History = () => {
         {/* Task Breakdown Donut Chart */}
         {taskBreakdown.length > 0 && (
           <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
-            <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Task Breakdown</h2>
+            <h2 className="section-label mb-4">Task Breakdown</h2>
             <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
               <ResponsiveContainer width="100%" height={160} className="md:w-1/2">
                 <PieChart>
