@@ -24,9 +24,9 @@ interface PriorityProps {
 
 const formatEffort = (mins: number | null) => {
   if (mins == null) return null;
-  if (mins < 60) return `${mins}분`;
-  if (mins === 60) return "1시간";
-  return "2시간+";
+  if (mins < 60) return `${mins}m`;
+  if (mins === 60) return "1h";
+  return "2h+";
 };
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
