@@ -120,6 +120,8 @@ All colors MUST be HSL.
 
     --gradient-start: 12 55% 52%;
     --gradient-end: 4 55% 42%;
+
+    --hud-glow: 8 70% 68%;
   }
 
   /* Lavender Pastel Theme */
