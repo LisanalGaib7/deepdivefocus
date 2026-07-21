@@ -192,7 +192,7 @@ const History = () => {
         <div className="relative">
           {/* Paywall overlay for locked analytics ranges. */}
           {rangeLocked && (
-            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-3xl backdrop-blur-md bg-background/40 border border-primary/20" style={{ margin: '-12px' }}>
+            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl backdrop-blur-md bg-background/40 border border-primary/30" style={{ margin: '-12px' }}>
               <div className="text-center space-y-4 p-6">
                 <Lock className="w-10 h-10 mx-auto text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.6)]" />
                 <div className="space-y-1">
@@ -218,7 +218,7 @@ const History = () => {
             {/* ===== BENTO GRID STATS ===== */}
         <div className="space-y-3">
           {/* Hero Card - Full Width with Tight Grouping */}
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10">
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-primary/30">
             {/* Header Row: Label + Date Badge (Flex Aligned) */}
             <div className="flex justify-between items-center mb-2">
               <p className="text-xs text-muted-foreground uppercase tracking-widest">
@@ -243,7 +243,7 @@ const History = () => {
           {/* Sub Cards - 2 Columns with Tight Grouping */}
           <div className="grid grid-cols-2 gap-3">
             {/* Total Sessions */}
-            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
               <div className="flex flex-col gap-1">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   Sessions
@@ -255,7 +255,7 @@ const History = () => {
             </div>
 
             {/* Average Session */}
-            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
               <div className="flex flex-col gap-1">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">
                   Avg Session
@@ -271,7 +271,7 @@ const History = () => {
 
         {/* ===== CHART SECTION ===== */}
         {/* Weekly Bar Chart */}
-        <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+        <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
           <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Weekly Focus</h2>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart 
@@ -359,7 +359,7 @@ const History = () => {
 
         {/* Task Breakdown Donut Chart */}
         {taskBreakdown.length > 0 && (
-          <div className="bg-white/5 backdrop-blur-md rounded-3xl p-5 border border-white/10">
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-primary/30">
             <h2 className="text-sm text-muted-foreground uppercase tracking-wider mb-4">Task Breakdown</h2>
             <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
               <ResponsiveContainer width="100%" height={160} className="md:w-1/2">

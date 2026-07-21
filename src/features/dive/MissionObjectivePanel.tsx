@@ -92,7 +92,7 @@ const MissionObjectivePanel = ({
             value={newTaskText}
             onChange={e => onNewTaskTextChange(e.target.value)}
             placeholder="> Add a focus task..."
-            className="text-center text-lg h-14 font-mono bg-black/60 border border-white/10 placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
+            className="text-center text-lg h-14 font-mono bg-card border border-primary/30 backdrop-blur-md placeholder:text-white/30 placeholder:text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all flex-1"
             disabled={hardCapped}
           />
           <Button

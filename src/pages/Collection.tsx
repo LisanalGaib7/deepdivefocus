@@ -195,8 +195,8 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
 
   return (
     <div
-      className={`relative rounded-xl border-2 p-4 transition-all duration-300 
-        bg-black/40 backdrop-blur-md
+      className={`relative rounded-2xl border-2 p-4 transition-all duration-300 
+        bg-card/40 backdrop-blur-md
         ${styles.border} ${styles.shadow}
         ${unlocked ? 'hover:scale-105 hover:border-opacity-100' : 'grayscale'}
       `}
@@ -204,7 +204,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
     >
       {/* Locked overlay */}
       {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm rounded-xl z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-card/70 backdrop-blur-md rounded-2xl z-10">
           <div className="text-center space-y-2">
             <Lock className="w-8 h-8 text-slate-600 mx-auto animate-pulse" />
             <p className="text-xs text-slate-500 font-mono tracking-wider">DATA ENCRYPTED</p>
@@ -218,7 +218,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
         {/* PixelCreature SVG in circular frame */}
         <div className="flex justify-center">
           <div
-            className={`rounded-full overflow-hidden flex items-center justify-center bg-black/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
+            className={`rounded-full overflow-hidden flex items-center justify-center bg-card/50 border-2 border-slate-700/50 ${pixelType === 'vampire_squid' ? 'w-24 h-24' : 'w-20 h-20'}`}
             style={unlocked ? { boxShadow: styles.frameShadow, borderColor: styles.frameBorderColor } : {}}
           >
             <PixelCreature type={pixelType} className={pixelType === 'vampire_squid' ? 'w-20 h-20' : 'w-16 h-16'} />
