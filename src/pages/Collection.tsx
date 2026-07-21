@@ -95,10 +95,9 @@ const getRarityStyle = (rarity: string, unlocked: boolean): RarityStyle =>
 const Collection = () => {
   const [collectedIds, setCollectedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const { currentTheme } = useTheme();
   const { isAuthenticated } = useAuthContext();
   const { fetchCreatures } = useUserCreatures();
-  const themeColors = getThemeColors(currentTheme);
+
 
   useEffect(() => {
     const loadCreatures = async () => {
