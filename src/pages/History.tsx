@@ -261,7 +261,8 @@ const History = () => {
               </div>
             </div>
           </div>
-        </div>
+
+
 
         {/* ===== CHART SECTION ===== */}
         {/* Weekly Bar Chart */}
