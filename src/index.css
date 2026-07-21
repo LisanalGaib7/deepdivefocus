@@ -9,43 +9,48 @@ All colors MUST be HSL.
 @layer base {
   :root,
   [data-theme="ocean"] {
-    /* Deep Ocean Theme - Premium Dark */
-    --background: 0 0% 2%;
-    --foreground: 0 0% 98%;
+    /* Deep Ocean Theme - Oceanic Bento Glass */
+    --background: 210 80% 5%;
+    --foreground: 200 30% 96%;
 
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
+    --card: 205 60% 8%;
+    --card-foreground: 200 30% 96%;
 
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 205 60% 8%;
+    --popover-foreground: 200 30% 96%;
 
-    /* Electric Blue to Deep Blue */
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
-    --primary-deep: 217 91% 60%;
+    /* Cyberpunk cyan primary — the HUD accent */
+    --primary: 185 100% 55%;
+    --primary-foreground: 210 80% 5%;
+    --primary-deep: 199 89% 48%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 205 40% 14%;
+    --secondary-foreground: 200 30% 96%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 72%;
+    --muted: 205 40% 14%;
+    --muted-foreground: 200 15% 72%;
 
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 185 100% 55%;
+    --accent-foreground: 210 80% 5%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 12%;
-    --ring: 199 89% 48%;
+    --border: 200 30% 20%;
+    --input: 205 40% 12%;
+    --ring: 185 100% 55%;
 
     --radius: 1rem;
 
     /* Custom gradients */
-    --gradient-start: 199 89% 48%;
-    --gradient-end: 217 91% 60%;
+    --gradient-start: 185 100% 55%;
+    --gradient-end: 199 89% 48%;
+
+    /* Deep-sea page gradient (top → bottom) */
+    --sea-top: 210 80% 5%;
+    --sea-mid: 205 70% 9%;
+    --sea-bottom: 190 55% 14%;
 
     /* HUD Colors */
     --hud-cyan: 185 100% 50%;
@@ -199,22 +204,62 @@ All colors MUST be HSL.
     text-shadow: 0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.4);
   }
 
-  /* ===== Unified Page System ===== */
+  /* ===== Oceanic Bento Glass System ===== */
+
+  /* Page shell — deep-sea vertical gradient. Falls back to bg-background for non-ocean themes. */
   .page-shell {
-    @apply min-h-screen bg-background text-foreground px-4 pt-6 pb-28;
+    @apply min-h-screen text-foreground px-4 pt-6 pb-28;
+    background:
+      radial-gradient(1200px 700px at 50% -10%, hsl(var(--primary) / 0.08), transparent 60%),
+      linear-gradient(180deg,
+        hsl(var(--sea-top, var(--background))) 0%,
+        hsl(var(--sea-mid, var(--background))) 55%,
+        hsl(var(--sea-bottom, var(--background))) 100%);
   }
   .page-shell-inner {
-    @apply max-w-2xl mx-auto space-y-6;
+    @apply max-w-2xl mx-auto space-y-4;
   }
+
+  /* Glass tile — the core surface of the new bento layout. */
+  .glass-tile {
+    @apply rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-xl;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 20px 40px -20px hsl(var(--primary) / 0.15);
+  }
+  .glass-tile-hero {
+    @apply rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-xl relative overflow-hidden;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 30px 60px -30px hsl(var(--primary) / 0.2);
+  }
+  .glass-tile-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, hsl(var(--primary) / 0.10), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Eyebrow label — the small uppercase tag that sits above titles */
+  .eyebrow {
+    @apply text-[10px] font-display font-bold uppercase tracking-[0.24em] text-primary/80;
+  }
+
+  /* Pill — used for compact currency/status readouts in the header */
+  .pill-glass {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md;
+  }
+
+  /* Page header — softer, display-font hierarchy. Replaces neon-only page-header. */
   .page-header {
-    @apply text-3xl font-robotic font-bold uppercase tracking-[0.2em] text-primary;
-    text-shadow: 0 0 30px hsl(var(--primary)), 0 0 60px hsl(var(--primary) / 0.4);
+    @apply text-2xl font-display font-bold tracking-tight text-foreground;
   }
   .page-subtitle {
-    @apply mt-1 text-xs font-mono tracking-widest text-muted-foreground uppercase;
+    @apply mt-1 text-xs font-display tracking-widest text-muted-foreground uppercase;
   }
   .section-label {
-    @apply text-[11px] uppercase tracking-widest text-muted-foreground font-robotic font-bold;
+    @apply text-[10px] uppercase tracking-[0.24em] text-muted-foreground font-display font-bold;
   }
   .readout-xl {
     @apply font-mono tabular-nums text-4xl font-bold text-primary;
@@ -226,10 +271,10 @@ All colors MUST be HSL.
     @apply font-mono text-xl font-semibold text-primary/60 ml-1;
   }
   .state-loading {
-    @apply animate-pulse text-primary font-robotic tracking-widest text-sm uppercase;
+    @apply animate-pulse text-primary font-display tracking-widest text-sm uppercase;
   }
   .state-empty {
-    @apply text-sm text-muted-foreground text-center py-6 font-mono;
+    @apply text-sm text-muted-foreground text-center py-6 font-display;
   }
 }
 

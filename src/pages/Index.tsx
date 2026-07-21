@@ -326,7 +326,7 @@ const Index = () => {
         />
       ) : (
 
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
+        <div className="page-shell flex flex-col items-center relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={timer.isDiveTransition} />
 
@@ -343,19 +343,17 @@ const Index = () => {
           />
 
 
-          <div className="w-full max-w-2xl mx-auto space-y-12 animate-fade-in">
-        {/* Header - hidden in focus mode */}
+          <div className="page-shell-inner w-full animate-fade-in">
+        {/* Header — Oceanic Bento hierarchy: eyebrow + title */}
         {!isRunning && (
-          <div className="text-center space-y-1 pt-8 md:pt-0 px-12 md:px-0">
-            <h1 className="page-header">
-              DEEP DIVE
-            </h1>
-            <p className="page-subtitle">Deep work without distractions</p>
+          <div className="pt-4 px-2">
+            <div className="eyebrow mb-1">Current Depth</div>
+            <h1 className="page-header">Hadopelagic Zone</h1>
           </div>
         )}
 
-        {/* Timer Circle - Submarine HUD Gauge */}
-        <div className="flex flex-col items-center gap-6">
+        {/* Timer Hero Tile — Cyberpunk HUD gauge preserved, framed in glass */}
+        <div className="glass-tile-hero p-6 flex flex-col items-center gap-5">
           <DiveGauge
             ref={timer.svgRef}
             setDuration={timer.setDuration}
@@ -373,11 +371,11 @@ const Index = () => {
           
           {/* Oxygen Bar - shown when diving */}
           {isRunning && (
-            <OxygenBar oxygen={oxygen} className="animate-fade-in" />
+            <OxygenBar oxygen={oxygen} className="animate-fade-in w-full" />
           )}
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-6 relative z-10">
             {/* Play/Pause Button - Theme-aware Glowing Glass Effect */}
             <Button
               onClick={timer.handleStart}
@@ -407,43 +405,47 @@ const Index = () => {
         {/* Focus Mode: Show only selected task when running */}
         {isRunning && selectedTask && !selectedTask.isCompleted && (
           <div className="text-center animate-fade-in mt-2">
-            <p className="text-4xl md:text-5xl font-extrabold text-primary tracking-wide" style={{ textShadow: '0 0 20px hsl(var(--primary) / 0.35)' }}>
+            <p className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight" style={{ textShadow: '0 0 20px hsl(var(--primary) / 0.35)' }}>
               {selectedTask.text}
             </p>
           </div>
         )}
 
         {!isRunning && (
-          <MissionObjectivePanel
-            tasks={displayedTasks}
-            selectedTaskId={selectedTaskId}
-            editingTaskId={taskHandlers.editingTaskId}
-            editingText={taskHandlers.editingText}
-            newTaskText={taskHandlers.newTaskText}
-            taskGating={taskGating}
-            onNewTaskTextChange={taskHandlers.setNewTaskText}
-            onSubmit={taskHandlers.handleAddTask}
-            onOpenPricing={handleOpenPricing}
-            onSelect={taskHandlers.handleSelectTask}
-            onToggleComplete={taskHandlers.handleToggleComplete}
-            onStartEdit={taskHandlers.handleStartEdit}
-            onSaveEdit={taskHandlers.handleSaveEdit}
-            onEditKeyDown={taskHandlers.handleEditKeyDown}
-            onEditTextChange={taskHandlers.setEditingText}
-            onDelete={taskHandlers.handleDeleteTask}
-            onReorder={handleFocusReorder}
+          <div className="glass-tile p-5">
+            <MissionObjectivePanel
+              tasks={displayedTasks}
+              selectedTaskId={selectedTaskId}
+              editingTaskId={taskHandlers.editingTaskId}
+              editingText={taskHandlers.editingText}
+              newTaskText={taskHandlers.newTaskText}
+              taskGating={taskGating}
+              onNewTaskTextChange={taskHandlers.setNewTaskText}
+              onSubmit={taskHandlers.handleAddTask}
+              onOpenPricing={handleOpenPricing}
+              onSelect={taskHandlers.handleSelectTask}
+              onToggleComplete={taskHandlers.handleToggleComplete}
+              onStartEdit={taskHandlers.handleStartEdit}
+              onSaveEdit={taskHandlers.handleSaveEdit}
+              onEditKeyDown={taskHandlers.handleEditKeyDown}
+              onEditTextChange={taskHandlers.setEditingText}
+              onDelete={taskHandlers.handleDeleteTask}
+              onReorder={handleFocusReorder}
 
-            getTimeDisplay={getTimeDisplay}
-          />
+              getTimeDisplay={getTimeDisplay}
+            />
+          </div>
         )}
 
         <DiveTimeCard todayMinutes={todayMinutes} showCalibration={!isRunning} />
 
-        <AmbientSoundMixer
-          sounds={sounds}
-          toggleSound={toggleSound}
-          activeSoundsCount={activeSoundsCount}
-        />
+        <div className="glass-tile p-5">
+          <AmbientSoundMixer
+            sounds={sounds}
+            toggleSound={toggleSound}
+            activeSoundsCount={activeSoundsCount}
+          />
+        </div>
 
           </div>
         </div>
