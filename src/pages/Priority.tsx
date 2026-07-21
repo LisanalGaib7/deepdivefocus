@@ -188,7 +188,7 @@ const Priority = ({
 
         {/* Top: Now Doing */}
         <section className="rounded-2xl border border-border bg-card/50 p-4 space-y-3">
-          <SectionTitle>지금 할 일</SectionTitle>
+          <SectionTitle>Now Doing</SectionTitle>
           {renderTop()}
         </section>
 
