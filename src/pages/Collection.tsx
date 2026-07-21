@@ -29,12 +29,12 @@ interface RarityStyle {
 }
 
 const LOCKED_STYLE: RarityStyle = {
-  border: 'border-slate-800',
+  border: 'border-slate-700',
   shadow: '',
   glow: {},
-  textColor: 'text-slate-600',
-  badge: 'border-slate-800 text-slate-600 bg-slate-900/50',
-  trait: 'bg-slate-700/50 text-slate-400 border border-slate-600/30',
+  textColor: 'text-slate-300',
+  badge: 'border-slate-600 text-slate-300 bg-slate-800/70',
+  trait: 'bg-slate-700/60 text-slate-200 border border-slate-500/40',
   frameShadow: '0 0 10px rgba(100, 116, 139, 0.2)',
 };
 
@@ -208,9 +208,9 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
       {!unlocked && (
         <div className="absolute inset-0 flex items-center justify-center bg-card/70 backdrop-blur-md rounded-2xl z-10">
           <div className="text-center space-y-2">
-            <Lock className="w-8 h-8 text-slate-600 mx-auto animate-pulse" />
-            <p className="text-xs text-slate-500 font-mono tracking-wider">DATA ENCRYPTED</p>
-            <p className="text-[10px] text-slate-700 font-mono">DEPTH: {creature.minDepth}m+</p>
+            <Lock className="w-8 h-8 text-slate-300 mx-auto animate-pulse" />
+            <p className="text-xs text-slate-200 font-mono tracking-wider">DATA ENCRYPTED</p>
+            <p className="text-[10px] text-slate-400 font-mono">DEPTH: {creature.minDepth}m+</p>
           </div>
         </div>
       )}
@@ -258,7 +258,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
         )}
 
         {/* Depth requirement */}
-        <p className={`text-[10px] font-mono text-center tracking-wider ${unlocked ? 'text-primary/70' : 'text-slate-700'}`}>
+        <p className={`text-[10px] font-mono text-center tracking-wider ${unlocked ? 'text-primary/85' : 'text-slate-400'}`}>
           MIN DEPTH: {creature.minDepth}m
         </p>
       </div>

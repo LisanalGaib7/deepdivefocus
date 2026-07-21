@@ -151,13 +151,13 @@ const DiveGauge = forwardRef<SVGSVGElement, DiveGaugeProps>(
                 <span className="font-robotic text-lg font-bold tracking-wider">{depth}m</span>
               </div>
               {isAtMaxDepth && (
-                <p className="text-xs text-primary/40 font-robotic mt-1">ZONE LOCKED 🔒</p>
+                <p className="text-xs text-primary/70 font-robotic mt-1">ZONE LOCKED 🔒</p>
               )}
             </div>
           )}
 
           {!isRunning && !isDragging && (
-            <p className="text-xs mt-2 text-primary/50 font-robotic tracking-wider">DRAG TO SET</p>
+            <p className="text-xs mt-2 text-primary/80 font-robotic tracking-wider">DRAG TO SET</p>
           )}
           {isDragging && (
             <p className="text-xs mt-2 animate-pulse text-primary/70 font-robotic tracking-wider">

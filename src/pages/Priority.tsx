@@ -260,7 +260,7 @@ const Divider = ({ label }: { label: string }) => (
   <div className="flex items-center gap-3 pt-2 pb-1">
     <div className="h-px flex-1 bg-border" />
     <span
-      className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-robotic"
+      className="text-[10px] uppercase tracking-widest text-muted-foreground font-robotic"
     >
       {label}
     </span>

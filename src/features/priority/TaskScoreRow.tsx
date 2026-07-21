@@ -51,7 +51,7 @@ const SegmentGroup = ({ label, options, selected, onSelect }: SegmentGroupProps)
   return (
     <div className="space-y-1.5">
       <div
-        className="text-[10px] uppercase tracking-widest text-muted-foreground/70"
+        className="text-[10px] uppercase tracking-widest text-muted-foreground"
         style={{ fontFamily: "Orbitron, sans-serif" }}
       >
         {label}
@@ -113,7 +113,7 @@ export const TaskScoreRow = ({ task, onChange, className }: TaskScoreRowProps) =
     >
       <div className="flex items-center justify-between gap-3">
         <div
-          className="text-[10px] uppercase tracking-widest text-muted-foreground/70"
+          className="text-[10px] uppercase tracking-widest text-muted-foreground"
           style={{ fontFamily: "Orbitron, sans-serif" }}
         >
           Priority
