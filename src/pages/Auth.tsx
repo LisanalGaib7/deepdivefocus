@@ -111,7 +111,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden px-4">
+    <div className="min-h-screen bg-card flex flex-col items-center justify-center relative overflow-hidden px-4">
       {/* Rising bubbles animation */}
       <div className="absolute inset-0 pointer-events-none">
         {bubbles.map((bubble) => (
@@ -249,7 +249,7 @@ const Auth = () => {
             <div className="w-full border-t border-primary/20" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2 bg-black text-muted-foreground font-mono tracking-wider">OR</span>
+            <span className="px-2 bg-card text-muted-foreground font-mono tracking-wider">OR</span>
           </div>
         </div>
 

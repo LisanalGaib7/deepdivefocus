@@ -16,7 +16,7 @@ interface TopBarProps {
 }
 
 const TOAST_CLASS =
-  "!bg-black/90 !border !border-primary/40 !shadow-[0_0_20px_hsl(var(--primary)/0.3)] !text-primary font-mono !text-xs !tracking-widest";
+  "!bg-card !border !border-primary/30 !backdrop-blur-md !shadow-[0_0_20px_hsl(var(--primary)/0.3)] !text-primary font-mono !text-xs !tracking-widest";
 
 const TopBar = ({
   showProBadge,
