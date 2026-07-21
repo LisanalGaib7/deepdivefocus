@@ -204,7 +204,7 @@ const CreatureCard = ({ creature, unlocked }: CreatureCardProps) => {
     >
       {/* Locked overlay */}
       {!unlocked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm rounded-xl z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-card/70 backdrop-blur-md rounded-2xl z-10">
           <div className="text-center space-y-2">
             <Lock className="w-8 h-8 text-slate-600 mx-auto animate-pulse" />
             <p className="text-xs text-slate-500 font-mono tracking-wider">DATA ENCRYPTED</p>
