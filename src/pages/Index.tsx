@@ -8,7 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 
 // Common components
-import BottomNav from "@/components/common/BottomNav";
+import BottomNav, { type BottomTab } from "@/components/common/BottomNav";
+
 
 // Feature components
 import { EngineeringBayModal } from "@/features/hangar";
@@ -30,6 +31,8 @@ import MissionObjectivePanel from "@/features/dive/MissionObjectivePanel";
 // Pages
 import History from "@/pages/History";
 import Collection from "@/pages/Collection";
+import Priority from "@/pages/Priority";
+
 
 // Hooks & Data
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -39,6 +42,9 @@ import { useUserCreatures } from "@/hooks/useUserCreatures";
 import { useGamification } from "@/hooks/useGamification";
 import { useDeepDiveAudio } from "@/hooks/useDeepDiveAudio";
 import { useTasks, LocalTask } from "@/hooks/useTasks";
+import { useSortMode } from "@/hooks/useSortMode";
+import { sortByPriority, getPriorityScore } from "@/lib/priority";
+
 import { getUpgradeCost } from "@/constants/gameConfig";
 import { useProStatus } from "@/hooks/useProStatus";
 import { useFullscreen } from "@/hooks/useFullscreen";
@@ -63,16 +69,19 @@ const Index = () => {
     tasks,
     addTask,
     updateTask,
+    updateTaskScores,
     deleteTask,
     incrementTimeSpent,
     saveTimeSpent,
     reorderTasks,
   } = useTasks();
+  const { sortMode, setSortMode } = useSortMode();
+
 
   // Audio hook - manages all sound playback
   const { sounds, toggleSound, playCompletionSound, activeSoundsCount, isSoundEnabled, toggleSoundEnabled } = useDeepDiveAudio();
   const { isFullscreen, showOverlay, toggleFullscreen, exitFullscreen } = useFullscreen();
-  const [activeTab, setActiveTab] = useState<"focus" | "history" | "collection">("focus");
+  const [activeTab, setActiveTab] = useState<BottomTab>("focus");
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showEngineeringBay, setShowEngineeringBay] = useState(false);
   const [showUpgradeRequired, setShowUpgradeRequired] = useState(false);
