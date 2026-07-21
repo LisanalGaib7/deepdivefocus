@@ -104,7 +104,7 @@ const Priority = ({
     if (allCompleted) {
       return (
         <p className="text-sm text-primary text-center py-6 font-semibold">
-          All tasks completed for today 🎉
+          All tasks completed for today
         </p>
       );
     }
