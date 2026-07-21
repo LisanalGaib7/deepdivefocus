@@ -149,7 +149,7 @@ const Collection = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 
-            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-orbitron uppercase`}
+            className={`text-4xl font-bold tracking-widest ${themeColors.text} font-robotic uppercase`}
             style={{ 
               textShadow: `0 0 30px ${themeColors.glow}, 0 0 60px ${themeColors.glowRgba}` 
             }}
@@ -231,7 +231,7 @@ const CreatureCard = ({ creature, unlocked, themeColors }: CreatureCardProps) =>
 
 
         {/* Name */}
-        <h3 className={`text-sm font-bold text-center font-orbitron uppercase tracking-wider ${styles.textColor}`}>
+        <h3 className={`text-sm font-bold text-center font-robotic uppercase tracking-wider ${styles.textColor}`}>
           {unlocked ? creature.name : '???'}
         </h3>
 
