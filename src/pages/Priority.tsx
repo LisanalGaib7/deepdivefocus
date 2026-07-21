@@ -313,10 +313,10 @@ function ListWithDividers({
   const sections: { label: string | null; slice: LocalTask[]; startIdx: number }[] = [];
   const boundaries = [
     { idx: 0, label: null },
-    ...(unscoredStartIndex > 0 ? [{ idx: unscoredStartIndex, label: "미분류" }] : []),
+    ...(unscoredStartIndex > 0 ? [{ idx: unscoredStartIndex, label: "Unscored" }] : []),
     ...(completedStartIndex > 0 &&
     completedStartIndex !== unscoredStartIndex
-      ? [{ idx: completedStartIndex, label: "완료" }]
+      ? [{ idx: completedStartIndex, label: "Completed" }]
       : []),
   ];
   for (let i = 0; i < boundaries.length; i++) {
