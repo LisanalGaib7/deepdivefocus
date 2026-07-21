@@ -65,100 +65,79 @@ export const MissionCompleteModal = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-2 gap-3 my-4">
-          <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
-            <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
-              MAX DEPTH
-            </p>
-            <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">{maxDepth}m</p>
-          </div>
-          <div className="bg-muted/30 border border-border rounded-lg p-3 text-center">
-            <p className="text-xs text-muted-foreground font-robotic tracking-wider mb-1">
-              DIVE TIME
-            </p>
-            <p className="text-xl font-robotic text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
-              {formatMinutesSeconds(sessionDuration)}
-            </p>
-          </div>
-        </div>
-
-        {/* Creature Reward Section */}
+        {/* Creature Reward Section — sonar-scanned reveal */}
         {creature && (
-          <div className="relative">
-            <div className="bg-muted/20 border border-border rounded-xl p-4 text-center relative overflow-hidden">
-              {/* Glow effect for new discoveries */}
-              {isNewDiscovery && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
-              )}
-
-              <div className="relative">
-                {isNewDiscovery && (
-                  <div className="flex items-center justify-center gap-1 text-primary text-xs font-robotic tracking-wider mb-2">
-                    <Sparkles className="h-3 w-3" />
-                    <span>NEW DISCOVERY</span>
-                    <Sparkles className="h-3 w-3" />
-                  </div>
-                )}
-
-                <div className="flex justify-center mb-2">
-                  <div className="p-3 rounded-full bg-background/50 border border-primary/30" style={{ boxShadow: '0 0 20px hsl(var(--primary) / 0.5)' }}>
-                    <PixelCreature type={creature.id} className="w-10 h-10" />
-                  </div>
-                </div>
-
-                <h3
-                  className={`text-2xl font-robotic font-bold tracking-wide mb-1 ${getRarityColor(
-                    creature.rarity
-                  )} drop-shadow-[0_0_10px_hsl(var(--primary))]`}
-                >
-                  {creature.name}
-                </h3>
-
-                <p
-                  className={`text-xs font-robotic tracking-widest uppercase ${
-                    creature.rarity === 'Common' ? 'text-gray-400' :
-                    creature.rarity === 'Rare' ? 'text-primary' :
-                    'text-amber-400'
-                  }`}
-                >
-                  {creature.rarity.toUpperCase()}
-                </p>
-
-                {/* Traits List */}
-                <div className="flex flex-wrap justify-center gap-2 mt-3">
-                  {creature.description.split('//').map((trait, index) => {
-                    // Prettify the trait string
-                    let cleanTrait = trait.trim();
-                    // Remove UNIT. prefix if present
-                    if (cleanTrait.startsWith('UNIT.')) {
-                      cleanTrait = cleanTrait.slice(5);
-                    }
-                    // Replace underscores with spaces and convert to title case
-                    cleanTrait = cleanTrait
-                      .replace(/_/g, ' ')
-                      .toLowerCase()
-                      .split(' ')
-                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(' ');
-                    
-                    return (
-                      <span 
-                        key={index} 
-                        className="bg-muted/50 border border-border/50 rounded-md px-3 py-1 text-xs text-muted-foreground font-robotic uppercase tracking-wider"
-                      >
-                        {cleanTrait}
-                      </span>
-                    );
-                  })}
-                </div>
-
-                {/* Pearl reward */}
-                <PearlBadge amount={pearls} variant="reward" className="mt-3" />
+          <div className="relative flex flex-col items-center my-4">
+            {/* Expanding sonar ping */}
+            <div className="relative">
+              <div
+                className="absolute inset-0 rounded-full border border-primary/50 pointer-events-none"
+                style={{ animation: "sonar 3s cubic-bezier(0.215,0.61,0.355,1) infinite" }}
+              />
+              <div
+                className="w-40 h-40 rounded-full bg-background/60 border border-primary/30 flex items-center justify-center overflow-hidden"
+                style={{ boxShadow: "inset 0 0 30px hsl(var(--primary) / 0.15)" }}
+              >
+                <PixelCreature type={creature.id} className="w-24 h-24" />
               </div>
+              {isNewDiscovery && (
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] px-3 py-1 font-bold tracking-widest rounded-sm font-robotic flex items-center gap-1 whitespace-nowrap">
+                  <Sparkles className="h-3 w-3" /> NEW BIOMASS
+                </div>
+              )}
             </div>
+
+            <h3
+              className={`mt-6 text-2xl font-robotic font-bold tracking-wide ${getRarityColor(
+                creature.rarity
+              )} drop-shadow-[0_0_10px_hsl(var(--primary))]`}
+            >
+              {creature.name}
+            </h3>
+            <p
+              className={`text-[10px] font-robotic tracking-[0.3em] uppercase mt-1 ${
+                creature.rarity === "Common"
+                  ? "text-gray-400"
+                  : creature.rarity === "Rare"
+                  ? "text-primary"
+                  : "text-amber-400"
+              }`}
+            >
+              {creature.rarity}
+            </p>
+
+            <PearlBadge amount={pearls} variant="reward" className="mt-3" />
           </div>
         )}
+
+        {/* Session log — glass panel with left neon accent */}
+        <div
+          className="p-4 border-l-2 border-primary rounded-r-md"
+          style={{
+            background:
+              "linear-gradient(180deg, hsl(var(--primary) / 0.06) 0%, transparent 100%)",
+          }}
+        >
+          <div className="text-[10px] opacity-60 mb-3 tracking-[0.3em] font-robotic text-primary uppercase">
+            Session Log
+          </div>
+          <div className="flex justify-between items-end mb-2">
+            <span className="text-xs opacity-70 uppercase font-robotic tracking-wider text-muted-foreground">
+              Time Active
+            </span>
+            <span className="text-xl font-robotic tabular-nums text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
+              {formatMinutesSeconds(sessionDuration)}
+            </span>
+          </div>
+          <div className="flex justify-between items-end">
+            <span className="text-xs opacity-70 uppercase font-robotic tracking-wider text-muted-foreground">
+              Max Depth
+            </span>
+            <span className="text-xl font-robotic tabular-nums text-white drop-shadow-[0_0_8px_hsl(var(--primary))]">
+              {maxDepth}m
+            </span>
+          </div>
+        </div>
 
         <AlertDialogFooter className="mt-4 mb-2">
           <Button
