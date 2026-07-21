@@ -280,13 +280,52 @@ const Index = () => {
     toast.success('Nuclear Reactor activated! Unlimited missions unlocked.', { duration: 4000 });
   }, [activatePro]);
 
+  // Ordered task list respecting sortMode. In 'priority' mode we surface
+  // scored uncompleted first, then unscored, then completed.
+  const displayedTasks = (() => {
+    if (sortMode === "manual") return tasks;
+    const uncompleted = tasks.filter((t) => !t.isCompleted);
+    const completed = tasks.filter((t) => t.isCompleted);
+    const scored = uncompleted.filter((t) => getPriorityScore(t) != null);
+    const unscored = uncompleted.filter((t) => getPriorityScore(t) == null);
+    return [...sortByPriority(scored), ...unscored, ...completed];
+  })();
+
+  // Reorder inside Focus tab: dragging always flips sort mode to manual.
+  const handleFocusReorder = useCallback(
+    (reordered: LocalTask[]) => {
+      if (sortMode !== "manual") setSortMode("manual");
+      reorderTasks(reordered);
+    },
+    [sortMode, setSortMode, reorderTasks]
+  );
+
+  // Priority tab → Focus tab dive handoff.
+  const handleSelectAndDive = useCallback(
+    (taskId: string) => {
+      taskHandlers.handleSelectTask(taskId);
+      setActiveTab("focus");
+    },
+    [taskHandlers]
+  );
+
   return (
     <>
       {activeTab === "history" ? (
         <History />
       ) : activeTab === "collection" ? (
         <Collection key={completion.collectionRefreshKey} />
+      ) : activeTab === "priority" ? (
+        <Priority
+          tasks={tasks}
+          onReorder={handleFocusReorder}
+          onToggleComplete={taskHandlers.handleToggleComplete}
+          onDelete={taskHandlers.handleDeleteTask}
+          onUpdateScores={updateTaskScores}
+          onSelectAndDive={handleSelectAndDive}
+        />
       ) : (
+
         <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-28 relative overflow-hidden">
           {/* Deep Sea Ambience - Underwater bubbles when diving */}
           <DeepSeaAmbience isActive={isRunning} isDiving={timer.isDiveTransition} />
