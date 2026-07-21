@@ -378,6 +378,8 @@ const writeGuestTasks = (tasks: LocalTask[]) => writeJSON(STORAGE_KEYS.tasks, ta
       loading,
       addTask,
       updateTask,
+      updateTaskScores,
+
       deleteTask,
       incrementTimeSpent,
       saveTimeSpent,
