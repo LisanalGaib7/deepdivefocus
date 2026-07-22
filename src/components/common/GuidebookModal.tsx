@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { BookOpen, Droplets, Fish, Palette, Wrench, Shield, Zap, Coins, Ship } from "lucide-react";
 import {
   Dialog,
@@ -14,24 +15,32 @@ import {
 } from "@/components/ui/accordion";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-const GuidebookModal = () => {
+interface GuidebookModalProps {
+  /** Custom trigger element. When omitted, renders the default topbar icon button. */
+  trigger?: ReactNode;
+}
+
+const DefaultTrigger = (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <button
+        className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
+        aria-label="Guidebook"
+      >
+        <BookOpen className="w-5 h-5" />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
+      GUIDEBOOK
+    </TooltipContent>
+  </Tooltip>
+);
+
+const GuidebookModal = ({ trigger }: GuidebookModalProps = {}) => {
   return (
     <Dialog>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <button
-              className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
-              aria-label="Guidebook"
-            >
-              <BookOpen className="w-5 h-5" />
-            </button>
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="font-mono text-xs tracking-wider">
-          GUIDEBOOK
-        </TooltipContent>
-      </Tooltip>
+      <DialogTrigger asChild>{trigger ?? DefaultTrigger}</DialogTrigger>
+
 
       <DialogContent className="max-w-md bg-background/95 backdrop-blur-xl border-primary/30 shadow-[0_0_30px_hsl(var(--primary)/0.2)] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
