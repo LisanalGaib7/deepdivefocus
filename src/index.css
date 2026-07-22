@@ -430,17 +430,34 @@ All colors MUST be HSL.
   100% { transform: scale(2); opacity: 0; }
 }
 
-/* ===== Tab transition ===== */
+/* ===== Tab transition — unified opacity-only fade (matches Focus tab feel) ===== */
 @keyframes tab-in {
-  0%   { opacity: 0; transform: translateY(6px); filter: blur(6px); }
-  100% { opacity: 1; transform: translateY(0);    filter: blur(0);  }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 .tab-transition-in {
-  animation: tab-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: opacity, transform, filter;
+  animation: tab-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity;
 }
 @media (prefers-reduced-motion: reduce) {
   .tab-transition-in { animation: none; }
+}
+
+/* ===== Onboarding spotlight (coach-mark) ===== */
+@keyframes coach-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55), 0 0 0 9999px hsl(0 0% 0% / 0.72); }
+  50%      { box-shadow: 0 0 0 8px hsl(var(--primary) / 0.15), 0 0 0 9999px hsl(0 0% 0% / 0.72); }
+}
+.coach-spotlight {
+  position: fixed;
+  border-radius: 16px;
+  pointer-events: none;
+  z-index: 100;
+  transition: top 300ms cubic-bezier(0.22, 1, 0.36, 1), left 300ms cubic-bezier(0.22, 1, 0.36, 1), width 300ms cubic-bezier(0.22, 1, 0.36, 1), height 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: coach-pulse 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .coach-spotlight { animation: none; box-shadow: 0 0 0 9999px hsl(0 0% 0% / 0.72); }
 }
 
 /* ===== Focus mode auto-fade ===== */
