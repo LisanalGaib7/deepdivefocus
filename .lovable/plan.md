@@ -1,82 +1,63 @@
-## Scope
+# 마무리 4종 세트 실행 계획
 
-Remove the "Pressure Collapse" descent overlay only. Keep the redesigned Mission Complete modal (session log panel, sonar reveal). Then implement three motion/immersion upgrades.
+## 1) 탭 전환 애니메이션 통일
 
----
+현재 `TabTransition`은 fade + translateY(6px) + blur(6px)를 결합한 260ms 애니메이션이다. Focus 탭에 들어올 때의 순수 fade-in 느낌과 미묘하게 다르다.
 
-## 1. Revert DescentCeremony
+- `src/index.css`의 `@keyframes tab-in`에서 `transform`/`filter`를 제거하고 opacity 트랜지션만 남긴다.
+- 지속 시간은 240ms, easing은 `cubic-bezier(0.22, 1, 0.36, 1)` 유지.
+- 4개 탭(Focus / Priority / History / Collection) 모두 동일한 fade-in 사용 — `TabTransition` 래퍼는 그대로 두고 CSS만 갈아낌.
+- `prefers-reduced-motion` 분기는 유지.
 
-- Delete `src/features/timer/DescentCeremony.tsx`.
-- In `src/pages/Index.tsx`: remove the import and the `<DescentCeremony … />` render at the bottom.
-- Leave `timer.isDiveTransition` in place (still used by `DeepSeaAmbience`) and leave `MissionCompleteModal` untouched.
+## 3) 온보딩: 3스텝 코치마크 오버레이
 
----
+첫 로그인 후 1회만 재생. 실제 다이브를 강제하지 않고 실 UI 위에 스포트라이트를 얹는다.
 
-## 2. Tab / Screen Transition Motion
+- 새 파일: `src/features/onboarding/TrainingDive.tsx`
+  - 반투명 백드롭 + 대상 요소를 감싸는 사각/원형 스포트라이트 홀
+  - 하단 툴팁 카드: 헤더(step 1/3), 설명 1–2줄, `Next` / `Skip` 버튼
+  - 3스텝 순서:
+    1. **다이브 시작** → Dive Gauge 중앙 Play 버튼 하이라이트, "Tap to descend. Your focus becomes depth."
+    2. **진주** → Mission Complete 예시 or Pearl 배지 하이라이트, "Complete dives to earn Golden Pearls."
+    3. **우선순위** → BottomNav의 Priority 탭 하이라이트, "Rank tasks by urgency and impact before diving."
+- 새 파일: `src/hooks/useOnboarding.ts`
+  - `localStorage` 키 `onboarding.trainingDive.completed.v1` 관리
+  - Supabase 사용자의 경우 별도 필드는 안 만들고 localStorage로 충분 (기기 단위 튜토리얼).
+- 진입점: `src/pages/Index.tsx`에서 마운트 후 tasks/creatures 초기 로드 완료 & 플래그 미설정이면 렌더.
+- Skip / 완료 시 즉시 플래그 저장, 이후 렌더 안 됨.
+- `prefers-reduced-motion`: 스포트라이트 확대 애니메이션 대신 즉시 표시.
+- 텍스트 전부 영어(글로벌 타겟 규칙).
 
-Goal: switching between Focus / Priority / Analytics / Bestiary feels like a single fluid HUD instead of a hard swap.
+## 4) TopBar → 단일 햄버거 + 바닥 시트
 
-- New wrapper `src/components/common/TabTransition.tsx`:
-  - Uses `AnimatePresence` + `motion.div` (framer-motion, already in deps — verify; if missing, add).
-  - Keyed by `activeTab`. Enter: opacity 0 → 1, `translateY(6px) → 0`, `filter: blur(6px) → 0`, 260ms, `cubic-bezier(0.22, 1, 0.36, 1)`. Exit: mirror, 180ms.
-  - Respects `prefers-reduced-motion` (falls back to instant).
-- `Index.tsx`: wrap the tab-switch block (the `activeTab === "history" ? … : …` tree) in `<TabTransition activeKey={activeTab}>`.
-- Bottom-nav tap: add a subtle 120ms scale/opacity press on the active icon (in `BottomNav.tsx`) so the transition feels initiated by touch, not by React.
+- `src/features/dive/TopBar.tsx` 리팩토링:
+  - 우측 5개 아이콘(Fullscreen / Sound / Engineering / Guide / Logout) 제거.
+  - 대신 `Menu`(lucide) 아이콘 단 하나. 좌측 PRO 배지는 그대로.
+  - 클릭 시 shadcn `Sheet` (side="bottom") 오픈.
+- 새 파일: `src/features/dive/TopBarSheet.tsx`
+  - 항목 리스트(각 항목 min-h-14 = 56px, WCAG AA 탭 타겟 44×44 이상 충족):
+    - Toggle Fullscreen (아이콘/라벨 상태에 따라 전환)
+    - Toggle Sound
+    - Engineering Bay (기존 `onOpenEngineeringBay`)
+    - Guidebook (기존 `GuidebookModal` 트리거를 시트 안에서 열도록 재구성 — 시트 안에서 다른 모달을 열 때 시트는 자동 닫힘)
+    - Log out (destructive 스타일)
+  - 바닥 안전 영역(`pb-safe`) 포함.
+- 접근성:
+  - 햄버거 버튼 `aria-label="Open menu"`, `aria-expanded`, `aria-controls`.
+  - 시트 내부 각 액션은 실제 `<button>`, 라벨 + 아이콘 조합, `min-h-14 min-w-11`.
+  - `prefers-reduced-motion` 시 시트 슬라이드 대신 즉시 표시 (Radix가 이미 기본 지원 — 별도 처리 불필요, 검증만).
+- `Index.tsx`의 TopBar props 시그니처는 유지(내부만 변경).
+- Fullscreen 상태와 관계없이 항상 접근 가능 (몰입 모드에서도 `focus-dim` 대상에 포함되어 자동 페이드).
 
----
+## 검증
 
-## 3. Focus Mode UI Auto-Fade (Immersion)
+- 4개 탭을 순차 전환 → 모두 동일한 fade-in만 재생되는지.
+- 다크 배경에서 h1 / gauge / active tab / PRO / mission-complete 다섯 곳에만 광원이 남았는지 스크린샷 확인.
+- 첫 로그인 시 코치마크 3스텝 → Skip 후 재로그인해도 재출현 안 함.
+- 모바일 375×667에서 햄버거 시트 항목 각각 44px 이상 탭 타겟.
+- Reduced motion 설정 시 fade / 코치마크 확대 / 시트 슬라이드 모두 즉시 표시.
 
-Goal: while `isRunning`, non-essential chrome dims/hides so only the gauge, task name, and oxygen remain.
+## 변경 파일 요약
 
-- Add `focus-dim` utility in `src/index.css`: `opacity .35; transition: opacity 600ms ease; &:hover, &:focus-within { opacity: 1 }`.
-- In `Index.tsx` (focus tab body) when `isRunning`:
-  - Apply `focus-dim` to: `TopBar`, `DiveTimeCard`, `AmbientSoundMixer`, `BottomNav`.
-  - Keep at full opacity: `DiveGauge`, `OxygenBar`, selected task name, Play/Pause + Reset buttons.
-- `BottomNav.tsx`: accept optional `dimmed?: boolean` prop; when true, wrap in the same fade utility and reduce nav background alpha.
-- After 4s of no pointer/touch activity while `isRunning`, add a deeper `focus-dim-deep` (opacity .15) via a small `useIdleWhileRunning` hook (`src/hooks/useIdleWhileRunning.ts`). Any pointermove/touchstart/keydown resets to `focus-dim`. Ends immediately when `isRunning` flips false.
-- Respect `prefers-reduced-motion`: skip the deep-idle stage; keep only the static `focus-dim` level.
-
----
-
-## 4. Dive Start/End Ceremony + Creature Unlock Modal
-
-Replacement for the removed pressure overlay — quieter, more "Instrument Panel".
-
-### Start (dive begin, ~900ms, non-blocking)
-- New `src/features/timer/DiveIgnition.tsx`:
-  - Thin horizontal sweep line across the gauge (single hairline, primary color, 700ms translateX with slight blur trail).
-  - Gauge tick marks briefly brighten then settle (CSS class toggled on `DiveGauge` root).
-  - Haptic: `hapticsLight` on start.
-- Triggered from `Index.tsx` via `timer.isDiveTransition` for a short window; overlay sits *behind* the gauge, no fullscreen takeover, no numeric readout, no hull-stress bar.
-
-### End (dive complete, before modal)
-- ~500ms "surface" cue: `DeepSeaAmbience` fades bubbles out, gauge ring pulses once, then `MissionCompleteModal` opens (existing redesign stays).
-- Add a small delay in `useDiveCompletion.triggerMissionComplete` so the surface cue plays before the modal (guarded by `prefers-reduced-motion`).
-
-### Creature Unlock Modal polish (inside existing `MissionCompleteModal`)
-- Staged reveal timeline (framer-motion or CSS keyframes):
-  1. 0ms: panel fades in.
-  2. 200ms: sonar ring expands (already added) + creature scales 0.85 → 1 with slight blur clear.
-  3. 500ms: rarity label types in (Orbitron, letter-spaced).
-  4. 700ms: pearl count counts up from 0 to earned value (250ms tween).
-  5. 900ms: CTA button fades in.
-- Skip staging entirely under `prefers-reduced-motion` (all appear at once).
-
----
-
-## Technical Notes
-
-- Framer Motion: confirm presence in `package.json`; if absent, add `framer-motion`.
-- New files: `TabTransition.tsx`, `DiveIgnition.tsx`, `useIdleWhileRunning.ts`.
-- Modified: `Index.tsx`, `BottomNav.tsx`, `DiveGauge.tsx` (tick brighten class), `MissionCompleteModal.tsx` (staged timeline), `useDiveCompletion.ts` (surface delay), `index.css` (focus-dim utilities + surface keyframe).
-- Deleted: `DescentCeremony.tsx`.
-- Accessibility: every new motion path checks `prefers-reduced-motion`. Auto-fade never hides interactive controls — only lowers opacity, and hover/focus restores instantly.
-
----
-
-## Out of Scope
-
-- Onboarding "Training Dive".
-- TopBar → bottom-sheet menu (one-hand reach) — separate track.
-- Any pixel-art or gameConfig changes.
+- 수정: `src/index.css`, `src/features/dive/TopBar.tsx`, `src/pages/Index.tsx`, `src/features/dive/AmbientSoundMixer.tsx` 인접 스타일, `src/pages/Priority.tsx` / `Collection.tsx` / `History.tsx`의 세컨더리 글로우 정리, TopBar 관련 toast 클래스.
+- 신규: `src/features/dive/TopBarSheet.tsx`, `src/features/onboarding/TrainingDive.tsx`, `src/hooks/useOnboarding.ts`.

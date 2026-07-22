@@ -24,7 +24,7 @@ const TimeRangeSelector = ({ value, onChange }: TimeRangeSelectorProps) => {
             index < 3 ? "col-span-2" : "col-span-3"
           } md:col-span-1 ${
             value === option.value
-              ? "bg-primary text-primary-foreground shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
+              ? "bg-primary text-primary-foreground"
               : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >

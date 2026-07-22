@@ -207,7 +207,7 @@ const Priority = ({
                   onClick={() => setSortMode(m)}
                   className={`min-h-10 rounded-md text-[11px] uppercase tracking-widest font-bold transition-colors font-robotic ${
                     active
-                      ? "bg-primary/20 text-primary shadow-[0_0_8px_hsl(var(--primary)/0.35)]"
+                      ? "bg-primary/20 text-primary"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
