@@ -190,7 +190,7 @@ const History = () => {
           {rangeLocked && (
             <div className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl backdrop-blur-md bg-background/40 border border-primary/30" style={{ margin: '-12px' }}>
               <div className="text-center space-y-4 p-6">
-                <Lock className="w-10 h-10 mx-auto text-primary drop-shadow-[0_0_10px_hsl(var(--primary)/0.6)]" />
+                <Lock className="w-10 h-10 mx-auto text-primary" />
                 <div className="space-y-1">
                   <h3 className="font-robotic text-xl font-bold text-primary uppercase tracking-widest">
                     DEEP DATA LOCKED
@@ -201,7 +201,7 @@ const History = () => {
                 </div>
                 <Button
                   onClick={() => setShowPricing(true)}
-                  className="font-robotic uppercase tracking-widest mt-2 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all"
+                  className="font-robotic uppercase tracking-widest mt-2 transition-all"
                 >
                   Unlock Full Journey
                 </Button>
@@ -229,7 +229,7 @@ const History = () => {
               </div>
               
               {/* Big Number with Styled Unit */}
-              <div className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent drop-shadow-[0_0_30px_hsl(var(--primary)/0.5)]">
+              <div className="text-6xl md:text-7xl font-bold font-mono tracking-tighter bg-gradient-to-r from-primary to-primary-deep bg-clip-text text-transparent">
                 {formatHeroTime(filteredStats.totalMinutes)}
               </div>
             </div>

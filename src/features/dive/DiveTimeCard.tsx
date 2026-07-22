@@ -9,7 +9,7 @@ interface DiveTimeCardProps {
 const DiveTimeCard = ({ todayMinutes, showCalibration }: DiveTimeCardProps) => {
   return (
     <div className="flex justify-center">
-      <div className="relative inline-flex flex-col items-center rounded-2xl bg-background/40 backdrop-blur-md border border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.15)] overflow-hidden">
+      <div className="relative inline-flex flex-col items-center rounded-2xl bg-background/40 backdrop-blur-md border border-primary/30 overflow-hidden">
         <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/30 rounded-tl-xl" />
         <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary/30 rounded-tr-xl" />
         <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary/30 rounded-bl-xl" />
@@ -24,7 +24,7 @@ const DiveTimeCard = ({ todayMinutes, showCalibration }: DiveTimeCardProps) => {
           </div>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-5xl md:text-6xl font-mono font-black text-foreground tracking-tight tabular-nums drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]">
+            <span className="text-5xl md:text-6xl font-mono font-black text-foreground tracking-tight tabular-nums">
               {todayMinutes}
             </span>
             <span className="text-base font-mono uppercase tracking-widest text-foreground/50 font-bold">

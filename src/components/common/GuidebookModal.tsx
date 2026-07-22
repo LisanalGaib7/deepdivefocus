@@ -42,7 +42,7 @@ const GuidebookModal = ({ trigger }: GuidebookModalProps = {}) => {
       <DialogTrigger asChild>{trigger ?? DefaultTrigger}</DialogTrigger>
 
 
-      <DialogContent className="max-w-md bg-background/95 backdrop-blur-xl border-primary/30 shadow-[0_0_30px_hsl(var(--primary)/0.2)] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-md bg-background/95 backdrop-blur-xl border-primary/30 max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold tracking-widest text-center text-primary font-mono flex items-center justify-center gap-2">
             <BookOpen className="w-6 h-6" />

@@ -31,11 +31,12 @@ const BottomNav = ({ activeTab, onTabChange, dimmed = false }: BottomNavProps) =
             return (
               <button
                 key={id}
+                data-onboarding={id === "priority" ? "priority-tab" : undefined}
                 onClick={() => {
                   hapticsLight();
                   onTabChange(id);
                 }}
-                className={`flex-1 flex flex-col items-center gap-1 py-2 px-2 rounded-xl transition-all duration-300 ${
+                className={`flex-1 flex flex-col items-center gap-1 py-2 px-2 rounded-xl transition-all duration-300 min-h-11 ${
                   active ? "bg-primary/10" : "hover:bg-muted"
                 }`}
                 style={{

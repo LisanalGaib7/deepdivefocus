@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import BottomNav, { type BottomTab } from "@/components/common/BottomNav";
 import TabTransition from "@/components/common/TabTransition";
 import { useIdleWhileRunning } from "@/hooks/useIdleWhileRunning";
+import { useOnboarding } from "@/hooks/useOnboarding";
+import TrainingDive from "@/features/onboarding/TrainingDive";
 
 
 // Feature components
@@ -320,8 +322,13 @@ const Index = () => {
       : "focus-dim"
     : "";
 
+  const onboarding = useOnboarding();
+
   return (
     <>
+      {onboarding.shouldShow && !isRunning && (
+        <TrainingDive onComplete={onboarding.complete} />
+      )}
       <TabTransition activeKey={activeTab}>
       {activeTab === "history" ? (
         <History />
@@ -399,6 +406,7 @@ const Index = () => {
             <Button
               onClick={timer.handleStart}
               size="lg"
+              data-onboarding="dive-start"
               className="play-button-themed h-16 w-16 rounded-full p-0 backdrop-blur-md transition-all duration-300 active:scale-95"
             >
               {isRunning ? (
@@ -471,7 +479,7 @@ const Index = () => {
       )}
       </TabTransition>
 
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} dimmed={isRunning && activeTab === "focus"} />
+      <BottomNav activeTab={activeTab} onTabChange={(t) => { if (onboarding.shouldShow) onboarding.complete(); setActiveTab(t); }} dimmed={isRunning && activeTab === "focus"} />
 
 
       
